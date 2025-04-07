@@ -45,8 +45,8 @@
     }
 
     .chat-entry {
-      background-color: #fff;
-      border-radius: 8px;
+      background-color: white;
+      border-radius: 10px;
       padding: 10px 15px;
       display: flex;
       justify-content: space-between;
@@ -54,14 +54,14 @@
       box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
     }
 
-    .chat-entry .user {
+    .user {
       width: 48%;
-      text-align: left;
       font-weight: bold;
       color: #003c47;
+      text-align: left;
     }
 
-    .chat-entry .bot {
+    .bot {
       width: 48%;
       text-align: right;
       color: #333;
@@ -106,13 +106,12 @@
         flex-direction: column;
       }
 
-      .chat-entry .user,
-      .chat-entry .bot {
+      .user, .bot {
         width: 100%;
         text-align: left;
       }
 
-      .chat-entry .bot {
+      .bot {
         text-align: right;
         margin-top: 8px;
       }
@@ -162,48 +161,4 @@
     </p>
   </div>
 
-  <script>
-    function aggiungiChat(domanda, risposta) {
-      const box = document.getElementById("risposta");
-      const entry = document.createElement("div");
-      entry.className = "chat-entry";
-      entry.innerHTML = `
-        <div class="user">${domanda}</div>
-        <div class="bot">${risposta}</div>
-      `;
-      box.appendChild(entry);
-      box.scrollTop = box.scrollHeight;
-    }
-
-    function handleClick(tipo) {
-      let domanda = "";
-      let risposta = "";
-
-      switch (tipo) {
-        case 'prenotazione':
-          domanda = "Come prenotare una visita?";
-          risposta = "Puoi prenotare chiamando lo 0332 624820 o scrivendo a segreteria@csvcuvio.it.";
-          break;
-        case 'orari':
-          domanda = "Quali sono gli orari?";
-          risposta = "Lunedì, Mercoledì e Venerdì: 9–12 / 14–19.30<br>Martedì: 14–19.30<br>Giovedì: 9–12<br>Sabato: 9–13";
-          break;
-        case 'indirizzo':
-          domanda = "Dove si trova il centro?";
-          risposta = "Ci trovi in Via Enrico Fermi, 6 – 21030 Cuvio (VA)";
-          break;
-        case 'specialita':
-          domanda = "Che specialità avete?";
-          risposta = "Odontoiatria, ginecologia, cardiologia, chirurgia vascolare, pneumologia, dietologia, fisioterapia.";
-          break;
-      }
-
-      aggiungiChat(domanda, risposta);
-    }
-
-    function handleInput() {
-      const input = document.getElementById("domanda");
-      const domanda = input.value.trim();
-      if (!domanda) return;
-
-      let risposta = "Grazie per la domanda! Ti ris
+  <script
