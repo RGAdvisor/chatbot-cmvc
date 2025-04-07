@@ -3,25 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <title>Assistente Virtuale – Centro Sanitario Valcuvia</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       font-family: Arial, sans-serif;
       background-color: #eafafa;
-      margin: 20px;
+      margin: 0;
+      padding: 20px;
     }
 
     h1 {
       color: #003c47;
+      text-align: center;
     }
 
     .button {
-      display: block;
       width: 100%;
       padding: 15px;
       margin: 5px 0;
       background-color: #00949c;
       color: white;
-      font-size: 18px;
+      font-size: 16px;
       border: none;
       cursor: pointer;
       border-radius: 5px;
@@ -29,37 +31,41 @@
 
     .chatbox {
       margin-top: 20px;
-      max-width: 800px;
-      margin-left: auto;
-      margin-right: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
 
     .chat-entry {
+      background-color: #fff;
+      border-radius: 8px;
+      padding: 10px;
+      box-shadow: 0 0 4px rgba(0,0,0,0.1);
       display: flex;
       justify-content: space-between;
-      background-color: #fff;
-      border-radius: 10px;
-      padding: 10px 15px;
-      margin-bottom: 10px;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+      align-items: flex-start;
+      flex-wrap: wrap;
     }
 
-    .user {
-      text-align: left;
-      width: 45%;
-      font-weight: bold;
+    .chat-entry .user,
+    .chat-entry .bot {
+      width: 48%;
+      font-size: 15px;
+    }
+
+    .chat-entry .user {
       color: #003c47;
+      font-weight: bold;
     }
 
-    .bot {
+    .chat-entry .bot {
       text-align: right;
-      width: 45%;
-      color: #333;
     }
 
     #inputBox {
       display: flex;
       margin-top: 20px;
+      flex-wrap: wrap;
     }
 
     #domanda {
@@ -68,6 +74,7 @@
       font-size: 16px;
       border: 1px solid #ccc;
       border-radius: 5px 0 0 5px;
+      min-width: 70%;
     }
 
     #invia {
@@ -83,60 +90,38 @@
     .footer {
       margin-top: 30px;
       font-size: 14px;
+      text-align: center;
     }
 
     .footer a {
       color: #0066cc;
       text-decoration: none;
     }
-  </style>
-</head>
-<body>
 
-  <h1>Assistente Virtuale – Centro Sanitario Valcuvia</h1>
-  <p>Ciao! Sono l’assistente virtuale del centro.<br>Posso aiutarti con le informazioni principali. Scegli un'opzione:</p>
+    @media (max-width: 600px) {
+      .chat-entry {
+        flex-direction: column;
+        align-items: stretch;
+      }
 
-  <button class="button" onclick="handleClick('prenotazione')">Come prenotare una visita?</button>
-  <button class="button" onclick="handleClick('orari')">Quali sono gli orari?</button>
-  <button class="button" onclick="handleClick('indirizzo')">Dove si trova il centro?</button>
-  <button class="button" onclick="handleClick('specialita')">Che specialità avete?</button>
+      .chat-entry .user,
+      .chat-entry .bot {
+        width: 100%;
+        text-align: left;
+      }
 
-  <div class="chatbox" id="chatbox"></div>
+      .chat-entry .bot {
+        text-align: right;
+        margin-top: 8px;
+      }
 
-  <div id="inputBox">
-    <input type="text" id="domanda" placeholder="Scrivi la tua domanda...">
-    <button id="invia" onclick="handleInput()">Invia</button>
-  </div>
+      #inputBox {
+        flex-direction: column;
+      }
 
-  <div class="footer">
-    Hai bisogno di ulteriori chiarimenti?<br>
-    Scrivici a <a href="mailto:segreteria@csvcuvio.it">segreteria@csvcuvio.it</a><br>
-    Ti risponderemo il prima possibile.
-  </div>
+      #domanda {
+        border-radius: 5px 5px 0 0;
+        min-width: 100%;
+      }
 
-  <script>
-    function addChatEntry(userText, botText) {
-      const chatbox = document.getElementById("chatbox");
-      const entry = document.createElement("div");
-      entry.className = "chat-entry";
-      entry.innerHTML = `<div class="user">${userText}</div><div class="bot">${botText}</div>`;
-      chatbox.appendChild(entry);
-      chatbox.scrollTop = chatbox.scrollHeight;
-    }
-
-    function handleClick(tipo) {
-      let risposta = "";
-      let domanda = "";
-
-      switch (tipo) {
-        case 'prenotazione':
-          domanda = "Come prenotare una visita?";
-          risposta = "Puoi prenotare chiamando lo 0332 624820 o scrivendo a segreteria@csvcuvio.it.";
-          break;
-        case 'orari':
-          domanda = "Quali sono gli orari?";
-          risposta = "Lunedì, Mercoledì e Venerdì: 9–12 / 14–19.30<br>Martedì: 14–19.30<br>Giovedì: 9–12<br>Sabato: 9–13";
-          break;
-        case 'indirizzo':
-          domanda = "Dove si trova il centro?";
-          risposta = "Ci trovi in Via Enrico Fermi, 6 – 21030 Cuvio (VA)";
+      #
