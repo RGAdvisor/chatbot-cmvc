@@ -1,0 +1,82 @@
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Assistente Virtuale – Centro Medico Cuvio</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #e6f7f7; margin: 0; padding: 0; }
+        .container { max-width: 600px; margin: auto; padding: 20px; background: white; border-radius: 8px; margin-top: 30px; box-shadow: 0 0 10px rgba(0,0,0,0.1);}
+        .header { background-color: #009999; color: white; padding: 15px; font-size: 22px; text-align: center; border-radius: 8px 8px 0 0; }
+        .message { padding: 20px; font-size: 16px; line-height: 1.6; }
+        .buttons { display: flex; flex-direction: column; gap: 10px; padding: 0 20px 20px; }
+        .button { background-color: #009999; color: white; padding: 12px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; text-align: center; }
+        .response { padding: 10px 20px; font-size: 15px; color: #333; min-height: 60px; }
+        .footer { font-size: 14px; color: #333; text-align: center; padding: 20px; }
+        .footer a { color: #009999; text-decoration: none; font-weight: bold; }
+        .input-area { display: flex; gap: 10px; padding: 0 20px 20px; }
+        input[type="text"] { flex: 1; padding: 10px; font-size: 15px; border: 1px solid #ccc; border-radius: 5px; }
+        .send-button { background-color: #009999; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-size: 15px; }
+    </style>
+    <script>
+        function showResponse(option) {
+            let response = "";
+            switch(option) {
+                case 'prenotazione':
+                    response = "Puoi prenotare chiamando lo 0332 624820 oppure scrivendo a segreteria@csvcuvio.it.";
+                    break;
+                case 'orari':
+                    response = "Lun–Mer–Ven: 9:00–12:00 / 14:00–19:30<br>Mar: 14:00–19:30<br>Gio: 9:00–12:00<br>Sab: 9:00–13:00";
+                    break;
+                case 'indirizzo':
+                    response = "Ci trovi in Via Enrico Fermi, 6 – 21030 Cuvio (VA).";
+                    break;
+                case 'specialita':
+                    response = "Al momento ci occupiamo di: odontoiatria, ginecologia, cardiologia, chirurgia vascolare, pneumologia, dietologia e fisioterapia.";
+                    break;
+            }
+            document.getElementById('responseBox').innerHTML = response;
+        }
+
+        function handleUserQuestion() {
+            const question = document.getElementById("userQuestion").value.toLowerCase();
+            let response = "Mi dispiace, prova a riformulare la domanda oppure clicca uno dei pulsanti sopra.";
+
+            if (question.includes("convenzionat")) {
+                response = "Il Centro Medico Cuvio non è convenzionato con il Servizio Sanitario Nazionale.";
+            } else if (question.includes("fisioterapia")) {
+                response = "Sì, offriamo servizi di fisioterapia. Vuoi sapere qualcosa in particolare?";
+            } else if (question.includes("prenotare")) {
+                response = "Puoi prenotare chiamando lo 0332 624820 oppure scrivendo a segreteria@csvcuvio.it.";
+            }
+
+            document.getElementById("responseBox").innerHTML = response;
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">Assistente Virtuale – Centro Sanitario Valcuvia</div>
+        <div class="message">
+            Ciao! Sono l’assistente virtuale del centro.<br>
+            Posso aiutarti con le informazioni principali. Scegli un'opzione:
+        </div>
+        <div class="buttons">
+            <button class="button" onclick="showResponse('prenotazione')">Come prenotare una visita?</button>
+            <button class="button" onclick="showResponse('orari')">Quali sono gli orari?</button>
+            <button class="button" onclick="showResponse('indirizzo')">Dove si trova il centro?</button>
+            <button class="button" onclick="showResponse('specialita')">Che specialità avete?</button>
+        </div>
+        <div class="input-area">
+            <input type="text" id="userQuestion" placeholder="Scrivi qui la tua domanda...">
+            <button class="send-button" onclick="handleUserQuestion()">Invia</button>
+        </div>
+        <div id="responseBox" class="response"></div>
+        <div class="footer">
+            Hai bisogno di ulteriori chiarimenti?<br>
+            Scrivici a <a href="mailto:segreteria@csvcuvio.it">segreteria@csvcuvio.it</a><br>
+            Ti risponderemo il prima possibile.
+        </div>
+    </div>
+</body>
+</html>
