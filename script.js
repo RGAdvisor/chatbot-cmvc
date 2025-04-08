@@ -26,7 +26,7 @@ async function handleInput() {
     // Se la domanda non è vuota, invia una richiesta a GPT
     if (domanda !== "") {
         // Imposta la chiave API di OpenAI (assicurati di non rivelarla mai pubblicamente)
-        const apiKey = "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";  // Sostituisci con la tua chiave API segreta
+        const apiKey = "YOUR_API_KEY";  // Sostituisci con la tua chiave API segreta
         
         // Definisci l'endpoint per la richiesta GPT
         const url = "https://api.openai.com/v1/chat/completions";
@@ -77,4 +77,12 @@ document.getElementById("domanda").addEventListener("keypress", function(event) 
     event.preventDefault();  // Prevenire il comportamento di default del tasto "Enter"
     handleInput();
   }
+});
+
+// Funzione per gestire il clic sui bottoni
+document.querySelectorAll('.button').forEach(button => {
+  button.addEventListener('click', function() {
+    const tipo = button.getAttribute('data-tipo');
+    handleClick(tipo);
+  });
 });
