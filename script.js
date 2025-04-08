@@ -25,7 +25,7 @@ async function handleInput() {
 
     // Se la domanda non è vuota, invia una richiesta a GPT
     if (domanda !== "") {
-        const apiKey = "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";  // Sostituisci con la tua chiave API segreta
+        const apiKey = "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";  // Sostituisci con la tua nuova chiave API segreta
         const url = "https://api.openai.com/v1/chat/completions";
 
         const data = {
@@ -49,11 +49,6 @@ async function handleInput() {
 
             if (response.ok) {
                 const json = await response.json();
-                console.log("Risposta JSON:", json);  // Aggiungi il debug per vedere il contenuto della risposta
-
-                // Aggiungiamo anche la risposta completa alla pagina per il debug
-                document.getElementById("debug").innerText = JSON.stringify(json, null, 2);
-
                 const gptResponse = json.choices[0].message.content.trim();
                 risposta = gptResponse;
             } else {
