@@ -36,7 +36,7 @@ button {
   border: none;
   padding: 12px;
   cursor: pointer;
-  width: 100%; /* Imposta larghezza al 100% */
+  width: 90%; /* Imposta larghezza al 90% */
   max-width: 500px; /* Imposta una larghezza massima per i pulsanti */
   margin: 5px auto;
   font-size: 14px;
