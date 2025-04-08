@@ -25,7 +25,7 @@ async function handleInput() {
 
     // Se la domanda non è vuota, invia una richiesta a GPT
     if (domanda !== "") {
-        const apiKey = "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";  // Sostituisci con la tua nuova chiave API segreta
+        const apiKey = "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";  // Sostituisci con la tua chiave API segreta
         const url = "https://api.openai.com/v1/chat/completions";
 
         const data = {
@@ -51,6 +51,9 @@ async function handleInput() {
                 const json = await response.json();
                 const gptResponse = json.choices[0].message.content.trim();
                 risposta = gptResponse;
+
+                // Aggiungi il debug sulla pagina
+                document.getElementById("debug").innerText = JSON.stringify(json, null, 2);
             } else {
                 console.error("Errore nella richiesta a GPT:", response.status);
                 risposta = "Mi scuso, ma non sono in grado di rispondere ora.";
@@ -71,4 +74,12 @@ document.getElementById("domanda").addEventListener("keypress", function(event) 
     event.preventDefault();  // Prevenire il comportamento di default del tasto "Enter"
     handleInput();
   }
+});
+
+// Funzione per gestire il clic sui bottoni
+document.querySelectorAll('.button').forEach(button => {
+  button.addEventListener('click', function() {
+    const tipo = button.getAttribute('data-tipo');
+    handleClick(tipo);
+  });
 });
