@@ -9,7 +9,7 @@ body {
 
 /* Contenitore principale */
 .container {
-  width: 80%;
+  width: 100%;
   max-width: 1200px; /* Impedisce il contenuto troppo largo su schermi grandi */
   margin: 0 auto;
   padding-top: 30px;
