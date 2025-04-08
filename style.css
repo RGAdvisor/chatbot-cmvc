@@ -9,7 +9,7 @@ body {
 /* Container per il layout centrale */
 .container {
   width: 90%;
-  max-width: 600px; /* Restringi la larghezza massima per dispositivi più grandi */
+  max-width: 500px; /* Ridurre la larghezza massima */
   margin: 0 auto;
   padding-top: 30px;
   text-align: center;
@@ -34,11 +34,12 @@ button {
   background-color: #00796b;
   color: white;
   border: none;
-  padding: 10px;
+  padding: 12px;
   cursor: pointer;
-  width: 100%;
-  max-width: 300px; /* Limita la larghezza massima per i pulsanti */
+  width: 100%; /* Imposta larghezza piena per i pulsanti */
+  max-width: 400px; /* Imposta una larghezza massima per i pulsanti */
   margin: 5px auto;
+  font-size: 14px;
 }
 
 button:hover {
@@ -54,7 +55,7 @@ button:hover {
   border-radius: 8px;
   min-height: 50px;
   width: 100%;
-  max-width: 500px; /* Restringi la larghezza della chat */
+  max-width: 500px; /* Impostato su larghezza massima */
   margin: 20px auto;
   text-align: left;
   word-wrap: break-word;
@@ -64,14 +65,14 @@ button:hover {
 .input-box {
   margin-top: 20px;
   display: flex;
-  flex-direction: row;
   gap: 10px;
   justify-content: center;
+  flex-direction: row;
 }
 
 input[type="text"] {
   width: 80%;
-  padding: 10px;
+  padding: 12px;
   border-radius: 8px;
   border: 1px solid #00796b;
   font-size: 14px;
@@ -85,10 +86,11 @@ input[type="text"]:focus {
 button[type="submit"] {
   background-color: #00796b;
   color: white;
-  padding: 10px;
+  padding: 12px;
   border: none;
   cursor: pointer;
-  width: 100px; /* Imposta una larghezza fissa per il pulsante di invio */
+  width: 100px;
+  font-size: 14px;
 }
 
 button[type="submit"]:hover {
