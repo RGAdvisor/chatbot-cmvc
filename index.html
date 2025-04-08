@@ -5,120 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Assistente Virtuale – Centro Sanitario Valcuvia</title>
   <link rel="stylesheet" href="style.css" />
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #e0f7fa;
-      margin: 0;
-      padding: 0;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 20px;
-      background-color: white;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    h1 {
-      font-size: 32px;
-      color: #00838f;
-      text-align: center;
-    }
-
-    p {
-      font-size: 18px;
-      color: #555;
-      text-align: center;
-    }
-
-    .buttons {
-      display: flex;
-      flex-direction: column;
-      margin: 20px 0;
-    }
-
-    .buttons button {
-      background-color: #00838f;
-      color: white;
-      font-size: 16px;
-      border: none;
-      padding: 15px;
-      margin: 10px 0;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    .buttons button:hover {
-      background-color: #006064;
-    }
-
-    .chat-box {
-      margin-bottom: 20px;
-    }
-
-    .message {
-      background-color: #f1f1f1;
-      padding: 10px;
-      border-radius: 5px;
-      margin-bottom: 10px;
-    }
-
-    .bot-message {
-      background-color: #00838f;
-      color: white;
-      text-align: left;
-    }
-
-    .user-message {
-      background-color: #f1f1f1;
-      color: black;
-      text-align: right;
-    }
-
-    .input-box {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .input-box input {
-      width: 80%;
-      padding: 10px;
-      font-size: 16px;
-      border: 2px solid #00838f;
-      border-radius: 5px;
-    }
-
-    .input-box button {
-      background-color: #00838f;
-      color: white;
-      font-size: 16px;
-      padding: 10px;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    .footer {
-      text-align: center;
-      font-size: 14px;
-      color: #555;
-      margin-top: 20px;
-    }
-
-    a {
-      color: #00838f;
-    }
-  </style>
 </head>
 <body>
   <div class="container">
     <h1>Assistente Virtuale – Centro Sanitario Valcuvia</h1>
     <p>Ciao! Sono l’assistente virtuale del centro.<br>Posso aiutarti con le informazioni principali. Scegli un'opzione:</p>
 
+    <!-- Pulsanti di opzioni -->
     <div class="buttons">
       <button onclick="handleClick('prenotazione')">Come prenotare una visita?</button>
       <button onclick="handleClick('orari')">Quali sono gli orari?</button>
@@ -126,15 +19,16 @@
       <button onclick="handleClick('specialita')">Che specialità avete?</button>
     </div>
 
-    <div class="chat-box" id="chat">
-      <div class="message bot-message">Benvenuto! Scrivi una domanda o scegli un'opzione.</div>
-    </div>
+    <!-- Casella di chat dove viene mostrato il messaggio di risposta -->
+    <div class="chat-box" id="risposta">Benvenuto! Scrivi una domanda o scegli un'opzione.</div>
 
+    <!-- Input per domanda -->
     <div class="input-box">
-      <input type="text" id="domanda" placeholder="Scrivi qui..." onkeydown="if(event.key === 'Enter'){ handleInput(); }"/>
+      <input type="text" id="domanda" placeholder="Scrivi qui..." />
       <button onclick="handleInput()">Invia</button>
     </div>
 
+    <!-- Footer con email per ulteriori chiarimenti -->
     <p class="footer">
       Hai bisogno di ulteriori chiarimenti?<br />
       Scrivici a <a href="mailto:segreteria@csvcuvio.it">segreteria@csvcuvio.it</a><br />
@@ -143,68 +37,70 @@
   </div>
 
   <script>
+    // Gestisce il clic sui pulsanti
+    function handleClick(tipo) {
+      let risposta = "";
+      switch (tipo) {
+        case 'prenotazione':
+          risposta = "Puoi prenotare chiamando lo 0332 624820 o scrivendo a segreteria@csvcuvio.it.";
+          break;
+        case 'orari':
+          risposta = "Lunedì, Mercoledì e Venerdì: 9–12 / 14–19.30\nMartedì: 14–19.30\nGiovedì: 9–12\nSabato: 9–13";
+          break;
+        case 'indirizzo':
+          risposta = "Ci trovi in Via Enrico Fermi, 6 – 21030 Cuvio (VA)";
+          break;
+        case 'specialita':
+          risposta = "Odontoiatria, ginecologia, cardiologia, chirurgia vascolare, pneumologia, dietologia, fisioterapia.";
+          break;
+      }
+      document.getElementById("risposta").innerText = risposta;
+    }
+
+    // Gestisce l'input dell'utente con l'integrazione con GPT
     async function handleInput() {
       const domanda = document.getElementById("domanda").value.trim();
       let risposta = "Grazie per la domanda! Ti risponderemo al più presto.";
 
       if (domanda.trim() !== "") {
-        const apiKey = "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";  // Inserisci la tua chiave API di OpenAI
-        const url = "https://api.openai.com/v1/completions"; // endpoint di OpenAI GPT
+        const apiKey = "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";  // Inserisci la tua chiave API qui
+        const url = "https://api.openai.com/v1/completions";
 
         const data = {
-            model: "gpt-3.5-turbo",  // O un altro modello
-            prompt: domanda,
-            max_tokens: 150,
-            temperature: 0.7,
+          model: "gpt-3.5-turbo", // Puoi scegliere un altro modello se preferisci
+          prompt: domanda,
+          max_tokens: 150,
+          temperature: 0.7,
         };
 
         try {
+          // Esegui la chiamata API
           const response = await fetch(url, {
-              method: "POST",
-              headers: {
-                  "Content-Type": "application/json",
-                  "Authorization": `Bearer ${apiKey}`
-              },
-              body: JSON.stringify(data),
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${apiKey}`,
+            },
+            body: JSON.stringify(data),
           });
 
-          const jsonResponse = await response.json();
-          if (jsonResponse.choices && jsonResponse.choices[0].text) {
-            risposta = jsonResponse.choices[0].text.trim();
-          }
+          const responseData = await response.json();
+          risposta = responseData.choices[0].text.trim();  // Ottieni la risposta da GPT
         } catch (error) {
-          console.error("Errore nella chiamata GPT:", error);
-          risposta = "Ci scusiamo, c'è stato un errore con il nostro assistente.";
+          risposta = "Mi dispiace, qualcosa è andato storto.";
         }
       }
-      
-      // Aggiungi la risposta alla chat
-      const chatBox = document.getElementById("chat");
-      chatBox.innerHTML += `<div class="message user-message">${domanda}</div>`;
-      chatBox.innerHTML += `<div class="message bot-message">${risposta}</div>`;
-      document.getElementById("domanda").value = ""; // Svuota il campo di input
+
+      // Mostra la risposta nella chatbox
+      document.getElementById("risposta").innerText = risposta;
     }
 
-    function handleClick(tipo) {
-        let risposta = "";
-        switch(tipo) {
-            case 'prenotazione':
-                risposta = "Puoi prenotare chiamando lo 0332 624820 o scrivendo a segreteria@csvcuvio.it.";
-                break;
-            case 'orari':
-                risposta = "Lunedì, Mercoledì e Venerdì: 9–12 / 14–19.30\nMartedì: 14–19.30\nGiovedì: 9–12\nSabato: 9–13";
-                break;
-            case 'indirizzo':
-                risposta = "Ci trovi in Via Enrico Fermi, 6 – 21030 Cuvio (VA)";
-                break;
-            case 'specialita':
-                risposta = "Odontoiatria, ginecologia, cardiologia, chirurgia vascolare, pneumologia, dietologia, fisioterapia.";
-                break;
-        }
-        const chatBox = document.getElementById("chat");
-        chatBox.innerHTML += `<div class="message user-message">${tipo}</div>`;
-        chatBox.innerHTML += `<div class="message bot-message">${risposta}</div>`;
-    }
+    // Permette di inviare il messaggio anche premendo il tasto Enter
+    document.getElementById("domanda").addEventListener("keypress", function(event) {
+      if (event.key === "Enter") {
+        handleInput(); // Chiamata alla funzione quando premi Enter
+      }
+    });
   </script>
 </body>
 </html>
