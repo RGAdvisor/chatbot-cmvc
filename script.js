@@ -1,46 +1,47 @@
-function handleClick(tipo) {
-    let risposta = "";
-    switch (tipo) {
-        case 'prenotazione':
-            risposta = "Puoi prenotare chiamando lo 0332 624820 o scrivendo a segreteria@csvcuvio.it.";
-            break;
-        case 'orari':
-            risposta = "Lunedì, Mercoledì e Venerdì: 9–12 / 14–19.30\nMartedì: 14–19.30\nGiovedì: 9–12\nSabato: 9–13";
-            break;
-        case 'indirizzo':
-            risposta = "Ci trovi in Via Enrico Fermi, 6 – 21030 Cuvio (VA)";
-            break;
-        case 'specialita':
-            risposta = "Odontoiatria, ginecologia, cardiologia, chirurgia vascolare, pneumologia, dietologia, fisioterapia.";
-            break;
+async function handleInput() {
+    // Prendi il valore della domanda dall'input
+    const domanda = document.getElementById("domanda").value.trim();
+
+    // Se la domanda è vuota, non fare nulla
+    if (domanda === "") return;
+
+    // Imposta una risposta predefinita
+    let risposta = "Mi dispiace, qualcosa è andato storto.";
+
+    try {
+        // La tua chiave API di OpenAI (sostituisci con la tua chiave)
+        const apiKey = "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";  // Inserisci qui la tua chiave API
+
+        // URL dell'endpoint di OpenAI
+        const url = "https://api.openai.com/v1/completions";
+
+        // Dati per la richiesta
+        const data = {
+            model: "gpt-3.5-turbo", // Puoi anche usare "gpt-4" se disponibile
+            prompt: domanda,  // La domanda che l'utente ha scritto
+            max_tokens: 150,  // Numero massimo di token per la risposta
+            temperature: 0.7   // Controlla la "creatività" della risposta
+        };
+
+        // Invia la richiesta HTTP POST a OpenAI
+        const response = await fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${apiKey}`
+            },
+            body: JSON.stringify(data)
+        });
+
+        // Ottieni la risposta da OpenAI
+        const responseData = await response.json();
+        risposta = responseData.choices[0].text.trim(); // Preleva la risposta
+    } catch (error) {
+        console.error("Errore:", error);
     }
-    document.getElementById("risposta").innerText = risposta;
+
+    // Mostra la risposta nel div della chat
+    appendMessage(risposta);
 }
 
-function handleInput() {
-    const domanda = document.getElementById("domanda").value.toLowerCase();
-    let risposta = "";
-
-    if (domanda.includes("ciao") || domanda.includes("buongiorno") || domanda.includes("salve")) {
-        risposta = "Ciao! Come posso aiutarti oggi?";
-    } else if (domanda.includes("ginecolog")) {
-        risposta = "Sì, effettuiamo visite ginecologiche. Vuoi sapere come prenotare?";
-    } else if (domanda.includes("fisioterapia")) {
-        risposta = "Sì, offriamo servizi di fisioterapia. Posso aiutarti con la prenotazione?";
-    } else if (domanda.includes("prenotare")) {
-        risposta = "Puoi prenotare chiamando lo 0332 624820 o scrivendo a segreteria@csvcuvio.it.";
-    } else if (domanda.includes("orari")) {
-        risposta = "Lunedì, Mercoledì e Venerdì: 9–12 / 14–19.30\nMartedì: 14–19.30\nGiovedì: 9–12\nSabato: 9–13";
-    } else if (domanda.includes("dove") || domanda.includes("indirizzo")) {
-        risposta = "Ci trovi in Via Enrico Fermi, 6 – 21030 Cuvio (VA)";
-    } else if (domanda.includes("specialità") || domanda.includes("medico") || domanda.includes("visite")) {
-        risposta = "Le nostre specialità includono odontoiatria, ginecologia, cardiologia, chirurgia vascolare, pneumologia, dietologia e fisioterapia.";
-    } else if (domanda.includes("convenzionat")) {
-        risposta = "Il Centro Medico Cuvio non è convenzionato con il Servizio Sanitario Nazionale.";
-    } else {
-        risposta = "Grazie per la domanda! Ti risponderemo al più presto oppure scrivici a segreteria@csvcuvio.it.";
-    }
-
-    document.getElementById("risposta").innerText = risposta;
-}
 
