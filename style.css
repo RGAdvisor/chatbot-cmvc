@@ -1,114 +1,86 @@
-/* Corpo principale */
+/* Impostazioni di base per la pagina */
 body {
-  font-family: Arial, sans-serif;
-  background-color: #e0f7fa;
-  margin: 0;
-  padding: 0;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
 }
 
-/* Container per il layout centrale */
-.container {
-  width: 90%;
-  max-width: 500px; /* Ridurre la larghezza massima */
-  margin: 0 auto;
-  padding-top: 30px;
-  text-align: center;
+header {
+    text-align: center;
+    margin: 20px;
+    font-size: 2em;
+    font-weight: bold;
+    color: #2c3e50;
 }
 
-/* Titolo principale */
-h1 {
-  color: #00796b;
-  font-size: 24px;
-  margin-bottom: 10px;
+/* Box di input domanda */
+.chat-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
 }
 
-/* Pulsanti per le opzioni */
-.buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-bottom: 20px;
+textarea {
+    width: 60%;
+    height: 80px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+    resize: none;
 }
 
 button {
-  background-color: #00796b;
-  color: white;
-  border: none;
-  padding: 12px;
-  cursor: pointer;
-  width: 90%; /* Imposta larghezza al 90% */
-  max-width: 500px; /* Imposta una larghezza massima per i pulsanti */
-  margin: 5px auto;
-  font-size: 14px;
-  border-radius: 8px; /* Angoli arrotondati per i pulsanti */
+    margin-left: 10px;
+    padding: 10px 20px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
 button:hover {
-  background-color: #004d40;
+    background-color: #2980b9;
 }
 
-/* Casella della chat (domanda/risposta) */
-.chat-box {
-  background-color: #00796b;
-  color: white;
-  padding: 20px;
-  margin-top: 20px;
-  border-radius: 8px;
-  min-height: 50px;
-  width: 100%;
-  max-width: 500px; /* Impostato su larghezza massima */
-  margin: 20px auto;
-  text-align: left;
-  word-wrap: break-word;
+/* Risposta */
+#risposta {
+    margin-top: 20px;
+    font-size: 1.2em;
+    text-align: center;
+    color: #e74c3c;
 }
 
-/* Casella di input */
-.input-box {
-  margin-top: 20px;
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  flex-direction: row;
+/* Bottoni per risposte preimpostate */
+.button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
 }
 
-input[type="text"] {
-  width: 100%; /* Imposta larghezza al 100% */
-  max-width: 500px; /* Impostato su larghezza massima */
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid #00796b;
-  font-size: 14px;
+.button {
+    margin: 5px;
+    padding: 10px 20px;
+    background-color: #16a085;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
-input[type="text"]:focus {
-  outline: none;
-  border-color: #004d40;
+.button:hover {
+    background-color: #1abc9c;
 }
 
-button[type="submit"] {
-  background-color: #00796b;
-  color: white;
-  padding: 12px;
-  border: none;
-  cursor: pointer;
-  width: 100%; /* Imposta larghezza al 100% */
-  max-width: 500px; /* Impostato su larghezza massima */
-  font-size: 14px;
-  border-radius: 8px; /* Angoli arrotondati per il bottone invia */
-}
-
-button[type="submit"]:hover {
-  background-color: #004d40;
-}
-
-/* Footer */
-.footer {
-  font-size: 12px;
-  margin-top: 20px;
-  color: #00796b;
-}
-
-footer a {
-  color: #004d40;
-  text-decoration: none;
+/* Sezione di debug */
+#debug {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #ecf0f1;
+    border: 1px solid #bdc3c7;
+    white-space: pre-wrap;
 }
