@@ -58,7 +58,7 @@ async function handleInput() {
                 risposta = gptResponse;
             } else {
                 console.error("Errore nella richiesta a GPT:", response.status);
-                risposta = "Mi scuso, ma c'è stato un errore nel recuperare la risposta.";
+                risposta = "Mi scuso, ma non sono in grado di rispondere ora";
             }
         } catch (error) {
             console.error("Errore nella chiamata API:", error);
