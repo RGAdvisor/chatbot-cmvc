@@ -1,21 +1,21 @@
 // Funzione per gestire il clic sui bottoni
 function handleClick(tipo) {
-  let risposta = "";
-  switch (tipo) {
-    case 'prenotazione':
-      risposta = "Puoi prenotare chiamando lo 0332 624820 o scrivendo a segreteria@csvcuvio.it.";
-      break;
-    case 'orari':
-      risposta = "Lunedì, Mercoledì e Venerdì: 9–12 / 14–19.30\nMartedì: 14–19.30\nGiovedì: 9–12\nSabato: 9–13";
-      break;
-    case 'indirizzo':
-      risposta = "Ci trovi in Via Enrico Fermi, 6 – 21030 Cuvio (VA)";
-      break;
-    case 'specialita':
-      risposta = "Odontoiatria, ginecologia, cardiologia, chirurgia vascolare, pneumologia, dietologia, fisioterapia.";
-      break;
-  }
-  document.getElementById("risposta").innerText = risposta;
+    let risposta = "";
+    switch (tipo) {
+        case 'prenotazione':
+            risposta = "Puoi prenotare chiamando lo 0332 624820 o scrivendo a segreteria@csvcuvio.it.";
+            break;
+        case 'orari':
+            risposta = "Lunedì, Mercoledì e Venerdì: 9–12 / 14–19.30\nMartedì: 14–19.30\nGiovedì: 9–12\nSabato: 9–13";
+            break;
+        case 'indirizzo':
+            risposta = "Ci trovi in Via Enrico Fermi, 6 – 21030 Cuvio (VA)";
+            break;
+        case 'specialita':
+            risposta = "Odontoiatria, ginecologia, cardiologia, chirurgia vascolare, pneumologia, dietologia, fisioterapia.";
+            break;
+    }
+    document.getElementById("risposta").innerText = risposta;
 }
 
 // Funzione per gestire l'invio della domanda a GPT-3.5 e ricevere la risposta
@@ -25,11 +25,11 @@ async function handleInput() {
 
     // Se la domanda non è vuota, invia una richiesta a GPT
     if (domanda !== "") {
-        const apiKey = "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";  // Sostituisci con la tua chiave API segreta
+        const apiKey = "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"; // **IMPORTANTE: SOSTITUISCI CON LA TUA CHIAVE API**
         const url = "https://api.openai.com/v1/chat/completions";
 
         const data = {
-            model: "gpt-3.5-turbo",  
+            model: "gpt-3.5-turbo",
             messages: [
                 { role: "user", content: domanda }
             ],
@@ -56,7 +56,9 @@ async function handleInput() {
                 document.getElementById("debug").innerText = JSON.stringify(json, null, 2);
             } else {
                 console.error("Errore nella richiesta a GPT:", response.status);
-                risposta = "Mi scuso, ma non sono in grado di rispondere ora.";
+                const errorData = await response.json();
+                console.error("Dettagli errore:", errorData); // Mostra i dettagli dell'errore
+                risposta = "Mi scuso, ma non sono in grado di rispondere ora. Errore: " + response.status;
             }
         } catch (error) {
             console.error("Errore nella chiamata API:", error);
@@ -70,16 +72,16 @@ async function handleInput() {
 
 // Invia la domanda premendo "Invio" dalla tastiera
 document.getElementById("domanda").addEventListener("keypress", function(event) {
-  if (event.key === "Enter") {
-    event.preventDefault();  // Prevenire il comportamento di default del tasto "Enter"
-    handleInput();
-  }
+    if (event.key === "Enter") {
+        event.preventDefault(); // Prevenire il comportamento di default del tasto "Enter"
+        handleInput();
+    }
 });
 
 // Funzione per gestire il clic sui bottoni
 document.querySelectorAll('.button').forEach(button => {
-  button.addEventListener('click', function() {
-    const tipo = button.getAttribute('data-tipo');
-    handleClick(tipo);
-  });
+    button.addEventListener('click', function() {
+        const tipo = button.getAttribute('data-tipo');
+        handleClick(tipo);
+    });
 });
