@@ -34,11 +34,13 @@ async function handleInput() {
 
         // Crea il corpo della richiesta per GPT
         const data = {
-            model: "gpt-3.5-turbo", // O "gpt-4" se preferisci usare GPT-4
-            prompt: domanda,
-            max_tokens: 150,
-            temperature: 0.7,
-        };
+  model: "gpt-3.5-turbo",  // O "gpt-4"
+  messages: [
+    { role: "user", content: domanda }
+  ],
+  max_tokens: 150,
+  temperature: 0.7,
+};
 
         // Effettua la chiamata API
         try {
