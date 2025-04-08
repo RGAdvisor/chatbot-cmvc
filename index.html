@@ -6,7 +6,6 @@
   <title>Assistente Virtuale – Centro Sanitario Valcuvia</title>
   <link rel="stylesheet" href="style.css" />
   <style>
-    /* Stile base */
     body {
       font-family: Arial, sans-serif;
       background-color: #e0f7fa;
@@ -56,7 +55,6 @@
       background-color: #004d40;
     }
 
-    /* Chat box */
     .chat-box {
       margin: 20px 0;
       padding: 10px;
@@ -67,7 +65,6 @@
       font-size: 16px;
     }
 
-    /* Input box */
     .input-box {
       display: flex;
       gap: 10px;
@@ -91,7 +88,6 @@
       color: #00796b;
     }
 
-    /* Stile per le risposte e domande */
     .message-box {
       display: flex;
       justify-content: space-between;
@@ -149,17 +145,14 @@
       const domanda = document.getElementById("domanda").value.trim();
       let risposta = "Grazie per la domanda! Ti risponderemo al più presto.";
 
-      // Verifica se la domanda non è vuota
       if (domanda.trim() !== "") {
-        // Aggiungi il messaggio dell'utente alla chat
         appendMessage(domanda, 'user');
 
-        // Chiamata all'API di OpenAI GPT
         const apiKey = "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";  // Inserisci la tua chiave API qui
         const url = "https://api.openai.com/v1/completions";
 
         const data = {
-          model: "gpt-3.5-turbo", // Modello da usare
+          model: "gpt-3.5-turbo",
           prompt: domanda,
           max_tokens: 150,
           temperature: 0.7,
@@ -177,7 +170,6 @@
 
           const responseData = await response.json();
           risposta = responseData.choices[0].text.trim();
-          // Aggiungi la risposta del bot alla chat
           appendMessage(risposta, 'bot');
         } catch (error) {
           risposta = "Mi dispiace, qualcosa è andato storto.";
@@ -194,10 +186,9 @@
         <div class="${type}-message">${message}</div>
       `;
       chatBox.appendChild(messageBox);
-      chatBox.scrollTop = chatBox.scrollHeight;  // Scrolla verso il basso
+      chatBox.scrollTop = chatBox.scrollHeight;
     }
 
-    // Gestione del tasto invio
     document.getElementById("domanda").addEventListener("keypress", function(event) {
       if (event.key === "Enter") {
         handleInput();
