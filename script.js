@@ -50,6 +50,10 @@ async function handleInput() {
             if (response.ok) {
                 const json = await response.json();
                 console.log("Risposta JSON:", json);  // Aggiungi il debug per vedere il contenuto della risposta
+
+                // Aggiungiamo anche la risposta completa alla pagina per il debug
+                document.getElementById("debug").innerText = JSON.stringify(json, null, 2);
+
                 const gptResponse = json.choices[0].message.content.trim();
                 risposta = gptResponse;
             } else {
