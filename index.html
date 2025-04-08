@@ -1,37 +1,38 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ciao! Sono l’assistente virtuale del centro.<br>Posso aiutarti con le informazioni principali. Scegli un'opzione:
-</title>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centro Sanitario Valcuvia</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="container">
-    <h1>Ciao! Sono l’assistente virtuale del centro.<br>Posso aiutarti con le informazioni principali. Scegli un'opzione:</h1>
- 
-    <div class="buttons">
-      <button onclick="handleClick('prenotazione')">Come prenotare una visita?</button>
-      <button onclick="handleClick('orari')">Quali sono gli orari?</button>
-      <button onclick="handleClick('indirizzo')">Dove si trova il centro?</button>
-      <button onclick="handleClick('specialita')">Che specialità avete?</button>
+    <!-- Intestazione -->
+    <header>
+        <h1>Benvenuto al Centro Sanitario Valcuvia</h1>
+    </header>
+
+    <!-- Sezione di Domande e Risposte -->
+    <div class="chat-box">
+        <textarea id="domanda" placeholder="Scrivi la tua domanda..." rows="5" cols="50"></textarea>
+        <button onclick="handleInput()">Invia</button>
     </div>
 
-    <div class="chat-box" id="risposta">Benvenuto! Scrivi una domanda o scegli un'opzione.</div>
+    <!-- Sezione Risposta -->
+    <div id="risposta"></div>
 
-    <div class="input-box">
-      <input type="text" id="domanda" placeholder="Scrivi qui..." />
-      <button onclick="handleInput()">Invia</button>
+    <!-- Bottoni con risposte preimpostate -->
+    <div class="button-container">
+        <button class="button" data-tipo="prenotazione">Prenotazione</button>
+        <button class="button" data-tipo="orari">Orari</button>
+        <button class="button" data-tipo="indirizzo">Indirizzo</button>
+        <button class="button" data-tipo="specialita">Specialità</button>
     </div>
 
-    <p class="footer">
-      Hai bisogno di ulteriori chiarimenti?<br />
-      Scrivici a <a href="mailto:segreteria@csvcuvio.it">segreteria@csvcuvio.it</a><br />
-      Ti risponderemo il prima possibile.
-    </p>
-  </div>
+    <!-- Area di Debugging per visualizzare la risposta API -->
+    <pre id="debug" style="border: 1px solid black; padding: 10px; background-color: #f0f0f0; white-space: pre-wrap;"></pre>
 
-  <script src="script.js"></script>
+    <!-- Includi il file script.js -->
+    <script src="script.js"></script>
 </body>
 </html>
