@@ -56,6 +56,7 @@
       background-color: #004d40;
     }
 
+    /* Chat box */
     .chat-box {
       margin: 20px 0;
       padding: 10px;
@@ -66,6 +67,7 @@
       font-size: 16px;
     }
 
+    /* Input box */
     .input-box {
       display: flex;
       gap: 10px;
@@ -87,6 +89,32 @@
 
     a {
       color: #00796b;
+    }
+
+    /* Stile per le risposte e domande */
+    .message-box {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 10px 0;
+    }
+
+    .message-box .user-message,
+    .message-box .bot-message {
+      padding: 10px;
+      border-radius: 5px;
+      max-width: 70%;
+    }
+
+    .message-box .user-message {
+      background-color: #e0f7fa;
+      align-self: flex-start;
+    }
+
+    .message-box .bot-message {
+      background-color: #00796b;
+      color: white;
+      align-self: flex-end;
     }
   </style>
 </head>
@@ -117,35 +145,21 @@
   </div>
 
   <script>
-    function handleClick(tipo) {
-      let risposta = "";
-      switch (tipo) {
-        case 'prenotazione':
-          risposta = "Puoi prenotare chiamando lo 0332 624820 o scrivendo a segreteria@csvcuvio.it.";
-          break;
-        case 'orari':
-          risposta = "Lunedì, Mercoledì e Venerdì: 9–12 / 14–19.30\nMartedì: 14–19.30\nGiovedì: 9–12\nSabato: 9–13";
-          break;
-        case 'indirizzo':
-          risposta = "Ci trovi in Via Enrico Fermi, 6 – 21030 Cuvio (VA)";
-          break;
-        case 'specialita':
-          risposta = "Odontoiatria, ginecologia, cardiologia, chirurgia vascolare, pneumologia, dietologia, fisioterapia.";
-          break;
-      }
-      document.getElementById("risposta").innerText = risposta;
-    }
-
     async function handleInput() {
       const domanda = document.getElementById("domanda").value.trim();
       let risposta = "Grazie per la domanda! Ti risponderemo al più presto.";
 
+      // Verifica se la domanda non è vuota
       if (domanda.trim() !== "") {
+        // Aggiungi il messaggio dell'utente alla chat
+        appendMessage(domanda, 'user');
+
+        // Chiamata all'API di OpenAI GPT
         const apiKey = "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";  // Inserisci la tua chiave API qui
         const url = "https://api.openai.com/v1/completions";
 
         const data = {
-          model: "gpt-3.5-turbo", // Puoi scegliere un altro modello se preferisci
+          model: "gpt-3.5-turbo", // Modello da usare
           prompt: domanda,
           max_tokens: 150,
           temperature: 0.7,
@@ -163,19 +177,51 @@
 
           const responseData = await response.json();
           risposta = responseData.choices[0].text.trim();
+          // Aggiungi la risposta del bot alla chat
+          appendMessage(risposta, 'bot');
         } catch (error) {
           risposta = "Mi dispiace, qualcosa è andato storto.";
+          appendMessage(risposta, 'bot');
         }
       }
-
-      document.getElementById("risposta").innerText = risposta;
     }
 
+    function appendMessage(message, type) {
+      const chatBox = document.getElementById("risposta");
+      const messageBox = document.createElement('div');
+      messageBox.classList.add('message-box');
+      messageBox.innerHTML = `
+        <div class="${type}-message">${message}</div>
+      `;
+      chatBox.appendChild(messageBox);
+      chatBox.scrollTop = chatBox.scrollHeight;  // Scrolla verso il basso
+    }
+
+    // Gestione del tasto invio
     document.getElementById("domanda").addEventListener("keypress", function(event) {
       if (event.key === "Enter") {
         handleInput();
       }
     });
+
+    function handleClick(tipo) {
+      let risposta = "";
+      switch (tipo) {
+        case 'prenotazione':
+          risposta = "Puoi prenotare chiamando lo 0332 624820 o scrivendo a segreteria@csvcuvio.it.";
+          break;
+        case 'orari':
+          risposta = "Lunedì, Mercoledì e Venerdì: 9–12 / 14–19.30\nMartedì: 14–19.30\nGiovedì: 9–12\nSabato: 9–13";
+          break;
+        case 'indirizzo':
+          risposta = "Ci trovi in Via Enrico Fermi, 6 – 21030 Cuvio (VA)";
+          break;
+        case 'specialita':
+          risposta = "Odontoiatria, ginecologia, cardiologia, chirurgia vascolare, pneumologia, dietologia, fisioterapia.";
+          break;
+      }
+      appendMessage(risposta, 'bot');
+    }
   </script>
 </body>
 </html>
