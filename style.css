@@ -1,16 +1,21 @@
-/* Corpo della pagina */
+/* Reset di base per evitare margini indesiderati */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
   font-family: Arial, sans-serif;
   background-color: #e0f7fa;
   margin: 0;
   padding: 0;
-  line-height: 1.5; /* Miglioramento leggibilità */
 }
 
 /* Contenitore principale */
 .container {
-  width: 100%;
-  max-width: 1200px; /* Impedisce il contenuto troppo largo su schermi grandi */
+  max-width: 1200px; /* Limita la larghezza su PC */
+  width: 90%; /* 90% della larghezza della finestra */
   margin: 0 auto;
   padding-top: 30px;
   text-align: center;
@@ -19,10 +24,10 @@ body {
 /* Titolo */
 h1 {
   color: #00796b;
-  font-weight: bold; /* Rende il titolo più prominente */
+  margin-bottom: 20px;
 }
 
-/* Pulsanti */
+/* Bottoni per l'interazione */
 .buttons {
   margin-bottom: 20px;
 }
@@ -31,18 +36,18 @@ button {
   background-color: #00796b;
   color: white;
   border: none;
-  padding: 10px;
+  padding: 12px 20px;
   margin: 5px;
   cursor: pointer;
-  border-radius: 5px; /* Aggiunta di bordi arrotondati */
-  transition: background-color 0.3s ease; /* Aggiunta di transizione */
+  width: 100%; /* Assicura che i bottoni siano a larghezza piena su schermi piccoli */
+  max-width: 300px; /* Limita la larghezza sui dispositivi più grandi */
 }
 
 button:hover {
   background-color: #004d40;
 }
 
-/* Chat Box */
+/* Chat box */
 .chat-box {
   background-color: #00796b;
   color: white;
@@ -50,27 +55,27 @@ button:hover {
   margin-top: 20px;
   border-radius: 8px;
   min-height: 50px;
-  max-width: 600px; /* Impedisce che diventi troppo largo su schermi grandi */
-  width: 80%;
+  max-width: 100%;
   margin: 20px auto;
   text-align: left;
   word-wrap: break-word;
-  transition: background-color 0.3s ease; /* Transizione aggiunta */
 }
 
-/* Input Box */
+/* Input box per le risposte */
 .input-box {
   margin-top: 20px;
+  display: flex;
+  justify-content: center; /* Centra l'input e il bottone */
+  flex-wrap: wrap;
 }
 
-/* Campo di testo */
 input[type="text"] {
-  width: 60%;
-  padding: 10px;
+  width: 100%;
+  max-width: 600px; /* Impostato per essere largo ma contenuto */
+  padding: 12px;
   margin-top: 10px;
   border-radius: 8px;
   border: 1px solid #00796b;
-  transition: border-color 0.3s ease; /* Transizione aggiunta */
 }
 
 input[type="text"]:focus {
@@ -78,21 +83,24 @@ input[type="text"]:focus {
   border-color: #004d40;
 }
 
-/* Footer */
-.footer {
-  margin-top: 20px;
-  font-size: 14px;
+/* Responsività: rende la chat più compatibile con schermi piccoli */
+@media screen and (max-width: 768px) {
+  .chat-box {
+    width: 100%;
+    margin: 10px auto;
+  }
+
+  .buttons {
+    display: grid;
+    gap: 10px;
+  }
+
+  button {
+    width: 100%;
+  }
 }
 
-/* Responsive Design */
-@media (max-width: 600px) {
-  .container {
-    width: 95%;
-  }
-  .buttons button {
-    width: 100%; /* Bottoni su schermo piccolo prendono tutta la larghezza */
-  }
-  input[type="text"] {
-    width: 90%; /* Input più largo su schermi piccoli */
-  }
-}
+/* Modifica per mobile */
+@media screen and (max-width: 480px) {
+  h1 {
+    font-size: 18
