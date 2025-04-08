@@ -25,15 +25,11 @@ async function handleInput() {
 
     // Se la domanda non è vuota, invia una richiesta a GPT
     if (domanda !== "") {
-        // Imposta la chiave API di OpenAI (assicurati di non rivelarla mai pubblicamente)
-        const apiKey = "YOUR_API_KEY";  // Sostituisci con la tua chiave API segreta
-        
-        // Definisci l'endpoint per la richiesta GPT
+        const apiKey = "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";  // Sostituisci con la tua chiave API segreta
         const url = "https://api.openai.com/v1/chat/completions";
 
-        // Crea il corpo della richiesta per GPT
         const data = {
-            model: "gpt-3.5-turbo",  // Puoi usare "gpt-4" se preferisci
+            model: "gpt-3.5-turbo",  
             messages: [
                 { role: "user", content: domanda }
             ],
@@ -41,7 +37,6 @@ async function handleInput() {
             temperature: 0.7,
         };
 
-        // Effettua la chiamata API
         try {
             const response = await fetch(url, {
                 method: "POST",
@@ -52,14 +47,14 @@ async function handleInput() {
                 body: JSON.stringify(data),
             });
 
-            // Controlla se la risposta è ok
             if (response.ok) {
                 const json = await response.json();
+                console.log("Risposta JSON:", json);  // Aggiungi il debug per vedere il contenuto della risposta
                 const gptResponse = json.choices[0].message.content.trim();
                 risposta = gptResponse;
             } else {
                 console.error("Errore nella richiesta a GPT:", response.status);
-                risposta = "Mi scuso, ma non sono in grado di rispondere ora";
+                risposta = "Mi scuso, ma non sono in grado di rispondere ora.";
             }
         } catch (error) {
             console.error("Errore nella chiamata API:", error);
@@ -77,12 +72,4 @@ document.getElementById("domanda").addEventListener("keypress", function(event) 
     event.preventDefault();  // Prevenire il comportamento di default del tasto "Enter"
     handleInput();
   }
-});
-
-// Funzione per gestire il clic sui bottoni
-document.querySelectorAll('.button').forEach(button => {
-  button.addEventListener('click', function() {
-    const tipo = button.getAttribute('data-tipo');
-    handleClick(tipo);
-  });
 });
