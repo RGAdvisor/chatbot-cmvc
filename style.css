@@ -36,8 +36,8 @@ button {
   border: none;
   padding: 12px;
   cursor: pointer;
-  width: 90%; /* Imposta larghezza piena per i pulsanti */
-  max-width: 380px; /* Imposta una larghezza massima per i pulsanti */
+  width: 80%; /* Imposta larghezza piena per i pulsanti */
+  max-width: 350px; /* Imposta una larghezza massima per i pulsanti */
   margin: 5px auto;
   font-size: 14px;
   border-radius: 8px; /* Angoli arrotondati per i pulsanti */
@@ -55,7 +55,7 @@ button:hover {
   margin-top: 20px;
   border-radius: 8px;
   min-height: 50px;
-  width: 80%;
+  width: 70%;
   max-width: 300px; /* Impostato su larghezza massima */
   margin: 20px auto;
   text-align: left;
