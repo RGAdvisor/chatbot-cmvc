@@ -55,9 +55,10 @@ async function handleInput() {
 
             // Controlla se la risposta è ok
             if (response.ok) {
-                const json = await response.json();
-                const gptResponse = json.choices[0].text.trim();
-                risposta = gptResponse;
+               const json = await response.json();
+const gptResponse = json.choices[0].message.content.trim();
+risposta = gptResponse;
+
             } else {
                 console.error("Errore nella richiesta a GPT:", response.status);
                 risposta = "Mi scuso, ma non sono in grado di rispondere ora";
