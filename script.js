@@ -19,14 +19,57 @@ function handleClick(tipo) {
 }
 
 // Funzione per gestire l'invio della domanda
+// Funzione per inviare la domanda a GPT-3 e ricevere la risposta
 async function handleInput() {
-  const domanda = document.getElementById("domanda").value.trim();
-  let risposta = "Grazie per la domanda! Ti risponderemo al più presto.";
-  
-  if (domanda !== "") {
-    try {
-      const apiKey = "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";  // Inserisci la tua chiave API di OpenAI
-      const url = "https://api.openai.com/v1/completions"; // Endpoint dell'API GPT
+    const domanda = document.getElementById("domanda").value.trim();
+    let risposta = "Grazie per la domanda! Ti risponderemo al più presto.";
+
+    // Se la domanda non è vuota, invia una richiesta a GPT
+    if (domanda !== "") {
+        // Imposta la chiave API di OpenAI
+        const apiKey = "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"; // Sostituisci "your-api-key" con la tua chiave API OpenAI
+        
+        // Definisci l'endpoint per la richiesta GPT
+        const url = "https://api.openai.com/v1/completions";
+
+        // Crea il corpo della richiesta per GPT
+        const data = {
+            model: "gpt-3.5-turbo", // O "gpt-4" se preferisci usare GPT-4
+            prompt: domanda,
+            max_tokens: 150,
+            temperature: 0.7,
+        };
+
+        // Effettua la chiamata API
+        try {
+            const response = await fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${apiKey}`,
+                },
+                body: JSON.stringify(data),
+            });
+
+            // Controlla se la risposta è ok
+            if (response.ok) {
+                const json = await response.json();
+                const gptResponse = json.choices[0].text.trim();
+                risposta = gptResponse;
+            } else {
+                console.error("Errore nella richiesta a GPT:", response.status);
+                risposta = "Mi scuso, ma c'è stato un errore nel recuperare la risposta.";
+            }
+        } catch (error) {
+            console.error("Errore nella chiamata API:", error);
+            risposta = "Mi scuso, ma c'è stato un errore nella chiamata al server.";
+        }
+    }
+
+    // Visualizza la risposta di GPT nella chat
+    document.getElementById("risposta").innerText = risposta;
+}
+
 
       const data = {
         model: "gpt-3.5-turbo",  // Puoi cambiare il modello se necessario
