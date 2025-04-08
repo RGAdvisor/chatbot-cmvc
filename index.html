@@ -5,13 +5,96 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Assistente Virtuale – Centro Sanitario Valcuvia</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    /* Stile base */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #e0f7fa;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 600px;
+      margin: 20px auto;
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #00796b;
+    }
+
+    p {
+      text-align: center;
+      color: #00796b;
+    }
+
+    .buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    button {
+      background-color: #00796b;
+      color: white;
+      border: none;
+      padding: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #004d40;
+    }
+
+    .chat-box {
+      margin: 20px 0;
+      padding: 10px;
+      background-color: #00796b;
+      color: white;
+      border-radius: 5px;
+      min-height: 60px;
+      font-size: 16px;
+    }
+
+    .input-box {
+      display: flex;
+      gap: 10px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      border: 2px solid #00796b;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 14px;
+    }
+
+    a {
+      color: #00796b;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
     <h1>Assistente Virtuale – Centro Sanitario Valcuvia</h1>
     <p>Ciao! Sono l’assistente virtuale del centro.<br>Posso aiutarti con le informazioni principali. Scegli un'opzione:</p>
 
-    <!-- Pulsanti di opzioni -->
     <div class="buttons">
       <button onclick="handleClick('prenotazione')">Come prenotare una visita?</button>
       <button onclick="handleClick('orari')">Quali sono gli orari?</button>
@@ -19,16 +102,13 @@
       <button onclick="handleClick('specialita')">Che specialità avete?</button>
     </div>
 
-    <!-- Casella di chat dove viene mostrato il messaggio di risposta -->
     <div class="chat-box" id="risposta">Benvenuto! Scrivi una domanda o scegli un'opzione.</div>
 
-    <!-- Input per domanda -->
     <div class="input-box">
       <input type="text" id="domanda" placeholder="Scrivi qui..." />
       <button onclick="handleInput()">Invia</button>
     </div>
 
-    <!-- Footer con email per ulteriori chiarimenti -->
     <p class="footer">
       Hai bisogno di ulteriori chiarimenti?<br />
       Scrivici a <a href="mailto:segreteria@csvcuvio.it">segreteria@csvcuvio.it</a><br />
@@ -37,7 +117,6 @@
   </div>
 
   <script>
-    // Gestisce il clic sui pulsanti
     function handleClick(tipo) {
       let risposta = "";
       switch (tipo) {
@@ -57,7 +136,6 @@
       document.getElementById("risposta").innerText = risposta;
     }
 
-    // Gestisce l'input dell'utente con l'integrazione con GPT
     async function handleInput() {
       const domanda = document.getElementById("domanda").value.trim();
       let risposta = "Grazie per la domanda! Ti risponderemo al più presto.";
@@ -74,7 +152,6 @@
         };
 
         try {
-          // Esegui la chiamata API
           const response = await fetch(url, {
             method: "POST",
             headers: {
@@ -85,20 +162,18 @@
           });
 
           const responseData = await response.json();
-          risposta = responseData.choices[0].text.trim();  // Ottieni la risposta da GPT
+          risposta = responseData.choices[0].text.trim();
         } catch (error) {
           risposta = "Mi dispiace, qualcosa è andato storto.";
         }
       }
 
-      // Mostra la risposta nella chatbox
       document.getElementById("risposta").innerText = risposta;
     }
 
-    // Permette di inviare il messaggio anche premendo il tasto Enter
     document.getElementById("domanda").addEventListener("keypress", function(event) {
       if (event.key === "Enter") {
-        handleInput(); // Chiamata alla funzione quando premi Enter
+        handleInput();
       }
     });
   </script>
