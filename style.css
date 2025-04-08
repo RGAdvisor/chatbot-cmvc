@@ -55,8 +55,8 @@ button:hover {
   margin-top: 20px;
   border-radius: 8px;
   min-height: 50px;
-  width: 100%;
-  max-width: 350px; /* Impostato su larghezza massima */
+  width: 80%;
+  max-width: 300px; /* Impostato su larghezza massima */
   margin: 20px auto;
   text-align: left;
   word-wrap: break-word;
@@ -90,8 +90,8 @@ button[type="submit"] {
   padding: 12px;
   border: none;
   cursor: pointer;
-  width: 80%; /* Stesso comportamento dei pulsanti */
-  max-width: 350px; /* Stesso comportamento dei pulsanti */
+  width: 70%; /* Stesso comportamento dei pulsanti */
+  max-width: 300px; /* Stesso comportamento dei pulsanti */
   font-size: 14px;
   border-radius: 8px; /* Angoli arrotondati per il bottone invia */
 }
