@@ -1,123 +1,107 @@
-/* Corpo principale */
-body {
-  font-family: Arial, sans-serif;
-  background-color: #e0f7fa;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centro Sanitario Valcuvia</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f1f1f1;
+            margin: 0;
+            padding: 0;
+        }
 
-/* Container per il layout centrale */
-.container {
-  width: 90%;
-  max-width: 600px;
-  margin: 0 auto;
-  padding-top: 30px;
-  text-align: center;
-  background-color: white;
-  border-radius: 10px;
-  padding: 20px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
 
-/* Titolo principale */
-h1 {
-  color: #00796b;
-  font-size: 26px;
-  margin-bottom: 20px;
-}
+        h1 {
+            text-align: center;
+            color: #2a7f63; /* Green color */
+        }
 
-/* Pulsanti per le opzioni */
-.buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-bottom: 20px;
-}
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 20px 0;
+        }
 
-button {
-  background-color: #00796b;
-  color: white;
-  border: none;
-  padding: 12px;
-  cursor: pointer;
-  width: 100%;
-  max-width: 380px;
-  margin: 5px auto;
-  font-size: 14px;
-  border-radius: 8px;
-}
+        .button-group button {
+            background-color: #2a7f63; /* Green color */
+            color: white;
+            font-size: 16px;
+            padding: 12px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
 
-button:hover {
-  background-color: #004d40;
-}
+        .button-group button:hover {
+            background-color: #1e5e45; /* Darker green */
+        }
 
-/* Casella della chat (domanda/risposta) */
-.chat-box {
-  background-color: #00796b;
-  color: white;
-  padding: 20px;
-  margin-top: 20px;
-  border-radius: 8px;
-  min-height: 50px;
-  width: 100%;
-  max-width: 500px;
-  margin: 20px auto;
-  text-align: left;
-  word-wrap: break-word;
-  font-size: 16px;
-}
+        textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-top: 15px;
+        }
 
-/* Casella di input */
-.input-box {
-  margin-top: 20px;
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-}
+        .submit-button {
+            background-color: #2a7f63;
+            color: white;
+            font-size: 16px;
+            padding: 12px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            margin-top: 15px;
+            width: 100%;
+        }
 
-textarea {
-  width: 80%;
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid #00796b;
-  font-size: 14px;
-  height: 100px;
-  resize: none;
-}
+        .submit-button:hover {
+            background-color: #1e5e45;
+        }
 
-textarea:focus {
-  outline: none;
-  border-color: #004d40;
-}
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+        }
 
-button[type="submit"] {
-  background-color: #00796b;
-  color: white;
-  padding: 12px;
-  border: none;
-  cursor: pointer;
-  width: 70%;
-  max-width: 300px;
-  font-size: 14px;
-  border-radius: 8px;
-}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Benvenuto al Centro Sanitario Valcuvia</h1>
+        
+        <div class="button-group">
+            <button>Come posso aiutarti?</button>
+            <button>Come prenoto una visita?</button>
+            <button>Quali sono gli orari?</button>
+            <button>Dove si trova il centro?</button>
+        </div>
+        
+        <textarea placeholder="Ciao"></textarea>
+        
+        <button class="submit-button">Invia</button>
 
-button[type="submit"]:hover {
-  background-color: #004d40;
-}
-
-/* Footer */
-.footer {
-  font-size: 12px;
-  margin-top: 20px;
-  color: #00796b;
-}
-
-footer a {
-  color: #004d40;
-  text-decoration: none;
-}
+        <footer>
+            Grazie per la domanda! Ti risponderemo al più presto.
+        </footer>
+    </div>
+</body>
+</html>
