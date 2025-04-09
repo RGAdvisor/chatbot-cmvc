@@ -45,8 +45,7 @@ async function handleInput() {
     if (domanda !== "") {
         console.log("Invio domanda a GPT:", domanda); // Log della domanda inviata
 
-        const apiKey = "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"; // **IMPORTANTE: SOSTITUISCI CON LA TUA CHIAVE API**
-        const url = "https://api.openai.com/v1/chat/completions";
+        const apiKey = "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";
 
         const data = {
             model: "gpt-3.5-turbo",
