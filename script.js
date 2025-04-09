@@ -45,7 +45,7 @@ async function handleInput() {
     if (domanda !== "") {
         console.log("Invio domanda a GPT:", domanda); // Log della domanda inviata
 
-        const apiKey = "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";
+        const apiKey = "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";
 
         const data = {
             model: "gpt-3.5-turbo",
