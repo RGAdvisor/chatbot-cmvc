@@ -1,38 +1,94 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Centro Sanitario Valcuvia</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Assistente Virtuale – Centro Sanitario Valcuvia</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #e6f7f9;
+      padding: 1rem;
+    }
+    .chat-container {
+      background: white;
+      max-width: 600px;
+      margin: auto;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .chat {
+      border: 1px solid #ccc;
+      height: 300px;
+      overflow-y: scroll;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      background: #fafafa;
+    }
+    .user, .bot {
+      margin-bottom: 1rem;
+    }
+    .user { text-align: right; }
+    .bot { text-align: left; }
+  </style>
 </head>
 <body>
-    <!-- Intestazione -->
-    <header>
-        <h1>Benvenuto al Centro Sanitario Valcuvia</h1>
-    </header>
+  <div class="chat-container">
+    <h2>Assistente Virtuale – Centro Sanitario Valcuvia</h2>
+    <div class="chat" id="chatBox"></div>
+    <form id="chatForm">
+      <input type="text" id="userInput" placeholder="Scrivi qui..." style="width: 80%;" required />
+      <button type="submit">Invia</button>
+    </form>
+  </div>
 
-    <!-- Sezione di Domande e Risposte -->
-    <div class="chat-box">
-        <textarea id="domanda" placeholder="Scrivi la tua domanda..." rows="5" cols="50"></textarea>
-        <button onclick="handleInput()">Invia</button>
-    </div>
+  <script>
+    const chatBox = document.getElementById('chatBox');
+    const form = document.getElementById('chatForm');
+    const input = document.getElementById('userInput');
 
-    <!-- Sezione Risposta -->
-    <div id="risposta"></div>
+    async function sendMessage(message) {
+      // Mostra il messaggio utente
+      const userDiv = document.createElement('div');
+      userDiv.className = 'user';
+      userDiv.textContent = message;
+      chatBox.appendChild(userDiv);
+      chatBox.scrollTop = chatBox.scrollHeight;
 
-    <!-- Bottoni con risposte preimpostate -->
-    <div class="button-container">
-        <button class="button" data-tipo="prenotazione">Prenotazione</button>
-        <button class="button" data-tipo="orari">Orari</button>
-        <button class="button" data-tipo="indirizzo">Indirizzo</button>
-        <button class="button" data-tipo="specialita">Specialità</button>
-    </div>
+      // Chiamata API a GPT
+      const botDiv = document.createElement('div');
+      botDiv.className = 'bot';
+      botDiv.textContent = '...';
+      chatBox.appendChild(botDiv);
+      chatBox.scrollTop = chatBox.scrollHeight;
 
-    <!-- Area di Debugging per visualizzare la risposta API -->
-    <pre id="debug" style="border: 1px solid black; padding: 10px; background-color: #f0f0f0; white-space: pre-wrap;"></pre>
+      const res = await fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + "{{OPENAI_API_KEY}}"
+        },
+        body: JSON.stringify({
+          model: "gpt-3.5-turbo",
+          messages: [{ role: "user", content: message }],
+          temperature: 0.7
+        })
+      });
 
-    <!-- Includi il file script.js -->
-    <script src="script.js"></script>
+      const data = await res.json();
+      botDiv.textContent = data.choices?.[0]?.message?.content || "Mi dispiace, qualcosa è andato storto.";
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const message = input.value.trim();
+      if (message) {
+        sendMessage(message);
+        input.value = "";
+      }
+    });
+  </script>
 </body>
 </html>
