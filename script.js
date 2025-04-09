@@ -48,44 +48,35 @@ async function handleInput() {
         const apiKey = "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";  // Sostituisci con la tua chiave API reale
         const url = "https://api.openai.com/v1/chat/completions"; // URL API
 
-        const data = {
-            model: "gpt-3.5-turbo",  // Usa il modello che desideri
-            messages: [ { role: "user", content: "domanda" }
-            ],
-            max_tokens: 150,
-            temperature: 0.7,
-        };
+const data = {
+    model: "gpt-3.5-turbo",  // Usa il modello che desideri
+    messages: [
+        { role: "user", content: "Ciao, come stai?" }  // Il contenuto della domanda dell'utente
+    ],
+    max_tokens: 150,  // Limita la lunghezza della risposta
+    temperature: 0.7,  // Imposta la temperatura del modello
+};
 
-        try {
-            const response = await fetch(url, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${apiKey}`,
-                },
-                body: JSON.stringify(data),
-            });
+try {
+    const response = await fetch(url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${apiKey}`,  // Aggiungi la tua chiave API qui
+        },
+        body: JSON.stringify(data),
+    });
 
-            if (response.ok) {
-                const json = await response.json();
-                const gptResponse = json.choices[0].message.content.trim();
-                console.log("Risposta ricevuta da GPT:", gptResponse); // Log della risposta ricevuta
-                risposta = gptResponse;
-            } else {
-                console.error("Errore nella richiesta a GPT:", response.status);
-                const errorData = await response.json();
-                console.error("Dettagli errore:", errorData);
-                risposta = "Mi scuso, ma non sono in grado di rispondere ora. Errore: " + response.status;
-            }
-        } catch (error) {
-            console.error("Errore nella chiamata API:", error);
-            risposta = "Mi scuso, ma c'è stato un errore nella chiamata al server.";
-        }
+    if (response.ok) {
+        const json = await response.json();
+        console.log("Risposta ricevuta da GPT:", json.choices[0].message.content);
+    } else {
+        console.error("Errore nella richiesta a GPT:", response.status);
+        const errorData = await response.json();
+        console.error("Dettagli errore:", errorData);
     }
-
-    // Visualizza la risposta di GPT nel campo di testo (textarea)
-    console.log("Visualizzazione risposta:", risposta); // Log della risposta visualizzata
-    document.getElementById("domanda").value = risposta;
+} catch (error) {
+    console.error("Errore nella chiamata API:", error);
 }
 
 // Aggiungi l'evento di click al pulsante "Invia"
