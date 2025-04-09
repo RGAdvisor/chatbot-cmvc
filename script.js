@@ -50,8 +50,7 @@ async function handleInput() {
 
         const data = {
             model: "gpt-3.5-turbo",  // Usa il modello che desideri
-            messages: [
-                { role: "user", content: domanda }
+            messages: [ { role: "user", content: "domanda" }
             ],
             max_tokens: 150,
             temperature: 0.7,
