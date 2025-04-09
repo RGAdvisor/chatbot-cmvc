@@ -1,32 +1,37 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Centro Sanitario Valcuvia</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Assistente Virtuale – Centro Sanitario Valcuvia</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <div class="container">
-        <h1>Benvenuto al Centro Sanitario Valcuvia</h1>
-        <p>Come posso aiutarti?</p>
+  <div class="container">
+    <h1>Assistente Virtuale – Centro Sanitario Valcuvia</h1>
+    <p>Ciao! Sono l’assistente virtuale del centro.<br>Posso aiutarti con le informazioni principali. Scegli un'opzione:</p>
 
-        <div class="button-group">
-            <button id="button1" class="button" data-tipo="prenotazione">Come prenoto una visita?</button>
-            <button id="button2" class="button" data-tipo="orari">Quali sono gli orari?</button>
-            <button id="button3" class="button" data-tipo="indirizzo">Dove si trova il centro?</button>
-            <button id="button4" class="button" data-tipo="specialita">Che specialità avete?</button>
-        </div>
-
-        <textarea id="domanda" placeholder="Ciao"></textarea>
-
-        <button class="submit-button">Invia</button>
-
-        <footer>
-            Grazie per la domanda! Ti risponderemo al più presto.
-        </footer>
+    <div class="buttons">
+      <button id="button1">Come prenotare una visita?</button>
+      <button id="button2">Quali sono gli orari?</button>
+      <button id="button3">Dove si trova il centro?</button>
+      <button id="button4">Che specialità avete?</button>
     </div>
 
-    <script src="script.js"></script>
+    <div class="chat-box" id="risposta">Benvenuto! Scrivi una domanda o scegli un'opzione.</div>
+
+    <div class="input-box">
+      <input type="text" id="domanda" placeholder="Scrivi qui..." />
+      <button class="submit-button">Invia</button>
+    </div>
+
+    <p class="footer">
+      Hai bisogno di ulteriori chiarimenti?<br />
+      Scrivici a <a href="mailto:segreteria@csvcuvio.it">segreteria@csvcuvio.it</a><br />
+      Ti risponderemo il prima possibile.
+    </p>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
