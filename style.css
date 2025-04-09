@@ -44,8 +44,6 @@ p {
     cursor: pointer;
     transition: background-color 0.3s;
     width: 100%;
-    /* Temporarily add a border to make sure the buttons are visible */
-    border: 2px #1e5e45; /* Add a border temporarily for visibility */
 }
 
 .button-group button:hover {
