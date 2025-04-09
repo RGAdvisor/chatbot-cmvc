@@ -43,6 +43,8 @@ async function handleInput() {
 
     // Se la domanda non è vuota, invia una richiesta a GPT
     if (domanda !== "") {
+        console.log("Invio domanda a GPT:", domanda); // Log della domanda inviata
+
         const apiKey = "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"; // **IMPORTANTE: SOSTITUISCI CON LA TUA CHIAVE API**
         const url = "https://api.openai.com/v1/chat/completions";
 
@@ -68,6 +70,7 @@ async function handleInput() {
             if (response.ok) {
                 const json = await response.json();
                 const gptResponse = json.choices[0].message.content.trim();
+                console.log("Risposta ricevuta da GPT:", gptResponse); // Log della risposta ricevuta
                 risposta = gptResponse;
             } else {
                 console.error("Errore nella richiesta a GPT:", response.status);
@@ -82,6 +85,7 @@ async function handleInput() {
     }
 
     // Visualizza la risposta di GPT nel campo di testo (textarea)
+    console.log("Visualizzazione risposta:", risposta); // Log della risposta visualizzata
     document.getElementById("domanda").value = risposta;
 }
 
