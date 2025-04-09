@@ -18,6 +18,23 @@ function handleClick(tipo) {
     document.getElementById("risposta").innerText = risposta;
 }
 
+// Gestire il clic sui bottoni
+document.getElementById("button1").addEventListener("click", function() {
+    handleClick('prenotazione');
+});
+
+document.getElementById("button2").addEventListener("click", function() {
+    handleClick('orari');
+});
+
+document.getElementById("button3").addEventListener("click", function() {
+    handleClick('indirizzo');
+});
+
+document.getElementById("button4").addEventListener("click", function() {
+    handleClick('specialita');
+});
+
 // Funzione per gestire l'invio della domanda a GPT-3.5 e ricevere la risposta
 async function handleInput() {
     const domanda = document.getElementById("domanda").value.trim();
@@ -51,13 +68,10 @@ async function handleInput() {
                 const json = await response.json();
                 const gptResponse = json.choices[0].message.content.trim();
                 risposta = gptResponse;
-
-                // Aggiungi il debug sulla pagina
-                document.getElementById("debug").innerText = JSON.stringify(json, null, 2);
             } else {
                 console.error("Errore nella richiesta a GPT:", response.status);
                 const errorData = await response.json();
-                console.error("Dettagli errore:", errorData); // Mostra i dettagli dell'errore
+                console.error("Dettagli errore:", errorData);
                 risposta = "Mi scuso, ma non sono in grado di rispondere ora. Errore: " + response.status;
             }
         } catch (error) {
@@ -69,19 +83,3 @@ async function handleInput() {
     // Visualizza la risposta di GPT nella chat
     document.getElementById("risposta").innerText = risposta;
 }
-
-// Invia la domanda premendo "Invio" dalla tastiera
-document.getElementById("domanda").addEventListener("keypress", function(event) {
-    if (event.key === "Enter") {
-        event.preventDefault(); // Prevenire il comportamento di default del tasto "Enter"
-        handleInput();
-    }
-});
-
-// Funzione per gestire il clic sui bottoni
-document.querySelectorAll('.button').forEach(button => {
-    button.addEventListener('click', function() {
-        const tipo = button.getAttribute('data-tipo');
-        handleClick(tipo);
-    });
-});
