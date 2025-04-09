@@ -45,10 +45,11 @@ async function handleInput() {
     if (domanda !== "") {
         console.log("Invio domanda a GPT:", domanda); // Log della domanda inviata
 
-        const apiKey = "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";
+        const apiKey = "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";  // Sostituisci con la tua chiave API reale
+        const url = "https://api.openai.com/v1/chat/completions"; // URL API
 
         const data = {
-            model: "gpt-3.5-turbo",
+            model: "gpt-3.5-turbo",  // Usa il modello che desideri
             messages: [
                 { role: "user", content: domanda }
             ],
