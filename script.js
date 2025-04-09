@@ -15,7 +15,7 @@ function handleClick(tipo) {
             risposta = "Odontoiatria, ginecologia, cardiologia, chirurgia vascolare, pneumologia, dietologia, fisioterapia.";
             break;
     }
-    // Mostra la risposta nel campo di testo (textarea) dove c'è scritto "ciao"
+    // Mostra la risposta nel campo di testo (textarea)
     document.getElementById("domanda").value = risposta;
 }
 
@@ -84,3 +84,6 @@ async function handleInput() {
     // Visualizza la risposta di GPT nel campo di testo (textarea)
     document.getElementById("domanda").value = risposta;
 }
+
+// Aggiungi l'evento di click al pulsante "Invia"
+document.querySelector(".submit-button").addEventListener("click", handleInput);
