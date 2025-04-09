@@ -1,86 +1,222 @@
-/* Impostazioni di base per la pagina */
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
-    color: #333;
-}
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Assistente Virtuale – Centro Sanitario Valcuvia</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #eafafa;
+      margin: 0;
+      padding: 20px;
+    }
 
-header {
-    text-align: center;
-    margin: 20px;
-    font-size: 2em;
-    font-weight: bold;
-    color: #2c3e50;
-}
+    h1 {
+      color: #003c47;
+      text-align: center;
+    }
 
-/* Box di input domanda */
-.chat-box {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 20px;
-}
+    .button {
+      width: 100%;
+      padding: 15px;
+      margin: 5px 0;
+      background-color: #00949c;
+      color: white;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
 
-textarea {
-    width: 60%;
-    height: 80px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 1em;
-    resize: none;
-}
+    .chatbox {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
 
-button {
-    margin-left: 10px;
-    padding: 10px 20px;
-    background-color: #3498db;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
+    .chat-entry {
+      background-color: #fff;
+      border-radius: 8px;
+      padding: 10px;
+      box-shadow: 0 0 4px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
 
-button:hover {
-    background-color: #2980b9;
-}
+    .chat-entry .user,
+    .chat-entry .bot {
+      width: 48%;
+      font-size: 15px;
+    }
 
-/* Risposta */
-#risposta {
-    margin-top: 20px;
-    font-size: 1.2em;
-    text-align: center;
-    color: #e74c3c;
-}
+    .chat-entry .user {
+      color: #003c47;
+      font-weight: bold;
+    }
 
-/* Bottoni per risposte preimpostate */
-.button-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-}
+    .chat-entry .bot {
+      text-align: right;
+    }
 
-.button {
-    margin: 5px;
-    padding: 10px 20px;
-    background-color: #16a085;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
+    #inputBox {
+      display: flex;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
 
-.button:hover {
-    background-color: #1abc9c;
-}
+    #domanda {
+      flex: 1;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px 0 0 5px;
+      min-width: 70%;
+    }
 
-/* Sezione di debug */
-#debug {
-    margin-top: 20px;
-    padding: 10px;
-    background-color: #ecf0f1;
-    border: 1px solid #bdc3c7;
-    white-space: pre-wrap;
-}
+    #invia {
+      padding: 10px 20px;
+      background-color: #00949c;
+      color: white;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 0 5px 5px 0;
+    }
+
+    .footer {
+      margin-top: 30px;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .footer a {
+      color: #0066cc;
+      text-decoration: none;
+    }
+
+    @media (max-width: 600px) {
+      .chat-entry {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .chat-entry .user,
+      .chat-entry .bot {
+        width: 100%;
+        text-align: left;
+      }
+
+      .chat-entry .bot {
+        text-align: right;
+        margin-top: 8px;
+      }
+
+      #inputBox {
+        flex-direction: column;
+      }
+
+      #domanda {
+        border-radius: 5px 5px 0 0;
+        min-width: 100%;
+      }
+
+      #invia {
+        border-radius: 0 0 5px 5px;
+        width: 100%;
+        margin-top: 5px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Assistente Virtuale – Centro Sanitario Valcuvia</h1>
+  <p>Ciao! Sono l’assistente virtuale del centro.<br>Posso aiutarti con le informazioni principali. Scegli un'opzione:</p>
+
+  <button class="button" onclick="handleClick('prenotazione')">Come prenotare una visita?</button>
+  <button class="button" onclick="handleClick('orari')">Quali sono gli orari?</button>
+  <button class="button" onclick="handleClick('indirizzo')">Dove si trova il centro?</button>
+  <button class="button" onclick="handleClick('specialita')">Che specialità avete?</button>
+
+  <div class="chatbox" id="chatbox"></div>
+
+  <div id="inputBox">
+    <input type="text" id="domanda" placeholder="Scrivi la tua domanda...">
+    <button id="invia" onclick="handleInput()">Invia</button>
+  </div>
+
+  <div class="footer">
+    Hai bisogno di ulteriori chiarimenti?<br>
+    Scrivici a <a href="mailto:segreteria@csvcuvio.it">segreteria@csvcuvio.it</a><br>
+    Ti risponderemo il prima possibile.
+  </div>
+
+  <script>
+    function addChatEntry(userText, botText) {
+      const chatbox = document.getElementById("chatbox");
+      const entry = document.createElement("div");
+      entry.className = "chat-entry";
+      entry.innerHTML = `
+        <div class="user">${userText}</div>
+        <div class="bot">${botText}</div>
+      `;
+      chatbox.appendChild(entry);
+      chatbox.scrollTop = chatbox.scrollHeight;
+    }
+
+    function handleClick(tipo) {
+      let risposta = "";
+      let domanda = "";
+
+      switch (tipo) {
+        case 'prenotazione':
+          domanda = "Come prenotare una visita?";
+          risposta = "Puoi prenotare chiamando lo 0332 624820 o scrivendo a segreteria@csvcuvio.it.";
+          break;
+        case 'orari':
+          domanda = "Quali sono gli orari?";
+          risposta = "Lunedì, Mercoledì e Venerdì: 9–12 / 14–19.30<br>Martedì: 14–19.30<br>Giovedì: 9–12<br>Sabato: 9–13";
+          break;
+        case 'indirizzo':
+          domanda = "Dove si trova il centro?";
+          risposta = "Ci trovi in Via Enrico Fermi, 6 – 21030 Cuvio (VA)";
+          break;
+        case 'specialita':
+          domanda = "Che specialità avete?";
+          risposta = "Odontoiatria, ginecologia, cardiologia, chirurgia vascolare, pneumologia, dietologia, fisioterapia.";
+          break;
+      }
+
+      addChatEntry(domanda, risposta);
+    }
+
+    function handleInput() {
+      const domandaInput = document.getElementById("domanda");
+      const domanda = domandaInput.value.trim();
+      if (domanda === "") return;
+
+      let risposta = "Grazie per la domanda! Ti risponderemo al più presto.";
+
+      const lower = domanda.toLowerCase();
+
+      if (lower.includes("convenzionat")) {
+        risposta = "Il Centro Medico Cuvio non è convenzionato con il Servizio Sanitario Nazionale.";
+      } else if (lower.includes("fisioterapia")) {
+        risposta = "Sì, offriamo servizi di fisioterapia.";
+      } else if (lower.includes("prenotare")) {
+        risposta = "Puoi prenotare chiamando lo 0332 624820 o scrivendo a segreteria@csvcuvio.it.";
+      } else if (lower.includes("ginecolog")) {
+        risposta = "Sì, è possibile effettuare visite ginecologiche presso il nostro centro.";
+      }
+
+      addChatEntry(domanda, risposta);
+      domandaInput.value = "";
+    }
+  </script>
+
+</body>
+</html>
