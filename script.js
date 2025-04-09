@@ -19,7 +19,7 @@ function handleClick(tipo) {
     document.getElementById("domanda").value = risposta;
 }
 
-// Gestire il clic sui bottoni
+// Assegna gli eventi ai bottoni
 document.getElementById("button1").addEventListener("click", function() {
     handleClick('prenotazione');
 });
@@ -46,38 +46,41 @@ async function handleInput() {
         console.log("Invio domanda a GPT:", domanda); // Log della domanda inviata
 
         const apiKey = "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";  // Sostituisci con la tua chiave API reale
-        const url = "https://api.openai.com/v1/chat/completions"; // URL API
+        const url = "https://api.openai.com/v1/completions"; // URL API
 
-const data = {
-    model: "gpt-3.5-turbo",  // Usa il modello che desideri
-    messages: [
-        { role: "user", content: "Ciao, come stai?" }  // Il contenuto della domanda dell'utente
-    ],
-    max_tokens: 150,  // Limita la lunghezza della risposta
-    temperature: 0.7,  // Imposta la temperatura del modello
-};
+        const data = {
+            model: "gpt-3.5-turbo",  // Usa il modello che desideri
+            prompt: domanda,
+            max_tokens: 150,  // Limita la lunghezza della risposta
+            temperature: 0.7,  // Imposta la temperatura del modello
+        };
 
-try {
-    const response = await fetch(url, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${apiKey}`,  // Aggiungi la tua chiave API qui
-        },
-        body: JSON.stringify(data),
-    });
+        try {
+            const response = await fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${apiKey}`,  // Aggiungi la tua chiave API qui
+                },
+                body: JSON.stringify(data),
+            });
 
-    if (response.ok) {
-        const json = await response.json();
-        console.log("Risposta ricevuta da GPT:", json.choices[0].message.content);
-    } else {
-        console.error("Errore nella richiesta a GPT:", response.status);
-        const errorData = await response.json();
-        console.error("Dettagli errore:", errorData);
+            if (response.ok) {
+                const json = await response.json();
+                console.log("Risposta ricevuta da GPT:", json.choices[0].text);
+                // Mostra la risposta nel campo di testo
+                document.getElementById("risposta").textContent = json.choices[0].text;
+            } else {
+                console.error("Errore nella richiesta a GPT:", response.status);
+            }
+        } catch (error) {
+            console.error("Errore nella chiamata API:", error);
+        }
     }
-} catch (error) {
-    console.error("Errore nella chiamata API:", error);
 }
 
 // Aggiungi l'evento di click al pulsante "Invia"
 document.querySelector(".submit-button").addEventListener("click", handleInput);
+
+
+
