@@ -15,7 +15,7 @@ function handleClick(tipo) {
             risposta = "Odontoiatria, ginecologia, cardiologia, chirurgia vascolare, pneumologia, dietologia, fisioterapia.";
             break;
     }
-    // Mostra la risposta nel campo di testo (textarea) dove c'è scritto "ciao"
+    // Mostra la risposta nel campo di testo (textarea)
     document.getElementById("domanda").value = risposta;
 }
 
@@ -36,6 +36,9 @@ document.getElementById("button4").addEventListener("click", function() {
     handleClick('specialita');
 });
 
+// Aggiungi il listener per il pulsante "Invia"
+document.querySelector(".submit-button").addEventListener("click", handleInput);
+
 // Funzione per gestire l'invio della domanda a GPT-3.5 e ricevere la risposta
 async function handleInput() {
     const domanda = document.getElementById("domanda").value.trim();
@@ -43,7 +46,7 @@ async function handleInput() {
 
     // Se la domanda non è vuota, invia una richiesta a GPT
     if (domanda !== "") {
-        const apiKey = "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"; // **IMPORTANTE: SOSTITUISCI CON LA TUA CHIAVE API**
+        const apiKey = "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"; // Sostituisci con la tua chiave API OpenAI
         const url = "https://api.openai.com/v1/chat/completions";
 
         const data = {
@@ -84,4 +87,3 @@ async function handleInput() {
     // Visualizza la risposta di GPT nel campo di testo (textarea)
     document.getElementById("domanda").value = risposta;
 }
- 
