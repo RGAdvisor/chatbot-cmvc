@@ -1,123 +1,87 @@
-/* Corpo principale */
-body {
-  font-family: Arial, sans-serif;
-  background-color: #e0f7fa;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+// Funzione per gestire il clic sui bottoni
+function handleClick(tipo) {
+    let risposta = "";
+    switch (tipo) {
+        case 'prenotazione':
+            risposta = "Puoi prenotare chiamando lo 0332 624820 o scrivendo a segreteria@csvcuvio.it.";
+            break;
+        case 'orari':
+            risposta = "Lunedì, Mercoledì e Venerdì: 9–12 / 14–19.30\nMartedì: 14–19.30\nGiovedì: 9–12\nSabato: 9–13";
+            break;
+        case 'indirizzo':
+            risposta = "Ci trovi in Via Enrico Fermi, 6 – 21030 Cuvio (VA)";
+            break;
+        case 'specialita':
+            risposta = "Odontoiatria, ginecologia, cardiologia, chirurgia vascolare, pneumologia, dietologia, fisioterapia.";
+            break;
+    }
+    // Mostra la risposta nel campo di testo (textarea) dove c'è scritto "ciao"
+    document.getElementById("domanda").value = risposta;
 }
 
-/* Container per il layout centrale */
-.container {
-  width: 90%;
-  max-width: 600px;
-  margin: 0 auto;
-  padding-top: 30px;
-  text-align: center;
-  background-color: white;
-  border-radius: 10px;
-  padding: 20px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
+// Gestire il clic sui bottoni
+document.getElementById("button1").addEventListener("click", function() {
+    handleClick('prenotazione');
+});
 
-/* Titolo principale */
-h1 {
-  color: #00796b;
-  font-size: 26px;
-  margin-bottom: 20px;
-}
+document.getElementById("button2").addEventListener("click", function() {
+    handleClick('orari');
+});
 
-/* Pulsanti per le opzioni */
-.buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-bottom: 20px;
-}
+document.getElementById("button3").addEventListener("click", function() {
+    handleClick('indirizzo');
+});
 
-button {
-  background-color: #00796b;
-  color: white;
-  border: none;
-  padding: 12px;
-  cursor: pointer;
-  width: 100%;
-  max-width: 380px;
-  margin: 5px auto;
-  font-size: 14px;
-  border-radius: 8px;
-}
+document.getElementById("button4").addEventListener("click", function() {
+    handleClick('specialita');
+});
 
-button:hover {
-  background-color: #004d40;
-}
+// Funzione per gestire l'invio della domanda a GPT-3.5 e ricevere la risposta
+async function handleInput() {
+    const domanda = document.getElementById("domanda").value.trim();
+    let risposta = "Grazie per la domanda! Ti risponderemo al più presto.";
 
-/* Casella della chat (domanda/risposta) */
-.chat-box {
-  background-color: #00796b;
-  color: white;
-  padding: 20px;
-  margin-top: 20px;
-  border-radius: 8px;
-  min-height: 50px;
-  width: 100%;
-  max-width: 500px;
-  margin: 20px auto;
-  text-align: left;
-  word-wrap: break-word;
-  font-size: 16px;
-}
+    // Se la domanda non è vuota, invia una richiesta a GPT
+    if (domanda !== "") {
+        const apiKey = "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"; // **IMPORTANTE: SOSTITUISCI CON LA TUA CHIAVE API**
+        const url = "https://api.openai.com/v1/chat/completions";
 
-/* Casella di input */
-.input-box {
-  margin-top: 20px;
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-}
+        const data = {
+            model: "gpt-3.5-turbo",
+            messages: [
+                { role: "user", content: domanda }
+            ],
+            max_tokens: 150,
+            temperature: 0.7,
+        };
 
-textarea {
-  width: 80%;
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid #00796b;
-  font-size: 14px;
-  height: 100px;
-  resize: none;
-}
+        try {
+            const response = await fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${apiKey}`,
+                },
+                body: JSON.stringify(data),
+            });
 
-textarea:focus {
-  outline: none;
-  border-color: #004d40;
-}
+            if (response.ok) {
+                const json = await response.json();
+                const gptResponse = json.choices[0].message.content.trim();
+                risposta = gptResponse;
+            } else {
+                console.error("Errore nella richiesta a GPT:", response.status);
+                const errorData = await response.json();
+                console.error("Dettagli errore:", errorData);
+                risposta = "Mi scuso, ma non sono in grado di rispondere ora. Errore: " + response.status;
+            }
+        } catch (error) {
+            console.error("Errore nella chiamata API:", error);
+            risposta = "Mi scuso, ma c'è stato un errore nella chiamata al server.";
+        }
+    }
 
-button[type="submit"] {
-  background-color: #00796b;
-  color: white;
-  padding: 12px;
-  border: none;
-  cursor: pointer;
-  width: 70%;
-  max-width: 300px;
-  font-size: 14px;
-  border-radius: 8px;
+    // Visualizza la risposta di GPT nel campo di testo (textarea)
+    document.getElementById("domanda").value = risposta;
 }
-
-button[type="submit"]:hover {
-  background-color: #004d40;
-}
-
-/* Footer */
-.footer {
-  font-size: 12px;
-  margin-top: 20px;
-  color: #00796b;
-}
-
-footer a {
-  color: #004d40;
-  text-decoration: none;
-}
+ 
