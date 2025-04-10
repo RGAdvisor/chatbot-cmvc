@@ -1,87 +1,123 @@
-// Funzione per gestire il clic sui bottoni
-function handleClick(tipo) {
-    let risposta = "";
-    switch (tipo) {
-        case 'prenotazione':
-            risposta = "Puoi prenotare chiamando lo 0332 624820 o scrivendo a segreteria@csvcuvio.it.";
-            break;
-        case 'orari':
-            risposta = "Lunedì, Mercoledì e Venerdì: 9–12 / 14–19.30\nMartedì: 14–19.30\nGiovedì: 9–12\nSabato: 9–13";
-            break;
-        case 'indirizzo':
-            risposta = "Ci trovi in Via Enrico Fermi, 6 – 21030 Cuvio (VA)";
-            break;
-        case 'specialita':
-            risposta = "Odontoiatria, ginecologia, cardiologia, chirurgia vascolare, pneumologia, dietologia, fisioterapia.";
-            break;
-    }
-    // Mostra la risposta nel campo di testo (textarea)
-    document.getElementById("domanda").value = risposta;
+/* Corpo principale */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #e0f7fa;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
-// Assegna gli eventi ai bottoni
-document.getElementById("button1").addEventListener("click", function() {
-    handleClick('prenotazione');
-});
-
-document.getElementById("button2").addEventListener("click", function() {
-    handleClick('orari');
-});
-
-document.getElementById("button3").addEventListener("click", function() {
-    handleClick('indirizzo');
-});
-
-document.getElementById("button4").addEventListener("click", function() {
-    handleClick('specialita');
-});
-
-// Funzione per gestire l'invio della domanda a GPT-3.5 e ricevere la risposta
-async function handleInput() {
-    const domanda = document.getElementById("domanda").value.trim();
-    let risposta = "Grazie per la domanda! Ti risponderemo al più presto.";
-
-    // Se la domanda non è vuota, invia una richiesta a GPT
-    if (domanda !== "") {
-        console.log("Invio domanda a GPT:", domanda); // Log della domanda inviata
-
-        const apiKey = "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";  // Sostituisci con la tua chiave API reale
-       const url = "https://api.openai.com/v1/chat/completions"; // Endpoint corretto per OpenAI GPT-3.5 o GPT-4
-
-
-        const data = {
-            model: "gpt-3.5-turbo",  // Usa il modello che desideri
-            prompt: domanda,
-            max_tokens: 150,  // Limita la lunghezza della risposta
-            temperature: 0.7,  // Imposta la temperatura del modello
-        };
-
-        try {
-            const response = await fetch(url, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${apiKey}`,  // Aggiungi la tua chiave API qui
-                },
-                body: JSON.stringify(data),
-            });
-
-            if (response.ok) {
-                const json = await response.json();
-                console.log("Risposta ricevuta da GPT:", json.choices[0].text);
-                // Mostra la risposta nel campo di testo
-                document.getElementById("risposta").textContent = json.choices[0].text;
-            } else {
-                console.error("Errore nella richiesta a GPT:", response.status);
-            }
-        } catch (error) {
-            console.error("Errore nella chiamata API:", error);
-        }
-    }
+/* Container per il layout centrale */
+.container {
+  width: 90%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding-top: 30px;
+  text-align: center;
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-// Aggiungi l'evento di click al pulsante "Invia"
-document.querySelector(".submit-button").addEventListener("click", handleInput);
+/* Titolo principale */
+h1 {
+  color: #00796b;
+  font-size: 26px;
+  margin-bottom: 20px;
+}
 
+/* Pulsanti per le opzioni */
+.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
 
+button {
+  background-color: #00796b;
+  color: white;
+  border: none;
+  padding: 12px;
+  cursor: pointer;
+  width: 100%;
+  max-width: 380px;
+  margin: 5px auto;
+  font-size: 14px;
+  border-radius: 8px;
+}
 
+button:hover {
+  background-color: #004d40;
+}
+
+/* Casella della chat (domanda/risposta) */
+.chat-box {
+  background-color: #00796b;
+  color: white;
+  padding: 20px;
+  margin-top: 20px;
+  border-radius: 8px;
+  min-height: 50px;
+  width: 100%;
+  max-width: 500px;
+  margin: 20px auto;
+  text-align: left;
+  word-wrap: break-word;
+  font-size: 16px;
+}
+
+/* Casella di input */
+.input-box {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+textarea {
+  width: 80%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #00796b;
+  font-size: 14px;
+  height: 100px;
+  resize: none;
+}
+
+textarea:focus {
+  outline: none;
+  border-color: #004d40;
+}
+
+button[type="submit"] {
+  background-color: #00796b;
+  color: white;
+  padding: 12px;
+  border: none;
+  cursor: pointer;
+  width: 70%;
+  max-width: 300px;
+  font-size: 14px;
+  border-radius: 8px;
+}
+
+button[type="submit"]:hover {
+  background-color: #004d40;
+}
+
+/* Footer */
+.footer {
+  font-size: 12px;
+  margin-top: 20px;
+  color: #00796b;
+}
+
+footer a {
+  color: #004d40;
+  text-decoration: none;
+}
