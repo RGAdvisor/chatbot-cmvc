@@ -12,7 +12,7 @@ function handleClick(tipo) {
             risposta = "Ci trovi in Via Enrico Fermi, 6 – 21030 Cuvio (VA)";
             break;
         case 'specialita':
-            risposta = "Odontoiatria, ginecologia, cardiologia, chirurgia vascolare, pneumologia, dietologia, fisioterapia.";
+            risposta = "Il centro ha una divisione dentale e una di polispecialistica: Odontoiatria, ginecologia, cardiologia, chirurgia vascolare, pneumologia, dietologia, fisioterapia.";
             break;
     }
     // Mostra la risposta nel campo di testo (textarea)
