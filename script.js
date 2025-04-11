@@ -1,3 +1,4 @@
+console.log("API Key:", process.env.OPENAI_API_KEY);
 // Funzione per gestire il clic sui bottoni
 function handleClick(tipo) {
     let risposta = "";
@@ -46,7 +47,7 @@ async function handleInput() {
 
     // Se la domanda non è vuota, invia una richiesta a GPT
     if (domanda !== "") {
-        const apiKey = "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"; // Sostituisci con la tua chiave API OpenAI
+        const apiKey = process.env.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 || "sk-proj-xxxxxxx"; // Recupera la chiave da variabile ambiente o fallback per testing
         const url = "https://api.openai.com/v1/chat/completions";
 
         const data = {
@@ -71,7 +72,13 @@ async function handleInput() {
             if (response.ok) {
                 const json = await response.json();
                 const gptResponse = json.choices[0].message.content.trim();
-                risposta = gptResponse;
+
+                // Controlla se la risposta di GPT è vuota o errata
+                if (!gptResponse) {
+                    risposta = "Non sono riuscito a ricevere una risposta, riprova più tardi.";
+                } else {
+                    risposta = gptResponse;
+                }
             } else {
                 console.error("Errore nella richiesta a GPT:", response.status);
                 const errorData = await response.json();
