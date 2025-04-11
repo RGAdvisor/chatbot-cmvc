@@ -46,7 +46,7 @@ async function handleInput() {
 
     // Se la domanda non è vuota, invia una richiesta a GPT
     if (domanda !== "") {
-        const apiKey = process.env.OPENAI_API_KEY; // Recupera la chiave da variabile ambiente
+        const apiKey = process.env.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; // Recupera la chiave da variabile ambiente
         if (!apiKey) {
             console.error("API Key is missing.");
             return;
