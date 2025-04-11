@@ -1,4 +1,3 @@
-console.log("API Key:", process.env.OPENAI_API_KEY);
 // Funzione per gestire il clic sui bottoni
 function handleClick(tipo) {
     let risposta = "";
@@ -47,14 +46,16 @@ async function handleInput() {
 
     // Se la domanda non è vuota, invia una richiesta a GPT
     if (domanda !== "") {
-        const apiKey = process.env.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 || "sk-proj-xxxxxxx"; // Recupera la chiave da variabile ambiente o fallback per testing
-        const url = "https://api.openai.com/v1/chat/completions";
+        const apiKey = process.env.OPENAI_API_KEY; // Recupera la chiave da variabile ambiente
+        if (!apiKey) {
+            console.error("API Key is missing.");
+            return;
+        }
 
+        const url = "https://api.openai.com/v1/chat/completions";
         const data = {
             model: "gpt-3.5-turbo",
-            messages: [
-                { role: "user", content: domanda }
-            ],
+            messages: [{ role: "user", content: domanda }],
             max_tokens: 150,
             temperature: 0.7,
         };
