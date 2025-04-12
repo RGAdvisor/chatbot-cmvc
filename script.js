@@ -12,7 +12,7 @@ function handleClick(tipo) {
             risposta = "Ci trovi in Via Enrico Fermi, 6 – 21030 Cuvio (VA)";
             break;
         case 'specialita':
-            risposta = "Odontoiatria, ginecologia, cardiologia, chirurgia vascolare, pneumologia, dietologia, fisioterapia.";
+            risposta = "Il centro ha una divisione dentale e una di polispecialistica: Odontoiatria, ginecologia, cardiologia, chirurgia vascolare, pneumologia, dietologia, fisioterapia.";
             break;
     }
     // Mostra la risposta nel campo di testo (textarea)
@@ -46,7 +46,8 @@ async function handleInput() {
 
     // Se la domanda non è vuota, invia una richiesta a GPT
     if (domanda !== "") {
-        const apiKey = "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"; // Sostituisci con la tua chiave API OpenAI
+        // Usa una chiave API dal backend, non in client-side per motivi di sicurezza
+        const apiKey = "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"; // Usa un sistema di gestione variabili d'ambiente come Netlify o un server backend
         const url = "https://api.openai.com/v1/chat/completions";
 
         const data = {
@@ -71,7 +72,13 @@ async function handleInput() {
             if (response.ok) {
                 const json = await response.json();
                 const gptResponse = json.choices[0].message.content.trim();
-                risposta = gptResponse;
+
+                // Controlla se la risposta di GPT è vuota o errata
+                if (!gptResponse) {
+                    risposta = "Non sono riuscito a ricevere una risposta, riprova più tardi.";
+                } else {
+                    risposta = gptResponse;
+                }
             } else {
                 console.error("Errore nella richiesta a GPT:", response.status);
                 const errorData = await response.json();
