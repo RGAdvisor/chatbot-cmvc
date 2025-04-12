@@ -1,65 +1,89 @@
-/const fetch = require('node-fetch'); // Importa fetch per fare le richieste HTTP
-
-exports.handler = async function(event, context) {
-    const body = JSON.parse(event.body); // Analizza il corpo della richiesta
-    const { messages, model, max_tokens } = body;  // Estrai i dati dal corpo
-
-    // Recupera la chiave API da Netlify environment variables
-    const apiKey = process.env.OPENAI_API_KEY;  // Chiave API gestita nel backend (Netlify)
-
-    const url = "https://api.openai.com/v1/chat/completions";  // URL per la richiesta a OpenAI
-
-    const data = {
-        model: model || "gpt-3.5-turbo",  // Usa il modello GPT-3.5
-        messages: messages,  // Messaggi della conversazione
-        max_tokens: max_tokens || 150,  // Numero massimo di token
-        temperature: 0.7,  // Imposta la temperatura per la generazione del testo
-    };
-
-    try {
-        const response = await fetch(url, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${apiKey}`,  // Usa la chiave API
-            },
-            body: JSON.stringify(data),  // Invia i dati nel corpo della richiesta
-        });
-
-        // Controlla se la risposta è OK
-        if (response.ok) {
-            const json = await response.json(); // Parsing della risposta
-            const gptResponse = json.choices[0].message.content.trim(); // Estrai il contenuto della risposta
-
-            // Verifica se la risposta è vuota o errata
-            if (!gptResponse) {
-                return { 
-                    statusCode: 500, 
-                    body: JSON.stringify({ message: "Non sono riuscito a ricevere una risposta." }) 
-                };
-            }
-
-            // Risposta corretta, invia il messaggio
-            return { 
-                statusCode: 200, 
-                body: JSON.stringify({ message: gptResponse }) 
-            };
-
-        } else {
-            // Se la risposta non è OK (errore HTTP)
-            console.error('Errore nella risposta:', response.status);
-            return { 
-                statusCode: response.status, 
-                body: JSON.stringify({ message: 'Errore nel recupero della risposta dal server.' }) 
-            };
-        }
-
-    } catch (error) {
-        // Gestione degli errori nella chiamata API
-        console.error('Errore nella chiamata API:', error);
-        return { 
-            statusCode: 500, 
-            body: JSON.stringify({ message: "Errore nella chiamata API" }) 
-        };
+// Funzione per gestire il clic sui bottoni
+function handleClick(tipo) {
+    let risposta = "";
+    switch (tipo) {
+        case 'prenotazione':
+            risposta = "Puoi prenotare chiamando lo 0332 624820 o scrivendo a segreteria@csvcuvio.it.";
+            break;
+        case 'orari':
+            risposta = "Lunedì, Mercoledì e Venerdì: 9–12 / 14–19.30\nMartedì: 14–19.30\nGiovedì: 9–12\nSabato: 9–13";
+            break;
+        case 'indirizzo':
+            risposta = "Ci trovi in Via Enrico Fermi, 6 – 21030 Cuvio (VA)";
+            break;
+        case 'specialita':
+            risposta = "Odontoiatria, ginecologia, cardiologia, chirurgia vascolare, pneumologia, dietologia, fisioterapia.";
+            break;
     }
-};
+    // Mostra la risposta nel campo di testo (textarea)
+    document.getElementById("domanda").value = risposta;
+}
+
+// Gestire il clic sui bottoni
+document.getElementById("button1").addEventListener("click", function() {
+    handleClick('prenotazione');
+});
+
+document.getElementById("button2").addEventListener("click", function() {
+    handleClick('orari');
+});
+
+document.getElementById("button3").addEventListener("click", function() {
+    handleClick('indirizzo');
+});
+
+document.getElementById("button4").addEventListener("click", function() {
+    handleClick('specialita');
+});
+
+// Aggiungi il listener per il pulsante "Invia"
+document.querySelector(".submit-button").addEventListener("click", handleInput);
+
+// Funzione per gestire l'invio della domanda a GPT-3.5 e ricevere la risposta
+async function handleInput() {
+    const domanda = document.getElementById("domanda").value.trim();
+    let risposta = "Grazie per la domanda! Ti risponderemo al più presto.";
+
+    // Se la domanda non è vuota, invia una richiesta a GPT
+    if (domanda !== "") {
+        const apiKey = "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"; // Sostituisci con la tua chiave API OpenAI
+        const url = "https://api.openai.com/v1/chat/completions";
+
+        const data = {
+            model: "gpt-3.5-turbo",
+            messages: [
+                { role: "user", content: domanda }
+            ],
+            max_tokens: 150,
+            temperature: 0.7,
+        };
+
+        try {
+            const response = await fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${apiKey}`,
+                },
+                body: JSON.stringify(data),
+            });
+
+            if (response.ok) {
+                const json = await response.json();
+                const gptResponse = json.choices[0].message.content.trim();
+                risposta = gptResponse;
+            } else {
+                console.error("Errore nella richiesta a GPT:", response.status);
+                const errorData = await response.json();
+                console.error("Dettagli errore:", errorData);
+                risposta = "Mi scuso, ma non sono in grado di rispondere ora. Errore: " + response.status;
+            }
+        } catch (error) {
+            console.error("Errore nella chiamata API:", error);
+            risposta = "Mi scuso, ma c'è stato un errore nella chiamata al server.";
+        }
+    }
+
+    // Visualizza la risposta di GPT nel campo di testo (textarea)
+    document.getElementById("domanda").value = risposta;
+}
