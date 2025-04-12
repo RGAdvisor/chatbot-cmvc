@@ -93,3 +93,20 @@ async function handleInput() {
     // Visualizza la risposta di GPT nel campo di testo (textarea)
     document.getElementById("domanda").value = risposta;
 }
+const response = await fetch(url, {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify(data)
+});
+
+if (response.ok) {
+    const json = await response.json();
+    const gptResponse = json.choices[0].message.content.trim();
+    return { statusCode: 200, body: JSON.stringify({ message: gptResponse }) };
+} else {
+    console.error('Errore nella risposta:', response.status);
+    return { statusCode: response.status, body: 'Errore nel recupero della risposta' };
+}
