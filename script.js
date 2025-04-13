@@ -1,4 +1,4 @@
-// Funzione per gestire il clic sui bottoni
+// Funzione per gestire il clic sui bottoni delle domande fisse
 function handleClick(tipo) {
     let risposta = "";
     switch (tipo) {
@@ -15,8 +15,28 @@ function handleClick(tipo) {
             risposta = "Il centro ha una divisione dentale e una di polispecialistica: Odontoiatria, ginecologia, cardiologia, chirurgia vascolare, pneumologia, dietologia, fisioterapia.";
             break;
     }
-    // Aggiungi la risposta al contenitore chat
-    appendMessage('gpt', risposta); 
+
+    // Aggiungi la domanda dell'utente e la risposta fissa, sovrascrivendo la risposta nel rettangolo
+    appendMessage('user', document.getElementById("domanda").value); // Aggiungi la domanda dell'utente
+    updateFixedResponse(risposta); // Sovrascrivi la risposta fissa
+    document.getElementById("domanda").value = ""; // Pulisci la textarea
+}
+
+// Funzione per sovrascrivere la risposta fissa nel rettangolo bianco
+function updateFixedResponse(risposta) {
+    const fixedResponseContainer = document.getElementById("fixed-response-container");
+    
+    // Se il contenitore non esiste, crealo
+    if (!fixedResponseContainer) {
+        const newFixedResponse = document.createElement("div");
+        newFixedResponse.id = "fixed-response-container";
+        newFixedResponse.classList.add("response-box");
+        document.querySelector(".chat-container").appendChild(newFixedResponse);
+    }
+    
+    // Sovrascrivi il contenuto del rettangolo bianco con la risposta
+    const fixedResponseElement = document.getElementById("fixed-response-container");
+    fixedResponseElement.textContent = risposta;
 }
 
 // Aggiungi il listener per i bottoni
@@ -40,16 +60,6 @@ document.getElementById("button4").addEventListener("click", function() {
 function appendMessage(sender, message) {
     const chatContainer = document.getElementById("chat-container");
 
-    // Se c'è già una risposta, sovrascrivi quella precedente
-    if (sender === "gpt") {
-        const lastMessage = chatContainer.querySelector('.gpt-response');
-        if (lastMessage) {
-            lastMessage.textContent = message; // Sovrascrivi l'ultima risposta
-            return;
-        }
-    }
-
-    // Creazione di un nuovo messaggio
     const messageElement = document.createElement("div");
     messageElement.classList.add(sender + "-message");
     messageElement.textContent = message;
@@ -61,8 +71,7 @@ function appendMessage(sender, message) {
 document.querySelector(".submit-button").addEventListener("click", function() {
     const domanda = document.getElementById("domanda").value.trim();
     if (domanda !== "") {
-        appendMessage('user', domanda); // Aggiungi la domanda dell'utente
-        appendMessage('gpt', "Risposta automatica del chatbot"); // Risposta simulata per la domanda dell'utente
-        document.getElementById("domanda").value = ""; // Pulisci la textarea dopo l'invio
+        appendMessage('user', domanda);
+        appendMessage('gpt', "Risposta automatica del chatbot");
     }
 });
