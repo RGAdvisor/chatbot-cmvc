@@ -12,29 +12,33 @@
         <p>Come posso aiutarti oggi?</p>
 
         <div class="button-group">
-            <button id="button1" class="button" data-tipo="prenotazione">Come posso prenotare una visita?</button>
-            <button id="button2" class="button" data-tipo="orari">Quali sono i vostri orari?</button>
-            <button id="button3" class="button" data-tipo="indirizzo">Dove si trova il Centro?</button>
-            <button id="button4" class="button" data-tipo="specialita">Quali servizi fornite?</button>
+            <!-- Aggiunto data-question per prendere il testo del bottone -->
+            <button class="button" data-tipo="prenotazione" data-question="Come posso prenotare una visita?">Come posso prenotare una visita?</button>
+            <button class="button" data-tipo="orari" data-question="Quali sono i vostri orari?">Quali sono i vostri orari?</button>
+            <button class="button" data-tipo="indirizzo" data-question="Dove si trova il Centro?">Dove si trova il Centro?</button>
+            <button class="button" data-tipo="specialita" data-question="Quali servizi fornite?">Quali servizi fornite?</button>
         </div>
 
-        <div id="chat-container"></div>
-
-        <div class="chat-container">
-            <div class="initial-question">
-                Come posso aiutarti?
-            </div>
-            <div class="user-message">
-                Scrivi qui la tua domanda
-            </div>
+        <!-- Area dedicata per la risposta alle domande fisse -->
+        <div id="fixed-answer-area" class="response-box" style="display: none;">
+            <!-- La risposta verrà inserita qui da JavaScript -->
         </div>
 
-        <textarea id="domanda" placeholder="Scrivi qui la tua domanda"></textarea>
+        <!-- Contenitore principale della chat dinamica -->
+        <div id="chat-container">
+            <!-- I messaggi verranno aggiunti qui da JavaScript -->
+        </div>
 
-        <button class="submit-button">Invia</button>
+        <!-- Rimosso il blocco statico "initial-question" e "user-message" -->
+
+        <!-- Area di input utente -->
+        <div class="input-area">
+             <textarea id="domanda" placeholder="Scrivi qui la tua domanda"></textarea>
+             <button id="submit-button" class="submit-button">Invia</button>
+        </div>
 
         <footer>
-            Grazie per la domanda! Ti risponderemo al più presto.
+            <!-- Spostato il messaggio di ringraziamento nel JS per quando si invia una domanda libera -->
         </footer>
     </div>
 
