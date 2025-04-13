@@ -16,7 +16,7 @@ function handleClick(tipo) {
             break;
     }
     appendMessage('user', document.getElementById("domanda").value); // Aggiungi la domanda dell'utente
-    updateResponseMessage('gpt', risposta); // Aggiorna la risposta di GPT
+    appendMessage('gpt', risposta); // Aggiungi la risposta del chatbot
     document.getElementById("domanda").value = ""; // Pulisci la textarea
 }
 
@@ -37,34 +37,15 @@ document.getElementById("button4").addEventListener("click", function() {
     handleClick('specialita');
 });
 
-// Funzione per aggiungere o aggiornare un messaggio nel contenitore della chat
+// Funzione per aggiungere dinamicamente il messaggio al contenitore della chat
 function appendMessage(sender, message) {
     const chatContainer = document.getElementById("chat-container");
-
+    
     const messageElement = document.createElement("div");
     messageElement.classList.add(sender + "-message");
     messageElement.textContent = message;
-
+    
     chatContainer.appendChild(messageElement);
-}
-
-// Funzione per aggiornare la risposta nel contenitore esistente
-function updateResponseMessage(sender, message) {
-    const chatContainer = document.getElementById("chat-container");
-
-    // Trova l'ultimo messaggio GPT esistente
-    const lastGptMessage = chatContainer.querySelector('.gpt-message');
-
-    if (lastGptMessage) {
-        // Se esiste, aggiorna il messaggio
-        lastGptMessage.textContent = message;
-    } else {
-        // Altrimenti crea un nuovo messaggio GPT
-        const messageElement = document.createElement("div");
-        messageElement.classList.add('gpt-message');
-        messageElement.textContent = message;
-        chatContainer.appendChild(messageElement);
-    }
 }
 
 // Aggiungi il listener per il pulsante "Invia"
@@ -72,6 +53,62 @@ document.querySelector(".submit-button").addEventListener("click", function() {
     const domanda = document.getElementById("domanda").value.trim();
     if (domanda !== "") {
         appendMessage('user', domanda);
-        updateResponseMessage('gpt', "Risposta automatica del chatbot");
+        appendMessage('gpt', "Risposta automatica del chatbot");
     }
 });
+
+// Funzione per gestire l'invio della domanda a GPT-3.5 e ricevere la risposta
+async function handleInput() {
+    const domanda = document.getElementById("domanda").value.trim();
+    let risposta = "Grazie per la domanda! Ti risponderemo al più presto.";
+
+    // Se la domanda non è vuota, invia una richiesta a GPT
+    if (domanda !== "") {
+        // Usa una chiave API dal backend, non in client-side per motivi di sicurezza
+        const apiKey = "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"; // Usa un sistema di gestione variabili d'ambiente come Netlify o un server backend
+        const url = "https://api.openai.com/v1/chat/completions";
+
+        const data = {
+            model: "gpt-3.5-turbo",
+            messages: [
+                { role: "user", content: domanda }
+            ],
+            max_tokens: 150,
+            temperature: 0.7,
+        };
+
+        try {
+            const response = await fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${apiKey}`,
+                },
+                body: JSON.stringify(data),
+            });
+
+            if (response.ok) {
+                const json = await response.json();
+                const gptResponse = json.choices[0].message.content.trim();
+
+                // Controlla se la risposta di GPT è vuota o errata
+                if (!gptResponse) {
+                    risposta = "Non sono riuscito a ricevere una risposta, riprova più tardi.";
+                } else {
+                    risposta = gptResponse;
+                }
+            } else {
+                console.error("Errore nella richiesta a GPT:", response.status);
+                const errorData = await response.json();
+                console.error("Dettagli errore:", errorData);
+                risposta = "Mi scuso, ma non sono in grado di rispondere ora. Errore: " + response.status;
+            }
+        } catch (error) {
+            console.error("Errore nella chiamata API:", error);
+            risposta = "Mi scuso, ma c'è stato un errore nella chiamata al server.";
+        }
+    }
+
+    // Visualizza la risposta di GPT nel campo di testo (textarea)
+    document.getElementById("domanda").value = risposta;
+}
