@@ -1,4 +1,4 @@
-/* Stile di base per la pagina */
+/* Generale */
 body {
     font-family: Arial, sans-serif;
     background-color: #f1f1f1;
@@ -18,9 +18,9 @@ body {
 }
 
 /* Titoli */
-h1, h2 {
+h1 {
     text-align: center;
-    color: #2a7f63;
+    color: #2a7f63; /* Verde */
 }
 
 /* Gruppo di bottoni */
@@ -32,7 +32,7 @@ h1, h2 {
 }
 
 .button-group button {
-    background-color: #2a7f63;
+    background-color: #2a7f63; /* Verde */
     color: white;
     font-size: 16px;
     padding: 12px;
@@ -44,11 +44,56 @@ h1, h2 {
 }
 
 .button-group button:hover {
-    background-color: #1e5e45;
+    background-color: #1e5e45; /* Verde più scuro */
 }
 
-/* Area di input per la domanda */
-textarea {
+/* Risposte automatiche del chatbot e domande fisse */
+.response-box, .user-message {
+    background-color: white; /* Sfondo bianco */
+    border: 1px solid #4CAF50; /* Bordo verde */
+    border-radius: 10px; /* Angoli arrotondati */
+    padding: 10px;
+    margin: 5px 0;
+    width: 100%; /* Adatta la larghezza al contenitore */
+}
+
+/* Risposta del chatbot */
+.gpt-response {
+    background-color: white; /* Colore di sfondo bianco per la risposta */
+    border: 1px solid #4CAF50; /* Bordo verde */
+    border-radius: 10px;
+    padding: 10px;
+    margin: 5px 0;
+}
+
+/* Per evitare il rettangolo verde extra che appare per le risposte fisse */
+.fixed-response {
+    display: none; /* Non creiamo il rettangolo verde per le risposte fisse */
+}
+
+/* Domanda dell'utente */
+.user-message {
+    background-color: #4CAF50; /* Colore verde per la domanda dell'utente */
+    color: white;
+    width: 50%;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 5px;
+    text-align: left;
+}
+
+/* Risposte del chatbot */
+.gpt-response {
+    background-color: white;
+    border: 1px solid #000; /* Bordo nero */
+    border-radius: 10px;
+    padding: 10px;
+    margin: 5px;
+    text-align: left;
+}
+
+/* Per il campo delle domande libere */
+.question-input {
     width: 100%;
     height: 100px;
     padding: 10px;
@@ -58,7 +103,7 @@ textarea {
     margin-top: 15px;
 }
 
-/* Bottone di invio */
+/* Pulsante di invio */
 .submit-button {
     background-color: #2a7f63;
     color: white;
@@ -75,41 +120,23 @@ textarea {
     background-color: #1e5e45;
 }
 
-/* Contenitore dei messaggi della chat */
-#chat-container {
-    margin-top: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-/* Messaggi dell'utente (domanda) */
-.user-message {
-    background-color: #4CAF50; /* Verde */
-    color: white;
-    padding: 10px;
-    border-radius: 15px;
-    text-align: left;
-    width: 100%; /* Larghezza del 100% del contenitore */
-    word-wrap: break-word;
-}
-
-/* Risposte del chatbot (rimuoviamo il pallino verde) */
-.gpt-message {
-    background-color: white;
-    border: 1px solid #000;
-    color: black;
-    padding: 10px;
-    border-radius: 15px;
-    text-align: left;
-    width: 100%; /* Larghezza del 100% del contenitore */
-    word-wrap: break-word;
-}
-
 /* Footer */
 footer {
     text-align: center;
     margin-top: 20px;
     font-size: 14px;
     color: #555;
+}
+
+/* Gestione dell'alternanza per le risposte */
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Per separare le domande fisse e risposte libere */
+.chat-container .user-message, .chat-container .gpt-response {
+    display: block;
+    margin: 10px;
 }
