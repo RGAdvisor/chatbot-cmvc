@@ -23,7 +23,7 @@ h1, h2 {
     color: #2a7f63;
 }
 
-/* Stile dei bottoni */
+/* Gruppo di bottoni */
 .button-group {
     display: flex;
     flex-direction: column;
@@ -47,7 +47,7 @@ h1, h2 {
     background-color: #1e5e45;
 }
 
-/* Stile della textarea */
+/* Area di input per la domanda */
 textarea {
     width: 100%;
     height: 100px;
@@ -58,7 +58,7 @@ textarea {
     margin-top: 15px;
 }
 
-/* Stile del bottone di invio */
+/* Bottone di invio */
 .submit-button {
     background-color: #2a7f63;
     color: white;
@@ -78,6 +78,9 @@ textarea {
 /* Contenitore dei messaggi della chat */
 #chat-container {
     margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 /* Messaggi dell'utente (domanda) */
@@ -86,8 +89,10 @@ textarea {
     color: white;
     padding: 10px;
     border-radius: 15px;
-    margin-bottom: 10px;
     text-align: left;
+    max-width: 45%; /* Larghezza della metà dei bottoni */
+    margin-left: auto; /* Messaggio a destra */
+    word-wrap: break-word; /* Consente il ritorno a capo nelle parole lunghe */
 }
 
 /* Risposte del chatbot */
@@ -97,8 +102,10 @@ textarea {
     color: black;
     padding: 10px;
     border-radius: 15px;
-    margin-bottom: 10px;
     text-align: left;
+    max-width: 45%; /* Larghezza della metà dei bottoni */
+    margin-right: auto; /* Risposta a sinistra */
+    word-wrap: break-word; /* Consente il ritorno a capo nelle parole lunghe */
 }
 
 /* Footer */
