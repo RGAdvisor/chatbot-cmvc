@@ -20,9 +20,6 @@ function handleClick(tipo) {
     // Mostra la risposta fissa nel box bianco
     document.getElementById("risposta-fissa").textContent = risposta;
 
-    // Mostra anche nella chat
-    document.getElementById("risposta-fissa").textContent = risposta;
-
 }
 
 // Restituisce il numero del bottone (1-4) in base al tipo
