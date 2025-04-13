@@ -60,26 +60,22 @@ h1 {
 /* Risposta del chatbot */
 .gpt-response {
     background-color: white; /* Colore di sfondo bianco per la risposta */
-    border: 1px solid #4CAF50; /* Bordo verde */
+    border: 1px solid #000; /* Bordo nero */
     border-radius: 10px;
     padding: 10px;
     margin: 5px 0;
-}
-
-/* Per evitare il rettangolo verde extra che appare per le risposte fisse */
-.fixed-response {
-    display: none; /* Non creiamo il rettangolo verde per le risposte fisse */
 }
 
 /* Domanda dell'utente */
 .user-message {
     background-color: #4CAF50; /* Colore verde per la domanda dell'utente */
     color: white;
-    width: 50%;
+    width: 50%; /* Larghezza alla metà del bottone */
     border-radius: 10px;
     padding: 10px;
     margin: 5px;
     text-align: left;
+    margin-left: auto; /* Allineamento a destra */
 }
 
 /* Risposte del chatbot */
@@ -90,6 +86,8 @@ h1 {
     padding: 10px;
     margin: 5px;
     text-align: left;
+    width: 50%; /* Larghezza alla metà del bottone */
+    margin-right: auto; /* Allineamento a sinistra */
 }
 
 /* Per il campo delle domande libere */
