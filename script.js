@@ -54,3 +54,21 @@ function appendMessage(sender, message) {
 async function getGPTResponse(domanda) {
     return "Grazie per la tua domanda. Ti risponderemo al più presto!";
 }
+async function getGPTResponse(domanda) {
+  try {
+    const response = await fetch("/.netlify/functions/askGPT", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ domanda })
+    });
+
+    const data = await response.json();
+    return data.risposta;
+  } catch (error) {
+    console.error("Errore:", error);
+    return "Si è verificato un errore. Riprova più tardi.";
+  }
+}
+
