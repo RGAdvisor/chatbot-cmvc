@@ -47,28 +47,9 @@ h1 {
     background-color: #1e5e45; /* Verde più scuro */
 }
 
-/* Risposte automatiche del chatbot e domande fisse */
-.response-box, .user-message {
-    background-color: white; /* Sfondo bianco */
-    border: 1px solid #4CAF50; /* Bordo verde */
-    border-radius: 10px; /* Angoli arrotondati */
-    padding: 10px;
-    margin: 5px 0;
-    width: 100%; /* Adatta la larghezza al contenitore */
-}
-
-/* Risposta del chatbot */
-.gpt-response {
-    background-color: white; /* Colore di sfondo bianco per la risposta */
-    border: 1px solid #000; /* Bordo nero */
-    border-radius: 10px;
-    padding: 10px;
-    margin: 5px 0;
-}
-
 /* Domanda dell'utente */
 .user-message {
-    background-color: #4CAF50; /* Colore verde per la domanda dell'utente */
+    background-color: #4CAF50; /* Verde */
     color: white;
     width: 50%; /* Larghezza alla metà del bottone */
     border-radius: 10px;
@@ -81,7 +62,7 @@ h1 {
 /* Risposte del chatbot */
 .gpt-response {
     background-color: white;
-    border: 1px solid #000; /* Bordo nero */
+    border: 1px solid #4CAF50; /* Bordo verde */
     border-radius: 10px;
     padding: 10px;
     margin: 5px;
@@ -90,15 +71,36 @@ h1 {
     margin-right: auto; /* Allineamento a sinistra */
 }
 
-/* Per il campo delle domande libere */
+/* Risposte fisse (domande predefinite) */
+.response-box {
+    background-color: white; /* Sfondo bianco per le risposte fisse */
+    border: 1px solid #4CAF50; /* Bordo verde */
+    border-radius: 10px; /* Angoli arrotondati */
+    padding: 10px;
+    margin: 5px 0;
+    width: 100%; /* Larghezza alla stessa del bottone */
+}
+
+/* Inizializzazione delle domande */
+.initial-question {
+    background-color: white; /* Sfondo bianco */
+    border: 1px solid #4CAF50; /* Bordo verde */
+    border-radius: 10px;
+    padding: 10px;
+    margin: 5px 0;
+    width: 50%; /* Larghezza alla metà del bottone */
+    text-align: left;
+    margin-left: auto;
+}
+
 .question-input {
-    width: 100%;
-    height: 100px;
+    width: 50%; /* Larghezza alla metà del bottone */
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 8px;
     font-size: 14px;
     margin-top: 15px;
+    text-align: left;
 }
 
 /* Pulsante di invio */
@@ -126,7 +128,7 @@ footer {
     color: #555;
 }
 
-/* Gestione dell'alternanza per le risposte */
+/* Separazione e allineamento delle risposte */
 .chat-container {
     display: flex;
     flex-direction: column;
