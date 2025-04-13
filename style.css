@@ -1,37 +1,9 @@
-/* Resetta margini e padding di base */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-/* Corpo e layout generale */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    color: #333;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    padding: 20px;
-}
-
-/* Header del sito */
-h1 {
-    font-size: 24px;
-    color: #333;
-    text-align: center;
-    margin-bottom: 20px;
-}
-
 /* Gruppo di bottoni */
 .button-group {
     margin-top: 20px;
     display: flex;
     justify-content: center;
-    flex-wrap: wrap; /* Aggiunta per garantire che si adattino a schermi più piccoli */
+    flex-wrap: wrap; /* Per far adattare i bottoni su schermi più piccoli */
 }
 
 .button {
@@ -51,27 +23,23 @@ h1 {
     background-color: #45a049; /* Colore al passaggio del mouse */
 }
 
-/* Layout delle domande e risposte */
+/* Layout della chat con alternanza domande/risposte */
 .chat-container {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     margin-top: 20px;
     flex-direction: row;
     gap: 20px;
-    width: 100%;
-    max-width: 900px;
 }
 
 /* Domanda dell'utente (a sinistra) */
 .user-message {
     flex-grow: 1;
-    display: flex;
-    justify-content: flex-start;
 }
 
-.question-input {
+textarea#domanda {
     width: 100%;
-    min-height: 100px;
+    min-height: 80px;
     padding: 10px;
     font-size: 16px;
     border: 1px solid #ccc;
@@ -84,13 +52,11 @@ h1 {
 /* Risposta del chatbot (a destra) */
 .gpt-response {
     flex-grow: 1;
-    display: flex;
-    justify-content: flex-start;
 }
 
 .response-box {
     width: 100%;
-    min-height: 100px;
+    min-height: 80px;
     padding: 10px;
     font-size: 16px;
     border: 1px solid #4CAF50; /* Bordo verde */
@@ -108,7 +74,6 @@ h1 {
     cursor: pointer;
     border-radius: 5px; /* Bordo arrotondato */
     font-size: 16px;
-    margin-top: 20px;
 }
 
 .submit-button:hover {
@@ -120,6 +85,4 @@ footer {
     margin-top: 20px;
     font-size: 14px;
     color: #777;
-    text-align: center;
-    padding: 10px;
 }
