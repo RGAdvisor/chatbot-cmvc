@@ -1,69 +1,139 @@
-// Funzione per gestire il clic sui bottoni verdi con domande fisse
-function handleClick(tipo) {
-    let risposta = "";
-
-    switch (tipo) {
-        case 'prenotazione':
-            risposta = "Puoi prenotare chiamando lo 0332 624820 o scrivendo a segreteria@csvcuvio.it.";
-            break;
-        case 'orari':
-            risposta = "Lunedì, Mercoledì e Venerdì: 9–12 / 14–19.30\nMartedì: 14–19.30\nGiovedì: 9–12\nSabato: 9–13";
-            break;
-        case 'indirizzo':
-            risposta = "Ci trovi in Via Enrico Fermi, 6 – 21030 Cuvio (VA)";
-            break;
-        case 'specialita':
-            risposta = "Il centro ha una divisione dentale e una di polispecialistica: Odontoiatria, ginecologia, cardiologia, chirurgia vascolare, pneumologia, dietologia, fisioterapia.";
-            break;
-    }
-
-    // Mostra la risposta fissa nel box bianco
-    document.getElementById("risposta-fissa").textContent = risposta;
+/* Reset base */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f1f1f1;
+    margin: 0;
+    padding: 0;
 }
 
-// Restituisce il numero del bottone (1-4) in base al tipo
-function getButtonNumber(tipo) {
-    const map = {
-        prenotazione: 1,
-        orari: 2,
-        indirizzo: 3,
-        specialita: 4
-    };
-    return map[tipo];
+.container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-// Listener bottoni verdi
-document.getElementById("button1").addEventListener("click", () => handleClick('prenotazione'));
-document.getElementById("button2").addEventListener("click", () => handleClick('orari'));
-document.getElementById("button3").addEventListener("click", () => handleClick('indirizzo'));
-document.getElementById("button4").addEventListener("click", () => handleClick('specialita'));
-
-// ✅ Listener per invio con ENTER dalla textarea
-document.getElementById("domanda").addEventListener("keydown", async function(e) {
-    if (e.key === "Enter" && !e.shiftKey) {
-        e.preventDefault();
-        const domanda = this.value.trim();
-        if (domanda === "") return;
-
-        appendMessage("user", domanda);
-        const risposta = await getGPTResponse(domanda);
-        appendMessage("gpt", risposta);
-        this.value = "";
-    }
-});
-
-// Funzione per inserire i messaggi nella chat
-function appendMessage(sender, message) {
-    const container = document.getElementById("chat-container");
-    const msg = document.createElement("div");
-
-    msg.classList.add(sender === 'user' ? 'user-message' : 'gpt-response');
-    msg.textContent = message;
-    container.appendChild(msg);
-    container.scrollTop = container.scrollHeight;
+/* Titolo */
+h1 {
+    text-align: center;
+    color: #2a7f63;
 }
 
-// Simula una risposta API (puoi integrarla con la tua chiave GPT)
-async function getGPTResponse(domanda) {
-    return "Grazie per la domanda! Ti risponderemo al più presto.";
+/* Bottoni verdi */
+.button-group {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.button-group button {
+    background-color: #2a7f63;
+    color: white;
+    font-size: 16px;
+    padding: 12px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 100%;
+}
+
+.button-group button:hover {
+    background-color: #1e5e45;
+}
+
+/* Risposta fissa */
+.response-box {
+    background-color: white;
+    border: 2px solid #2a7f63;
+    color: #2a7f63;
+    font-size: 16px;
+    padding: 12px;
+    border-radius: 25px;
+    margin-top: 15px;
+    width: 100%;
+    text-align: center;
+    min-height: 40px;
+}
+
+/* Riga input: bottone bianco + textarea verde */
+.input-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+/* Bottone bianco a sinistra */
+.assist-button {
+    width: 48%;
+    background-color: white;
+    border: 2px solid #2a7f63;
+    color: #2a7f63;
+    font-size: 14px;
+    border-radius: 25px;
+    padding: 12px;
+    text-align: center;
+    box-sizing: border-box;
+    cursor: default;
+}
+
+/* Textarea verde a destra */
+.green-textarea {
+    width: 48%;
+    background-color: #2a7f63;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-size: 14px;
+    padding: 12px;
+    resize: none;
+    box-sizing: border-box;
+}
+
+.green-textarea::placeholder {
+    color: #e0e0e0;
+}
+
+/* Contenitore chat */
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+/* Messaggi */
+.user-message,
+.gpt-response {
+    padding: 10px;
+    border-radius: 10px;
+    max-width: 60%;
+    word-wrap: break-word;
+    font-size: 15px;
+}
+
+.user-message {
+    background-color: #2a7f63;
+    color: white;
+    align-self: flex-end;
+}
+
+.gpt-response {
+    background-color: #f1f1f1;
+    border: 1px solid #2a7f63;
+    color: #2a7f63;
+    align-self: flex-start;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    margin-top: 30px;
+    font-size: 13px;
+    color: #666;
 }
