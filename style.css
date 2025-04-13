@@ -90,9 +90,8 @@ textarea {
     padding: 10px;
     border-radius: 15px;
     text-align: left;
-    max-width: 45%; /* Larghezza della metà dei bottoni */
-    margin-left: auto; /* Messaggio a destra */
-    word-wrap: break-word; /* Consente il ritorno a capo nelle parole lunghe */
+    max-width: 100%; /* Larghezza del 100% del contenitore */
+    word-wrap: break-word;
 }
 
 /* Risposte del chatbot */
@@ -103,9 +102,8 @@ textarea {
     padding: 10px;
     border-radius: 15px;
     text-align: left;
-    max-width: 45%; /* Larghezza della metà dei bottoni */
-    margin-right: auto; /* Risposta a sinistra */
-    word-wrap: break-word; /* Consente il ritorno a capo nelle parole lunghe */
+    max-width: 100%; /* Larghezza del 100% del contenitore */
+    word-wrap: break-word;
 }
 
 /* Footer */
