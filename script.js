@@ -1,174 +1,176 @@
-/* Generale */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f1f1f1;
-    margin: 0;
-    padding: 0;
-    display: flex; /* Aggiunto per centrare meglio il container */
-    justify-content: center; /* Aggiunto per centrare */
-    min-height: 100vh; /* Aggiunto per centrare verticalmente */
-    align-items: center; /* Aggiunto per centrare verticalmente */
+// Trova gli elementi del DOM una sola volta all'inizio
+const chatContainer = document.getElementById("chat-container");
+const fixedAnswerDiv = document.getElementById('fixed-answer-area');
+const domandaTextarea = document.getElementById("domanda");
+const submitButton = document.getElementById("submit-button");
+const footer = document.querySelector("footer"); // Seleziona il footer
+
+// --- Gestione Domande Fisse ---
+
+// Funzione per mostrare la risposta fissa
+function showFixedAnswer(tipo) {
+    let risposta = "";
+    switch (tipo) {
+        case 'prenotazione':
+            risposta = "Puoi prenotare chiamando lo 0332 624820 o scrivendo a segreteria@csvcuvio.it.";
+            break;
+        case 'orari':
+            // Usiamo \n per le interruzioni di riga, il CSS (white-space: pre-wrap) le rispetterà
+            risposta = "Lunedì, Mercoledì e Venerdì: 9–12 / 14–19.30\nMartedì: 14–19.30\nGiovedì: 9–12\nSabato: 9–13";
+            break;
+        case 'indirizzo':
+            risposta = "Ci trovi in Via Enrico Fermi, 6 – 21030 Cuvio (VA)";
+            break;
+        case 'specialita':
+            risposta = "Il centro ha una divisione dentale e una di polispecialistica:\nOdontoiatria, ginecologia, cardiologia, chirurgia vascolare, pneumologia, dietologia, fisioterapia.";
+            break;
+        default:
+             risposta = "Seleziona una delle domande predefinite."; // Caso di default
+    }
+
+    // Mostra la risposta nell'area dedicata
+    fixedAnswerDiv.textContent = risposta;
+    fixedAnswerDiv.style.display = 'block'; // Rendi visibile il div
+
+    // Opzionale: Nascondi l'area dopo qualche secondo?
+    // setTimeout(() => {
+    //     fixedAnswerDiv.style.display = 'none';
+    // }, 10000); // Nasconde dopo 10 secondi
 }
 
-/* Contenitore principale */
-.container {
-    width: 100%;
-    max-width: 600px;
-    /* Rimosso margin: 20px auto; perché gestito dal body flex */
-    margin: 20px; /* Aggiunto un margine per non attaccare ai bordi su schermi piccoli */
-    padding: 20px;
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    display: flex; /* Usiamo flexbox per organizzare gli elementi interni */
-    flex-direction: column; /* Elementi in colonna */
+// Aggiungi listener ai bottoni delle domande fisse
+// Uso querySelectorAll per selezionare tutti i bottoni con classe 'button' nel button-group
+document.querySelectorAll(".button-group .button").forEach(button => {
+    button.addEventListener("click", function() {
+        const tipo = this.getAttribute('data-tipo'); // Prende il tipo dal data attribute
+        showFixedAnswer(tipo);
+        // NON aggiungiamo nulla alla chat principale qui
+    });
+});
+
+
+// --- Gestione Chat Libera ---
+
+// Funzione per aggiungere un messaggio alla chat principale
+function appendMessage(sender, message) {
+    const messageElement = document.createElement("div");
+    // Usa 'user-message' per l'utente e 'gpt-message' per il bot
+    messageElement.classList.add(sender === 'user' ? 'user-message' : 'gpt-message');
+    messageElement.textContent = message; // Usa textContent per sicurezza (evita injection HTML)
+
+    chatContainer.appendChild(messageElement);
+
+    // Scrolla fino all'ultimo messaggio
+    chatContainer.scrollTop = chatContainer.scrollHeight;
 }
 
-/* Titoli */
-h1 {
-    text-align: center;
-    color: #2a7f63; /* Verde */
-    margin-top: 0; /* Rimuove margine superiore predefinito */
+// Funzione per inviare la domanda libera e gestire la risposta
+async function handleFreeQuestion() {
+    const domanda = domandaTextarea.value.trim();
+
+    if (domanda === "") {
+        return; // Non fare nulla se l'input è vuoto
+    }
+
+    // 1. Aggiungi la domanda dell'utente alla chat
+    appendMessage('user', domanda);
+
+    // 2. Pulisci l'area della risposta fissa (se visibile)
+    fixedAnswerDiv.style.display = 'none';
+
+    // 3. Pulisci la textarea
+    domandaTextarea.value = "";
+
+    // 4. Mostra un messaggio di attesa (opzionale)
+    appendMessage('gpt', 'Sto cercando una risposta...');
+
+    // 5. Invia la richiesta a GPT (ATTENZIONE ALLA API KEY!)
+    // !!! ATTENZIONE: Non esporre MAI la tua API Key direttamente nel codice frontend!
+    // !!! Questo è solo un esempio. In produzione, la chiamata API dovrebbe avvenire
+    // !!! tramite un backend sicuro (serverless function, API gateway, ecc.).
+    const apiKey = "sk-proj-INCOLLA_LA_TUA_CHIAVE_API_QUI_MA_NON_FARLO_IN_PRODUZIONE"; // NON FARE QUESTO IN PRODUZIONE!
+    const url = "https://api.openai.com/v1/chat/completions";
+
+    const data = {
+        model: "gpt-3.5-turbo",
+        messages: [
+             // Puoi aggiungere qui un contesto o istruzioni per il bot
+             // { role: "system", content: "Sei un assistente virtuale del Centro Sanitario Valcuvia. Rispondi in modo cortese e informativo." },
+            { role: "user", content: domanda }
+        ],
+        max_tokens: 150,
+        temperature: 0.7,
+    };
+
+    let rispostaGpt = "Grazie per la domanda! Al momento non posso elaborare la richiesta tramite AI, ma ti risponderemo al più presto."; // Messaggio di fallback generico
+
+    try {
+        // !!! TOGLIERE QUESTO BLOCCO TRY/CATCH SE NON SI USA L'API KEY REALE O UN BACKEND
+        const response = await fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${apiKey}`,
+            },
+            body: JSON.stringify(data),
+        });
+
+        // Rimuovi il messaggio "Sto cercando..." (trovando l'ultimo elemento gpt-message)
+        const thinkingMessage = chatContainer.querySelector('.gpt-message:last-child');
+        if (thinkingMessage && thinkingMessage.textContent.includes('Sto cercando')) {
+            chatContainer.removeChild(thinkingMessage);
+        }
+
+        if (response.ok) {
+            const json = await response.json();
+            const gptChoice = json.choices && json.choices[0] && json.choices[0].message;
+            if (gptChoice && gptChoice.content) {
+                 rispostaGpt = gptChoice.content.trim();
+            } else {
+                 console.error("Risposta API non valida:", json);
+                 rispostaGpt = "Ho ricevuto una risposta inaspettata. Riprova.";
+            }
+        } else {
+            console.error("Errore nella richiesta a GPT:", response.status, response.statusText);
+            const errorData = await response.text(); // Leggi come testo se JSON fallisce
+            console.error("Dettagli errore:", errorData);
+            rispostaGpt = `Mi scuso, ma non sono in grado di rispondere ora (Errore: ${response.status}).`;
+        }
+        // FINE BLOCCO DA TOGLIERE/SOSTITUIRE SE NON SI USA API KEY REALE
+
+    } catch (error) {
+        console.error("Errore nella chiamata API:", error);
+        // Assicurati di rimuovere il messaggio "Sto cercando..." anche in caso di errore fetch
+        const thinkingMessage = chatContainer.querySelector('.gpt-message:last-child');
+        if (thinkingMessage && thinkingMessage.textContent.includes('Sto cercando')) {
+            chatContainer.removeChild(thinkingMessage);
+        }
+        rispostaGpt = "Mi scuso, si è verificato un problema tecnico. Riprova più tardi.";
+    }
+
+    // 6. Aggiungi la risposta del bot (GPT o fallback) alla chat
+    appendMessage('gpt', rispostaGpt);
+
+    // 7. Aggiorna il footer (opzionale)
+    // footer.textContent = "Grazie per averci contattato!";
 }
 
-/* Paragrafo introduttivo */
-.container > p { /* Seleziona solo il primo <p> figlio diretto */
-    text-align: center;
-    color: #555;
-    margin-bottom: 20px;
-}
+// Aggiungi listener al pulsante "Invia"
+submitButton.addEventListener("click", handleFreeQuestion);
+
+// Aggiungi listener per inviare con il tasto "Invio" nella textarea
+domandaTextarea.addEventListener("keypress", function(event) {
+    // Controlla se il tasto premuto è "Invio" (keyCode 13) e non è stato premuto Shift+Invio
+    if (event.key === "Enter" && !event.shiftKey) {
+        event.preventDefault(); // Impedisce di andare a capo nella textarea
+        handleFreeQuestion(); // Chiama la stessa funzione del click
+    }
+});
 
 
-/* Gruppo di bottoni */
-.button-group {
-    display: flex;
-    flex-direction: column;
-    gap: 10px; /* Ridotto leggermente lo spazio */
-    margin-top: 10px;
-    margin-bottom: 15px; /* Spazio prima dell'area risposta fissa */
-}
+// --- Inizializzazione ---
 
-.button-group button {
-    background-color: #2a7f63; /* Verde */
-    color: white;
-    font-size: 15px; /* Leggermente più piccolo */
-    padding: 10px 15px; /* Padding aggiustato */
-    border: none;
-    border-radius: 20px; /* Arrotondamento leggermente ridotto */
-    cursor: pointer;
-    transition: background-color 0.3s;
-    width: 100%;
-    text-align: center; /* Assicura testo centrato */
-}
-
-.button-group button:hover {
-    background-color: #1e5e45; /* Verde più scuro */
-}
-
-/* Area per la risposta fissa (MODIFICATA) */
-#fixed-answer-area.response-box { /* Stile specifico per l'area dedicata */
-    background-color: white;
-    border: 1px solid #2a7f63; /* Bordo verde coordinato */
-    border-radius: 10px;
-    padding: 12px;
-    margin-top: 0; /* Rimosso margine sopra, gestito dal gap del container */
-    margin-bottom: 15px; /* Spazio prima della chat */
-    width: auto; /* Adatta larghezza al contenuto, ma rispetta padding */
-    align-self: center; /* Centra il box se il contenuto è corto */
-    max-width: 95%; /* Limita larghezza massima */
-    box-sizing: border-box; /* Include padding e border nella larghezza */
-    color: #333; /* Colore testo */
-    font-size: 14px; /* Dimensione testo risposta */
-    line-height: 1.5; /* Interlinea per leggibilità */
-    white-space: pre-wrap; /* Mantiene le interruzioni di riga dalla stringa JS */
-}
-
-
-/* Contenitore della chat dinamica */
-#chat-container {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 15px; /* Spazio prima dell'input */
-    overflow-y: auto; /* Aggiunge scroll se la chat diventa lunga */
-    max-height: 300px; /* Limita altezza massima della chat */
-    padding: 5px; /* Piccolo padding interno */
-}
-
-/* Messaggio dell'utente (MODIFICATO) */
-.user-message {
-    background-color: #2a7f63; /* Verde */
-    color: white;
-    border-radius: 15px 15px 0 15px; /* Arrotondamento stile chat */
-    padding: 10px 15px;
-    margin-left: auto; /* Allineamento a destra */
-    max-width: 70%; /* Limita larghezza massima */
-    word-wrap: break-word; /* Va a capo se parole lunghe */
-    align-self: flex-end; /* Allinea il box a destra nel flex container */
-}
-
-/* Messaggio del Chatbot (GPT o iniziale) (MODIFICATO) */
-.gpt-message { /* Rinominato per chiarezza */
-    background-color: #e9e9eb; /* Grigio chiaro per il bot */
-    color: #333;
-    border: 1px solid #dcdcdc; /* Bordo leggero */
-    border-radius: 15px 15px 15px 0; /* Arrotondamento stile chat */
-    padding: 10px 15px;
-    margin-right: auto; /* Allineamento a sinistra */
-    max-width: 70%; /* Limita larghezza massima */
-    word-wrap: break-word; /* Va a capo se parole lunghe */
-    align-self: flex-start; /* Allinea il box a sinistra nel flex container */
-}
-
-/* Rimosso .initial-question e .question-input perché non più usati */
-/* Rimosso .response-box generico se non serve altrove, usato #fixed-answer-area */
-
-
-/* Area di input (MODIFICATA) */
-.input-area {
-    display: flex; /* Allinea textarea e bottone sulla stessa riga */
-    gap: 10px; /* Spazio tra textarea e bottone */
-    margin-top: 15px;
-    align-items: flex-end; /* Allinea bottone e textarea in basso */
-}
-
-/* Textarea per input utente (MODIFICATA) */
-#domanda {
-    flex-grow: 1; /* Occupa lo spazio rimanente */
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 15px; /* Angoli arrotondati */
-    font-size: 14px;
-    resize: none; /* Impedisce ridimensionamento manuale */
-    min-height: 40px; /* Altezza minima */
-    box-sizing: border-box; /* Include padding/border nel calcolo altezza/larghezza */
-}
-
-/* Pulsante di invio (MODIFICATO) */
-#submit-button.submit-button { /* Aumenta specificità se necessario */
-    background-color: #2a7f63;
-    color: white;
-    font-size: 15px;
-    padding: 10px 15px; /* Padding coerente */
-    border: none;
-    border-radius: 15px; /* Angoli arrotondati */
-    cursor: pointer;
-    transition: background-color 0.3s;
-    height: 40px; /* Altezza fissa uguale a min-height textarea */
-    /* Rimosso width: 100% perché è in flex ora */
-    white-space: nowrap; /* Evita che "Invia" vada a capo */
-}
-
-#submit-button.submit-button:hover {
-    background-color: #1e5e45;
-}
-
-/* Footer (MODIFICATO) */
-footer {
-    text-align: center;
-    margin-top: 20px;
-    font-size: 12px; /* Più piccolo */
-    color: #888; /* Grigio più chiaro */
-    padding-top: 10px;
-    border-top: 1px solid #eee; /* Separatore leggero */
-}
+// Messaggio di benvenuto iniziale nella chat
+window.addEventListener('DOMContentLoaded', (event) => {
+    appendMessage('gpt', 'Ciao! Sono l\'assistente virtuale del Centro Sanitario Valcuvia. Come posso aiutarti? Puoi scegliere una domanda rapida o scrivere la tua.');
+});
