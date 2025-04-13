@@ -5,52 +5,9 @@
     text-align: center;
 }
 
-/* Layout alternato per domanda e risposte */
-.chat-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    margin-top: 20px;
-}
-
-/* Spazio per la domanda libera (a sinistra) */
-.user-message {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 15px;
-}
-
-.question-input {
-    width: 45%;
-    height: 100px;
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    background-color: #4f8a8b; /* Petrolio */
-    color: white;
-    resize: none;
-}
-
-/* Spazio per la risposta di GPT (a destra) */
-.gpt-response {
-    display: flex;
-    justify-content: flex-start;
-    margin-bottom: 15px;
-}
-
-.response-box {
-    width: 45%;
-    height: 100px;
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #4CAF50; /* Bordo verde */
-    background-color: white;
-    resize: none;
-}
-
-/* Pulsanti */
+/* Gruppo di bottoni */
 .button-group {
-    margin: 20px 0;
+    margin-top: 20px;
 }
 
 .button {
@@ -60,10 +17,54 @@
     padding: 10px;
     margin: 5px;
     cursor: pointer;
+    width: 250px;
 }
 
 .button:hover {
     background-color: #45a049;
+}
+
+/* Layout alternato per domanda e risposte */
+.chat-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    flex-direction: column; /* Le risposte si alternano in colonna */
+}
+
+/* Domanda dell'utente (a sinistra) */
+.user-message {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 15px;
+}
+
+.question-input {
+    width: 80%;
+    height: 100px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    background-color: #4f8a8b; /* Petrolio */
+    color: white;
+    resize: none;
+}
+
+/* Risposta del chatbot (a destra) */
+.gpt-response {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 15px;
+}
+
+.response-box {
+    width: 80%;
+    height: 100px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #4CAF50; /* Bordo verde */
+    background-color: white;
+    resize: none;
 }
 
 /* Pulsante di invio */
