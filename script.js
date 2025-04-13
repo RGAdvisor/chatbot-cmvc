@@ -22,7 +22,8 @@ function handleClick(tipo) {
 
     // Mostra anche nella chat
     appendMessage('user', document.querySelector(`#button${getButtonNumber(tipo)}`).textContent);
-    appendMessage('gpt', risposta);
+    document.getElementById("risposta-fissa").textContent = risposta;
+
 }
 
 // Restituisce il numero del bottone (1-4) in base al tipo
