@@ -15,11 +15,12 @@ function handleClick(tipo) {
             risposta = "Il centro ha una divisione dentale e una di polispecialistica: Odontoiatria, ginecologia, cardiologia, chirurgia vascolare, pneumologia, dietologia, fisioterapia.";
             break;
     }
-    // Mostra la risposta nel campo di testo (textarea)
-    document.getElementById("domanda").value = risposta;
+    appendMessage('user', document.getElementById("domanda").value); // Aggiungi la domanda dell'utente
+    appendMessage('gpt', risposta); // Aggiungi la risposta del chatbot
+    document.getElementById("domanda").value = ""; // Pulisci la textarea
 }
 
-// Gestire il clic sui bottoni
+// Aggiungi il listener per i bottoni
 document.getElementById("button1").addEventListener("click", function() {
     handleClick('prenotazione');
 });
@@ -36,8 +37,26 @@ document.getElementById("button4").addEventListener("click", function() {
     handleClick('specialita');
 });
 
+// Funzione per aggiungere dinamicamente il messaggio al contenitore della chat
+function appendMessage(sender, message) {
+    const chatContainer = document.getElementById("chat-container");
+    
+    const messageElement = document.createElement("div");
+    messageElement.classList.add(sender + "-message");
+    messageElement.textContent = message;
+    
+    chatContainer.appendChild(messageElement);
+}
+
 // Aggiungi il listener per il pulsante "Invia"
-document.querySelector(".submit-button").addEventListener("click", handleInput);
+document.querySelector(".submit-button").addEventListener("click", function() {
+    const domanda = document.getElementById("domanda").value.trim();
+    if (domanda !== "") {
+        appendMessage('user', domanda);
+        appendMessage('gpt', "Risposta automatica del chatbot");
+    }
+});
+
 
 // Funzione per gestire l'invio della domanda a GPT-3.5 e ricevere la risposta
 async function handleInput() {
