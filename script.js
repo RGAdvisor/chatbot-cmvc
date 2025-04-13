@@ -53,7 +53,6 @@ document.querySelector(".submit-button").addEventListener("click", async () => {
     // Inserisci chiamata API a OpenAI o risposta fittizia
     const risposta = await getGPTResponse(domanda);
 
-    appendMessage('gpt', risposta);
     document.getElementById("domanda").value = "";
 });
 
