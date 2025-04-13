@@ -1,84 +1,72 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f1f1f1;
-    margin: 0;
-    padding: 0;
-}
-
+/* Contenitore principale */
 .container {
-    width: 100%;
-    max-width: 600px;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-h1 {
+    width: 80%;
+    margin: 0 auto;
     text-align: center;
-    color: #2a7f63; /* Verde */
 }
 
-p {
-    text-align: center;
-    color: #333;
-    font-size: 18px;
-    margin-top: 10px;
-}
-
-.button-group {
+/* Layout delle due colonne */
+.chat-container {
     display: flex;
-    flex-direction: column;
-    gap: 15px;
+    justify-content: space-between;
     margin-top: 20px;
 }
 
-.button-group button {
-    background-color: #2a7f63; /* Verde */
-    color: white;
-    font-size: 16px;
-    padding: 12px;
-    border: none;
-    border-radius: 25px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    width: 100%;
-}
-
-.button-group button:hover {
-    background-color: #1e5e45; /* Verde più scuro */
-}
-
-textarea {
-    width: 100%;
-    height: 100px;
+/* Area delle risposte automatiche (a sinistra) */
+.response-box {
+    width: 45%;
+    height: 200px;
     padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 14px;
-    margin-top: 15px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    resize: none;
+    margin-right: 10px;
 }
 
-.submit-button {
-    background-color: #2a7f63;
-    color: white;
+/* Area per la domanda libera (a destra) */
+.question-input {
+    width: 45%;
+    height: 200px;
+    padding: 10px;
     font-size: 16px;
-    padding: 12px;
+    border: 1px solid #ccc;
+    resize: none;
+}
+
+/* Pulsanti */
+.button-group {
+    margin: 20px 0;
+}
+
+.button {
+    background-color: #4CAF50;
+    color: white;
     border: none;
-    border-radius: 25px;
+    padding: 10px;
+    margin: 5px;
     cursor: pointer;
-    margin-top: 15px;
-    width: 100%;
+}
+
+.button:hover {
+    background-color: #45a049;
+}
+
+/* Pulsante di invio */
+.submit-button {
+    background-color: #008CBA;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
 }
 
 .submit-button:hover {
-    background-color: #1e5e45;
+    background-color: #007bb5;
 }
 
+/* Footer */
 footer {
-    text-align: center;
     margin-top: 20px;
     font-size: 14px;
-    color: #555;
+    color: #777;
 }
