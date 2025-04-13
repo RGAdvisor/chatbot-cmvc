@@ -19,7 +19,6 @@ function handleClick(tipo) {
 
     // Mostra la risposta fissa nel box bianco
     document.getElementById("risposta-fissa").textContent = risposta;
-
 }
 
 // Restituisce il numero del bottone (1-4) in base al tipo
@@ -39,17 +38,18 @@ document.getElementById("button2").addEventListener("click", () => handleClick('
 document.getElementById("button3").addEventListener("click", () => handleClick('indirizzo'));
 document.getElementById("button4").addEventListener("click", () => handleClick('specialita'));
 
-// Listener per bottone "Scrivi la tua domanda"
-document.querySelector(".submit-button").addEventListener("click", async () => {
-    const domanda = document.getElementById("domanda").value.trim();
-    if (domanda === "") return;
+// ✅ Listener per invio con ENTER dalla textarea
+document.getElementById("domanda").addEventListener("keydown", async function(e) {
+    if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        const domanda = this.value.trim();
+        if (domanda === "") return;
 
-    appendMessage('user', domanda);
-
-    // Inserisci chiamata API a OpenAI o risposta fittizia
-    const risposta = await getGPTResponse(domanda);
-
-    document.getElementById("domanda").value = "";
+        appendMessage("user", domanda);
+        const risposta = await getGPTResponse(domanda);
+        appendMessage("gpt", risposta);
+        this.value = "";
+    }
 });
 
 // Funzione per inserire i messaggi nella chat
@@ -65,6 +65,5 @@ function appendMessage(sender, message) {
 
 // Simula una risposta API (puoi integrarla con la tua chiave GPT)
 async function getGPTResponse(domanda) {
-    // QUI puoi collegarti con la tua chiave GPT oppure rispondere localmente
     return "Grazie per la domanda! Ti risponderemo al più presto.";
 }
