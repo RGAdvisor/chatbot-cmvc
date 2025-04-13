@@ -1,0 +1,27 @@
+# 🔒 File di configurazione segreti
+.env
+.env.local
+.env.*.local
+
+# 💻 File generati dagli editor
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# 🗑️ File di sistema o temporanei
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+
+# ⚙️ Cartelle di build (se userai strumenti tipo Webpack)
+dist/
+build/
+
+# 🧪 Test o mock temporanei
+__tests__/
+*.test.js
+
+# ⚠️ Evita doppie cartelle Netlify nel repo
+.netlify/
