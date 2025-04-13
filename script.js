@@ -1,113 +1,174 @@
-// Funzione per gestire il clic sui bottoni
-function handleClick(tipo) {
-    let risposta = "";
-    switch (tipo) {
-        case 'prenotazione':
-            risposta = "Puoi prenotare chiamando lo 0332 624820 o scrivendo a segreteria@csvcuvio.it.";
-            break;
-        case 'orari':
-            risposta = "Lunedì, Mercoledì e Venerdì: 9–12 / 14–19.30\nMartedì: 14–19.30\nGiovedì: 9–12\nSabato: 9–13";
-            break;
-        case 'indirizzo':
-            risposta = "Ci trovi in Via Enrico Fermi, 6 – 21030 Cuvio (VA)";
-            break;
-        case 'specialita':
-            risposta = "Il centro ha una divisione dentale e una di polispecialistica: Odontoiatria, ginecologia, cardiologia, chirurgia vascolare, pneumologia, dietologia, fisioterapia.";
-            break;
-    }
-    appendMessage('user', document.getElementById("domanda").value); // Aggiungi la domanda dell'utente
-    appendMessage('gpt', risposta); // Aggiungi la risposta del chatbot
-    document.getElementById("domanda").value = ""; // Pulisci la textarea
+/* Generale */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f1f1f1;
+    margin: 0;
+    padding: 0;
+    display: flex; /* Aggiunto per centrare meglio il container */
+    justify-content: center; /* Aggiunto per centrare */
+    min-height: 100vh; /* Aggiunto per centrare verticalmente */
+    align-items: center; /* Aggiunto per centrare verticalmente */
 }
 
-// Aggiungi il listener per i bottoni
-document.getElementById("button1").addEventListener("click", function() {
-    handleClick('prenotazione');
-});
-
-document.getElementById("button2").addEventListener("click", function() {
-    handleClick('orari');
-});
-
-document.getElementById("button3").addEventListener("click", function() {
-    handleClick('indirizzo');
-});
-
-document.getElementById("button4").addEventListener("click", function() {
-    handleClick('specialita');
-});
-
-// Funzione per aggiungere dinamicamente il messaggio al contenitore della chat
-function appendMessage(sender, message) {
-    const chatContainer = document.getElementById("chat-container");
-    
-    const messageElement = document.createElement("div");
-    messageElement.classList.add(sender + "-message");
-    messageElement.textContent = message;
-    
-    chatContainer.appendChild(messageElement);
+/* Contenitore principale */
+.container {
+    width: 100%;
+    max-width: 600px;
+    /* Rimosso margin: 20px auto; perché gestito dal body flex */
+    margin: 20px; /* Aggiunto un margine per non attaccare ai bordi su schermi piccoli */
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    display: flex; /* Usiamo flexbox per organizzare gli elementi interni */
+    flex-direction: column; /* Elementi in colonna */
 }
 
-// Aggiungi il listener per il pulsante "Invia"
-document.querySelector(".submit-button").addEventListener("click", function() {
-    const domanda = document.getElementById("domanda").value.trim();
-    if (domanda !== "") {
-        appendMessage('user', domanda);
-        appendMessage('gpt', "Risposta automatica del chatbot");
-    }
-});
+/* Titoli */
+h1 {
+    text-align: center;
+    color: #2a7f63; /* Verde */
+    margin-top: 0; /* Rimuove margine superiore predefinito */
+}
 
-// Funzione per gestire l'invio della domanda a GPT-3.5 e ricevere la risposta
-async function handleInput() {
-    const domanda = document.getElementById("domanda").value.trim();
-    let risposta = "Grazie per la domanda! Ti risponderemo al più presto.";
+/* Paragrafo introduttivo */
+.container > p { /* Seleziona solo il primo <p> figlio diretto */
+    text-align: center;
+    color: #555;
+    margin-bottom: 20px;
+}
 
-    // Se la domanda non è vuota, invia una richiesta a GPT
-    if (domanda !== "") {
-        const apiKey = "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"; // Usa un sistema di gestione variabili d'ambiente come Netlify o un server backend
-        const url = "https://api.openai.com/v1/chat/completions";
 
-        const data = {
-            model: "gpt-3.5-turbo",
-            messages: [
-                { role: "user", content: domanda }
-            ],
-            max_tokens: 150,
-            temperature: 0.7,
-        };
+/* Gruppo di bottoni */
+.button-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Ridotto leggermente lo spazio */
+    margin-top: 10px;
+    margin-bottom: 15px; /* Spazio prima dell'area risposta fissa */
+}
 
-        try {
-            const response = await fetch(url, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${apiKey}`,
-                },
-                body: JSON.stringify(data),
-            });
+.button-group button {
+    background-color: #2a7f63; /* Verde */
+    color: white;
+    font-size: 15px; /* Leggermente più piccolo */
+    padding: 10px 15px; /* Padding aggiustato */
+    border: none;
+    border-radius: 20px; /* Arrotondamento leggermente ridotto */
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 100%;
+    text-align: center; /* Assicura testo centrato */
+}
 
-            if (response.ok) {
-                const json = await response.json();
-                const gptResponse = json.choices[0].message.content.trim();
+.button-group button:hover {
+    background-color: #1e5e45; /* Verde più scuro */
+}
 
-                // Controlla se la risposta di GPT è vuota o errata
-                if (!gptResponse) {
-                    risposta = "Non sono riuscito a ricevere una risposta, riprova più tardi.";
-                } else {
-                    risposta = gptResponse;
-                }
-            } else {
-                console.error("Errore nella richiesta a GPT:", response.status);
-                const errorData = await response.json();
-                console.error("Dettagli errore:", errorData);
-                risposta = "Mi scuso, ma non sono in grado di rispondere ora. Errore: " + response.status;
-            }
-        } catch (error) {
-            console.error("Errore nella chiamata API:", error);
-            risposta = "Mi scuso, ma c'è stato un errore nella chiamata al server.";
-        }
-    }
+/* Area per la risposta fissa (MODIFICATA) */
+#fixed-answer-area.response-box { /* Stile specifico per l'area dedicata */
+    background-color: white;
+    border: 1px solid #2a7f63; /* Bordo verde coordinato */
+    border-radius: 10px;
+    padding: 12px;
+    margin-top: 0; /* Rimosso margine sopra, gestito dal gap del container */
+    margin-bottom: 15px; /* Spazio prima della chat */
+    width: auto; /* Adatta larghezza al contenuto, ma rispetta padding */
+    align-self: center; /* Centra il box se il contenuto è corto */
+    max-width: 95%; /* Limita larghezza massima */
+    box-sizing: border-box; /* Include padding e border nella larghezza */
+    color: #333; /* Colore testo */
+    font-size: 14px; /* Dimensione testo risposta */
+    line-height: 1.5; /* Interlinea per leggibilità */
+    white-space: pre-wrap; /* Mantiene le interruzioni di riga dalla stringa JS */
+}
 
-    // Visualizza la risposta di GPT nel campo di testo (textarea)
-    document.getElementById("domanda").value = risposta;
+
+/* Contenitore della chat dinamica */
+#chat-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 15px; /* Spazio prima dell'input */
+    overflow-y: auto; /* Aggiunge scroll se la chat diventa lunga */
+    max-height: 300px; /* Limita altezza massima della chat */
+    padding: 5px; /* Piccolo padding interno */
+}
+
+/* Messaggio dell'utente (MODIFICATO) */
+.user-message {
+    background-color: #2a7f63; /* Verde */
+    color: white;
+    border-radius: 15px 15px 0 15px; /* Arrotondamento stile chat */
+    padding: 10px 15px;
+    margin-left: auto; /* Allineamento a destra */
+    max-width: 70%; /* Limita larghezza massima */
+    word-wrap: break-word; /* Va a capo se parole lunghe */
+    align-self: flex-end; /* Allinea il box a destra nel flex container */
+}
+
+/* Messaggio del Chatbot (GPT o iniziale) (MODIFICATO) */
+.gpt-message { /* Rinominato per chiarezza */
+    background-color: #e9e9eb; /* Grigio chiaro per il bot */
+    color: #333;
+    border: 1px solid #dcdcdc; /* Bordo leggero */
+    border-radius: 15px 15px 15px 0; /* Arrotondamento stile chat */
+    padding: 10px 15px;
+    margin-right: auto; /* Allineamento a sinistra */
+    max-width: 70%; /* Limita larghezza massima */
+    word-wrap: break-word; /* Va a capo se parole lunghe */
+    align-self: flex-start; /* Allinea il box a sinistra nel flex container */
+}
+
+/* Rimosso .initial-question e .question-input perché non più usati */
+/* Rimosso .response-box generico se non serve altrove, usato #fixed-answer-area */
+
+
+/* Area di input (MODIFICATA) */
+.input-area {
+    display: flex; /* Allinea textarea e bottone sulla stessa riga */
+    gap: 10px; /* Spazio tra textarea e bottone */
+    margin-top: 15px;
+    align-items: flex-end; /* Allinea bottone e textarea in basso */
+}
+
+/* Textarea per input utente (MODIFICATA) */
+#domanda {
+    flex-grow: 1; /* Occupa lo spazio rimanente */
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 15px; /* Angoli arrotondati */
+    font-size: 14px;
+    resize: none; /* Impedisce ridimensionamento manuale */
+    min-height: 40px; /* Altezza minima */
+    box-sizing: border-box; /* Include padding/border nel calcolo altezza/larghezza */
+}
+
+/* Pulsante di invio (MODIFICATO) */
+#submit-button.submit-button { /* Aumenta specificità se necessario */
+    background-color: #2a7f63;
+    color: white;
+    font-size: 15px;
+    padding: 10px 15px; /* Padding coerente */
+    border: none;
+    border-radius: 15px; /* Angoli arrotondati */
+    cursor: pointer;
+    transition: background-color 0.3s;
+    height: 40px; /* Altezza fissa uguale a min-height textarea */
+    /* Rimosso width: 100% perché è in flex ora */
+    white-space: nowrap; /* Evita che "Invia" vada a capo */
+}
+
+#submit-button.submit-button:hover {
+    background-color: #1e5e45;
+}
+
+/* Footer (MODIFICATO) */
+footer {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 12px; /* Più piccolo */
+    color: #888; /* Grigio più chiaro */
+    padding-top: 10px;
+    border-top: 1px solid #eee; /* Separatore leggero */
 }
