@@ -92,12 +92,12 @@ footer {
 }
 
 .user-message {
-    background-color: #4f8a8b;
+    background-color: #2a7f63;
     color: white;
     padding: 10px;
-    border-radius: 10px;
-    max-width: 80%;
-    align-self: flex-start;
+    border-radius: 25px;
+    max-width: 45%;
+    align-self: flex-end; /* Messaggi a destra */
 }
 
 .gpt-response {
@@ -106,6 +106,6 @@ footer {
     padding: 10px;
     border: 1px solid #4CAF50;
     border-radius: 10px;
-    max-width: 80%;
-    align-self: flex-end;
+    max-width: 45%;
+    align-self: flex-start; /* Risposte a sinistra */
 }
