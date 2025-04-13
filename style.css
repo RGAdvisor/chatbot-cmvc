@@ -5,31 +5,46 @@
     text-align: center;
 }
 
-/* Layout delle due colonne */
+/* Layout alternato per domanda e risposte */
 .chat-container {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    justify-content: flex-start;
     margin-top: 20px;
 }
 
-/* Area delle risposte automatiche (a sinistra) */
-.response-box {
-    width: 45%;
-    height: 200px;
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    resize: none;
-    margin-right: 10px;
+/* Spazio per la domanda libera (a sinistra) */
+.user-message {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 15px;
 }
 
-/* Area per la domanda libera (a destra) */
 .question-input {
     width: 45%;
-    height: 200px;
+    height: 100px;
     padding: 10px;
     font-size: 16px;
     border: 1px solid #ccc;
+    background-color: #4f8a8b; /* Petrolio */
+    color: white;
+    resize: none;
+}
+
+/* Spazio per la risposta di GPT (a destra) */
+.gpt-response {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 15px;
+}
+
+.response-box {
+    width: 45%;
+    height: 100px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #4CAF50; /* Bordo verde */
+    background-color: white;
     resize: none;
 }
 
