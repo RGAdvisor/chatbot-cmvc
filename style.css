@@ -45,7 +45,7 @@ h1 {
     background-color: #1e5e45;
 }
 
-/* Risposta fissa (stile identico al bottone verde ma sfondo bianco) */
+/* Risposta fissa */
 .response-box {
     background-color: white;
     border: 2px solid #2a7f63;
@@ -59,52 +59,26 @@ h1 {
     min-height: 40px;
 }
 
-/* Riga input: 2 bottoni e textarea */
-.input-row {
-    display: flex;
-    align-items: center;
-    margin-top: 20px;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-
-/* Bottoni metà */
-.half-button {
-    width: 48%;
-    padding: 10px;
-    border-radius: 25px;
-    font-size: 14px;
-    cursor: pointer;
-    text-align: center;
-    border: none;
-}
-
-/* Bianco a sinistra */
-.half-button.white {
-    background-color: white;
-    border: 2px solid #ccc;
-    color: #333;
-}
-
-/* Verde a destra */
-.half-button.green {
+/* Textarea verde per domanda */
+.green-textarea {
     background-color: #2a7f63;
     color: white;
     border: none;
-}
-
-/* Textarea centrale */
-textarea#domanda {
+    border-radius: 25px;
+    font-size: 16px;
+    padding: 12px 16px;
     width: 100%;
-    padding: 12px;
-    border-radius: 10px;
-    border: 1px solid #ccc;
-    resize: vertical;
-    margin-top: 10px;
-    font-size: 14px;
+    box-sizing: border-box;
+    text-align: left;
+    margin-top: 20px;
+    resize: none;
 }
 
-/* Chat container */
+.green-textarea::placeholder {
+    color: #e0e0e0;
+}
+
+/* Contenitore chat */
 .chat-container {
     display: flex;
     flex-direction: column;
@@ -113,11 +87,13 @@ textarea#domanda {
 }
 
 /* Messaggi */
-.user-message, .gpt-response {
+.user-message,
+.gpt-response {
     padding: 10px;
     border-radius: 10px;
     max-width: 60%;
     word-wrap: break-word;
+    font-size: 15px;
 }
 
 .user-message {
@@ -140,38 +116,3 @@ footer {
     font-size: 13px;
     color: #666;
 }
-.green-textarea {
-    background-color: #2a7f63;
-    color: white;
-    border: none;
-    border-radius: 25px;
-    font-size: 16px;
-    padding: 12px 16px;
-    width: 100%;
-    box-sizing: border-box;
-    text-align: left;
-    margin-top: 20px;
-    resize: none;
-}
-
-.green-textarea::placeholder {
-    color: #e0e0e0;
-}
-.green-textarea {
-    background-color: #2a7f63;
-    color: white;
-    border: none;
-    border-radius: 25px;
-    font-size: 16px;
-    padding: 12px 16px;
-    width: 100%;
-    box-sizing: border-box;
-    text-align: left;
-    margin-top: 20px;
-    resize: none;
-}
-
-.green-textarea::placeholder {
-    color: #e0e0e0;
-}
-
