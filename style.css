@@ -47,6 +47,16 @@ h1 {
     background-color: #1e5e45; /* Verde più scuro */
 }
 
+/* Risposte fisse (domande predefinite) */
+.response-box {
+    background-color: white; /* Sfondo bianco per le risposte fisse */
+    border: 1px solid #4CAF50; /* Bordo verde */
+    border-radius: 10px; /* Angoli arrotondati */
+    padding: 10px;
+    margin: 5px 0;
+    width: 100%; /* Larghezza alla stessa del bottone */
+}
+
 /* Domanda dell'utente */
 .user-message {
     background-color: #4CAF50; /* Verde */
@@ -69,16 +79,6 @@ h1 {
     text-align: left;
     width: 50%; /* Larghezza alla metà del bottone */
     margin-right: auto; /* Allineamento a sinistra */
-}
-
-/* Risposte fisse (domande predefinite) */
-.response-box {
-    background-color: white; /* Sfondo bianco per le risposte fisse */
-    border: 1px solid #4CAF50; /* Bordo verde */
-    border-radius: 10px; /* Angoli arrotondati */
-    padding: 10px;
-    margin: 5px 0;
-    width: 100%; /* Larghezza alla stessa del bottone */
 }
 
 /* Inizializzazione delle domande */
