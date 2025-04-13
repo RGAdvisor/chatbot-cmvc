@@ -21,7 +21,6 @@ function handleClick(tipo) {
     document.getElementById("risposta-fissa").textContent = risposta;
 
     // Mostra anche nella chat
-    appendMessage('user', document.querySelector(`#button${getButtonNumber(tipo)}`).textContent);
     document.getElementById("risposta-fissa").textContent = risposta;
 
 }
