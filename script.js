@@ -19,19 +19,19 @@ function handleClick(tipo) {
     document.getElementById("risposta-fissa").textContent = risposta;
 }
 
-// Bottoni verdi
+// Listener bottoni fissi
 document.getElementById("button1").addEventListener("click", () => handleClick('prenotazione'));
 document.getElementById("button2").addEventListener("click", () => handleClick('orari'));
 document.getElementById("button3").addEventListener("click", () => handleClick('indirizzo'));
 document.getElementById("button4").addEventListener("click", () => handleClick('specialita'));
 
-// Invio domanda con ENTER
+// Invio domanda libera
 document.getElementById("domanda").addEventListener("keydown", async function (e) {
     if (e.key === "Enter" && !e.shiftKey) {
         e.preventDefault();
         const domanda = this.value.trim();
-        if (domanda === "") {
-            alert("Scrivi qualcosa prima di inviare!");
+        if (!domanda) {
+            alert("Scrivi una domanda prima di inviare!");
             return;
         }
 
@@ -45,13 +45,12 @@ document.getElementById("domanda").addEventListener("keydown", async function (e
 function appendMessage(sender, message) {
     const container = document.getElementById("chat-container");
     const msg = document.createElement("div");
-    msg.classList.add(sender === 'user' ? 'user-message' : 'gpt-response');
+    msg.classList.add(sender === "user" ? "user-message" : "gpt-response");
     msg.textContent = message;
     container.appendChild(msg);
     container.scrollTop = container.scrollHeight;
 }
 
-// Risposta simulata
 async function getGPTResponse(domanda) {
-    return "Grazie per la tua domanda. Un nostro operatore ti risponderà al più presto!";
+    return "Grazie per la tua domanda. Ti risponderemo al più presto!";
 }
