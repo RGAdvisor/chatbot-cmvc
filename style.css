@@ -1,8 +1,29 @@
-/* Contenitore principale */
-.container {
-    width: 80%;
-    margin: 0 auto;
+/* Resetta margini e padding di base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Corpo e layout generale */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* Header del sito */
+h1 {
+    font-size: 24px;
+    color: #333;
     text-align: center;
+    margin-bottom: 20px;
 }
 
 /* Gruppo di bottoni */
@@ -10,62 +31,71 @@
     margin-top: 20px;
     display: flex;
     justify-content: center;
+    flex-wrap: wrap; /* Aggiunta per garantire che si adattino a schermi più piccoli */
 }
 
 .button {
     background-color: #4CAF50;
     color: white;
     border: none;
-    padding: 10px;
-    margin: 5px;
+    border-radius: 15px; /* Bordo arrotondato */
+    padding: 10px 20px;
+    margin: 10px;
     cursor: pointer;
     width: 250px;
+    font-size: 16px;
+    transition: background-color 0.3s ease; /* Transizione per il cambiamento di colore */
 }
 
 .button:hover {
-    background-color: #45a049;
+    background-color: #45a049; /* Colore al passaggio del mouse */
 }
 
-/* Layout alternato per domanda e risposte */
+/* Aggiustamenti al layout */
 .chat-container {
     display: flex;
     justify-content: center;
     margin-top: 20px;
-    flex-direction: row; /* Risposte e domande si alternano orizzontalmente */
+    flex-direction: row;
+    gap: 10px;
 }
 
 /* Domanda dell'utente (a sinistra) */
 .user-message {
     display: flex;
     justify-content: flex-start;
-    margin-right: 10px; /* Spazio tra domanda e risposta */
+    margin-right: 10px;
+    flex-grow: 1;
 }
 
 .question-input {
-    width: 300px;
-    height: 100px;
+    width: 100%;
+    min-height: 100px;
     padding: 10px;
     font-size: 16px;
     border: 1px solid #ccc;
     background-color: #4f8a8b; /* Petrolio */
     color: white;
     resize: none;
+    border-radius: 10px; /* Bordo arrotondato */
 }
 
 /* Risposta del chatbot (a destra) */
 .gpt-response {
     display: flex;
     justify-content: flex-start;
+    flex-grow: 1;
 }
 
 .response-box {
-    width: 300px;
-    height: 100px;
+    width: 100%;
+    min-height: 100px;
     padding: 10px;
     font-size: 16px;
     border: 1px solid #4CAF50; /* Bordo verde */
     background-color: white;
     resize: none;
+    border-radius: 10px; /* Bordo arrotondato */
 }
 
 /* Pulsante di invio */
@@ -75,6 +105,8 @@
     border: none;
     padding: 10px 20px;
     cursor: pointer;
+    border-radius: 5px; /* Bordo arrotondato */
+    font-size: 16px;
 }
 
 .submit-button:hover {
@@ -86,4 +118,6 @@ footer {
     margin-top: 20px;
     font-size: 14px;
     color: #777;
+    text-align: center;
+    padding: 10px;
 }
