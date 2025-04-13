@@ -19,15 +19,14 @@
             <button id="button4" class="button" data-tipo="specialita">Quali servizi fornite?</button>
         </div>
 
-        <!-- Layout a due colonne per domanda libera e risposte -->
+        <!-- Layout alternato per domanda libera e risposte -->
         <div class="chat-container">
-            <div class="chat-box">
-                <!-- Qui verranno mostrate solo le risposte automatiche dei bottoni -->
-                <textarea id="risposte" class="response-box" placeholder="Risposte automatiche del chatbot" readonly></textarea>
-            </div>
-            <div class="question-box">
-                <!-- Spazio per scrivere la domanda libera -->
+            <div class="message-box user-message">
                 <textarea id="domanda" class="question-input" placeholder="Scrivi qui la tua domanda"></textarea>
+            </div>
+
+            <div class="message-box gpt-response">
+                <textarea id="risposte" class="response-box" placeholder="Risposte automatiche del chatbot" readonly></textarea>
             </div>
         </div>
 
