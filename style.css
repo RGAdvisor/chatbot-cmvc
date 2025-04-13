@@ -59,29 +59,30 @@ h1 {
     min-height: 40px;
 }
 
-/* Riga input: bottone bianco + textarea verde */
+/* Riga input con bottoni verticali */
 .input-row {
     display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
+    flex-direction: row;
     gap: 10px;
-    margin-top: 20px;
+    margin-top: 15px;
+    justify-content: center;
 }
 
-/* Bottone bianco a sinistra */
+/* Bottone bianco (Come posso aiutarti?) */
 .assist-button {
     width: 48%;
     background-color: white;
-    border: 2px solid #ccc;
-    color: #333;
+    border: 2px solid #2a7f63;
+    color: #2a7f63;
     font-size: 14px;
     border-radius: 25px;
     padding: 12px;
     text-align: center;
     box-sizing: border-box;
+    cursor: default;
 }
 
-/* Textarea verde a destra */
+/* Textarea verde */
 .green-textarea {
     width: 48%;
     background-color: #2a7f63;
@@ -98,7 +99,7 @@ h1 {
     color: #e0e0e0;
 }
 
-/* Contenitore chat */
+/* Chat */
 .chat-container {
     display: flex;
     flex-direction: column;
