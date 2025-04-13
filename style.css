@@ -4,6 +4,10 @@ body {
     background-color: #f1f1f1;
     margin: 0;
     padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }
 
 /* Contenitore principale */
@@ -15,11 +19,11 @@ body {
     background-color: white;
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
 }
 
 /* Titoli */
 h1 {
-    text-align: center;
     color: #2a7f63; /* Verde */
 }
 
@@ -52,24 +56,40 @@ h1 {
     background-color: white; /* Sfondo bianco per le risposte fisse */
     border: 1px solid #2a7f63; /* Bordo verde */
     border-radius: 10px; /* Angoli arrotondati */
-    padding: 15px;
-    margin-top: 15px;
-    width: 100%; /* Larghezza della stessa del bottone */
-    font-size: 16px;
-    color: #333;
+    padding: 10px;
+    margin: 5px 0;
+    width: 100%; /* Larghezza alla stessa del bottone */
     text-align: left;
 }
 
 /* Domanda dell'utente */
-.user-message {
-    background-color: #2a7f63; /* Verde */
-    color: white;
-    width: 50%; /* Larghezza alla metà del bottone */
+.initial-question {
+    background-color: white; /* Sfondo bianco */
+    border: 1px solid #2a7f63; /* Bordo verde */
     border-radius: 10px;
     padding: 10px;
-    margin: 5px;
+    margin: 5px 0;
+    width: 50%; /* Larghezza alla metà del bottone */
     text-align: left;
-    margin-left: auto; /* Allineamento a destra */
+    margin-left: auto;
+}
+
+/* Domanda libera dell'utente */
+.question-input-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+textarea {
+    width: 50%; /* Larghezza alla metà del bottone */
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    margin-top: 15px;
+    text-align: left;
+    margin-right: 15px;
 }
 
 /* Risposte del chatbot */
@@ -82,28 +102,6 @@ h1 {
     text-align: left;
     width: 50%; /* Larghezza alla metà del bottone */
     margin-right: auto; /* Allineamento a sinistra */
-}
-
-/* Inizializzazione delle domande */
-.initial-question {
-    background-color: white; /* Sfondo bianco */
-    border: 1px solid #2a7f63; /* Bordo verde */
-    border-radius: 10px;
-    padding: 10px;
-    margin: 5px 0;
-    width: 50%; /* Larghezza alla metà del bottone */
-    text-align: left;
-    margin-left: auto;
-}
-
-.question-input {
-    width: 50%; /* Larghezza alla metà del bottone */
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 14px;
-    margin-top: 15px;
-    text-align: left;
 }
 
 /* Pulsante di invio */
@@ -123,14 +121,6 @@ h1 {
     background-color: #1e5e45;
 }
 
-/* Footer */
-footer {
-    text-align: center;
-    margin-top: 20px;
-    font-size: 14px;
-    color: #555;
-}
-
 /* Separazione e allineamento delle risposte */
 .chat-container {
     display: flex;
@@ -144,7 +134,10 @@ footer {
     margin: 10px;
 }
 
-/* Nascondi i pallini verdi che si generano per le risposte */
-.chat-container .response-indicator {
-    display: none;
+/* Footer */
+footer {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #555;
 }
