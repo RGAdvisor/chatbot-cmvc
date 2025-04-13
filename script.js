@@ -16,7 +16,7 @@ function handleClick(tipo) {
             break;
     }
     appendMessage('user', document.getElementById("domanda").value); // Aggiungi la domanda dell'utente
-    appendMessage('gpt', risposta); // Aggiungi la risposta del chatbot
+    updateResponseMessage('gpt', risposta); // Aggiorna la risposta del chatbot
     document.getElementById("domanda").value = ""; // Pulisci la textarea
 }
 
@@ -37,7 +37,7 @@ document.getElementById("button4").addEventListener("click", function() {
     handleClick('specialita');
 });
 
-// Funzione per aggiungere dinamicamente il messaggio al contenitore della chat
+// Funzione per aggiungere o aggiornare un messaggio nel contenitore della chat
 function appendMessage(sender, message) {
     const chatContainer = document.getElementById("chat-container");
 
@@ -48,11 +48,30 @@ function appendMessage(sender, message) {
     chatContainer.appendChild(messageElement);
 }
 
+// Funzione per aggiornare la risposta nel contenitore esistente
+function updateResponseMessage(sender, message) {
+    const chatContainer = document.getElementById("chat-container");
+
+    // Trova l'ultimo messaggio GPT esistente
+    const lastGptMessage = chatContainer.querySelector('.gpt-message');
+
+    if (lastGptMessage) {
+        // Se esiste, aggiorna il messaggio
+        lastGptMessage.textContent = message;
+    } else {
+        // Altrimenti crea un nuovo messaggio GPT
+        const messageElement = document.createElement("div");
+        messageElement.classList.add('gpt-message');
+        messageElement.textContent = message;
+        chatContainer.appendChild(messageElement);
+    }
+}
+
 // Aggiungi il listener per il pulsante "Invia"
 document.querySelector(".submit-button").addEventListener("click", function() {
     const domanda = document.getElementById("domanda").value.trim();
     if (domanda !== "") {
         appendMessage('user', domanda);
-        appendMessage('gpt', "Risposta automatica del chatbot");
+        updateResponseMessage('gpt', "Risposta automatica del chatbot");
     }
 });
