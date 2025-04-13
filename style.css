@@ -55,6 +55,7 @@ h1 {
     padding: 10px;
     margin: 5px 0;
     width: 100%; /* Larghezza alla stessa del bottone */
+    text-align: left;
 }
 
 /* Domanda dell'utente */
@@ -93,6 +94,7 @@ h1 {
     margin-left: auto;
 }
 
+/* Input domanda */
 .question-input {
     width: 50%; /* Larghezza alla metà del bottone */
     padding: 10px;
@@ -139,4 +141,14 @@ footer {
 .chat-container .user-message, .chat-container .gpt-response {
     display: block;
     margin: 10px;
+}
+
+/* Eliminazione del rettangolo verde per le risposte fisse */
+.response-box {
+    background-color: white;
+    border: 1px solid #4CAF50;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 10px 0;
+    width: 100%;
 }
