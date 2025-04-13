@@ -16,7 +16,7 @@ function handleClick(tipo) {
             break;
     }
     appendMessage('user', document.getElementById("domanda").value); // Aggiungi la domanda dell'utente
-    updateResponseMessage('gpt', risposta); // Aggiorna la risposta del chatbot
+    updateResponseMessage('gpt', risposta); // Aggiorna la risposta di GPT
     document.getElementById("domanda").value = ""; // Pulisci la textarea
 }
 
