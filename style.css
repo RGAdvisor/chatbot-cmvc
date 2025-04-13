@@ -8,6 +8,8 @@
 /* Gruppo di bottoni */
 .button-group {
     margin-top: 20px;
+    display: flex;
+    justify-content: center;
 }
 
 .button {
@@ -29,18 +31,18 @@
     display: flex;
     justify-content: center;
     margin-top: 20px;
-    flex-direction: column; /* Le risposte si alternano in colonna */
+    flex-direction: row; /* Risposte e domande si alternano orizzontalmente */
 }
 
 /* Domanda dell'utente (a sinistra) */
 .user-message {
     display: flex;
     justify-content: flex-start;
-    margin-bottom: 15px;
+    margin-right: 10px; /* Spazio tra domanda e risposta */
 }
 
 .question-input {
-    width: 80%;
+    width: 300px;
     height: 100px;
     padding: 10px;
     font-size: 16px;
@@ -54,11 +56,10 @@
 .gpt-response {
     display: flex;
     justify-content: flex-start;
-    margin-bottom: 15px;
 }
 
 .response-box {
-    width: 80%;
+    width: 300px;
     height: 100px;
     padding: 10px;
     font-size: 16px;
