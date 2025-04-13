@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Centro Sanitario Valcuvia - Chatbot</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Centro Sanitario Valcuvia</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
@@ -12,34 +12,29 @@
         <p>Come posso aiutarti oggi?</p>
 
         <div class="button-group">
-            <button id="button1">Come posso prenotare una visita?</button>
-            <button id="button2">Quali sono i vostri orari?</button>
-            <button id="button3">Dove si trova il Centro?</button>
-            <button id="button4">Quali servizi fornite?</button>
+            <button id="button1" class="button" data-tipo="prenotazione">Come posso prenotare una visita?</button>
+            <button id="button2" class="button" data-tipo="orari">Quali sono i vostri orari?</button>
+            <button id="button3" class="button" data-tipo="indirizzo">Dove si trova il Centro?</button>
+            <button id="button4" class="button" data-tipo="specialita">Quali servizi fornite?</button>
         </div>
 
-        <div id="chat-container" class="chat-container">
-            <!-- Risposte fisse -->
-            <div class="response-box">
-                <p>Ci trovi in Via Enrico Fermi, 6 – 21030 Cuvio (VA)</p>
+        <div id="chat-container"></div>
+
+        <div class="chat-container">
+            <div class="initial-question">
+                Come posso aiutarti?
             </div>
-            <div class="response-box">
-                <p>Lunedì, Mercoledì e Venerdì: 9–12 / 14–19.30, Martedì: 14–19.30, Giovedì: 9–12, Sabato: 9–13</p>
+            <div class="user-message">
+                Scrivi qui la tua domanda
             </div>
         </div>
 
-        <!-- Domanda iniziale e area per input -->
-        <div class="initial-question">
-            <p>Come posso aiutarti?</p>
-        </div>
-        
-        <div class="user-message">
-            <input type="text" id="domanda" placeholder="Scrivi qui la tua domanda..." />
-        </div>
+        <textarea id="domanda" placeholder="Scrivi qui la tua domanda"></textarea>
 
         <button class="submit-button">Invia</button>
+
         <footer>
-            <p>Grazie per la domanda! Ti risponderemo al più presto.</p>
+            Grazie per la domanda! Ti risponderemo al più presto.
         </footer>
     </div>
 
