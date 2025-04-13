@@ -4,52 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Centro Sanitario Valcuvia</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Benvenuto al Centro Sanitario Valcuvia</h1>
-        <p>Come posso aiutarti oggi?</p>
+<div class="container">
+    <h1>Benvenuto al Centro Sanitario Valcuvia</h1>
 
-        <div class="button-group">
-            <button id="button1">Come posso prenotare una visita?</button>
-            <button id="button2">Quali sono i vostri orari?</button>
-            <button id="button3">Dove si trova il Centro?</button>
-            <button id="button4">Quali servizi fornite?</button>
-        </div>
-
-        <!-- Risposte fisse sotto il bottone "Quali servizi fornite?" -->
-        <div id="fixed-responses">
-            <div class="fixed-response-container" id="response1">
-                <p>Puoi prenotare chiamando lo 0332 624820 o scrivendo a segreteria@csvcuvio.it.</p>
-            </div>
-            <div class="fixed-response-container" id="response2">
-                <p>Lunedì, Mercoledì e Venerdì: 9–12 / 14–19.30 Martedì: 14–19.30 Giovedì: 9–12 Sabato: 9–13</p>
-            </div>
-            <div class="fixed-response-container" id="response3">
-                <p>Ci trovi in Via Enrico Fermi, 6 – 21030 Cuvio (VA)</p>
-            </div>
-            <div class="fixed-response-container" id="response4">
-                <p>Il centro ha una divisione dentale e una di polispecialistica: Odontoiatria, ginecologia, cardiologia, chirurgia vascolare, pneumologia, dietologia, fisioterapia.</p>
-            </div>
-        </div>
-
-        <!-- Sezione Domanda e Risposta dell'utente -->
-        <div id="user-input">
-            <div class="initial-question">
-                <p>Come posso aiutarti?</p>
-            </div>
-            <div class="question-input-container">
-                <textarea id="domanda" placeholder="Scrivi qui la tua domanda..." rows="4"></textarea>
-            </div>
-            <button id="submit-btn" class="submit-button">Invia</button>
-        </div>
-
-        <footer>
-            <p>Grazie per la domanda! Ti risponderemo al più presto.</p>
-        </footer>
+    <div class="button-group">
+        <button id="button1" data-tipo="prenotazione">Come posso prenotare una visita?</button>
+        <button id="button2" data-tipo="orari">Quali sono i vostri orari?</button>
+        <button id="button3" data-tipo="indirizzo">Dove si trova il Centro?</button>
+        <button id="button4" data-tipo="specialita">Quali servizi fornite?</button>
     </div>
 
-    <script src="script.js"></script>
+    <!-- Box con la risposta fissa -->
+    <div id="risposta-fissa" class="response-box"></div>
+
+    <!-- Area domanda e invio -->
+    <div class="input-row">
+        <button class="half-button white">Come posso aiutarti?</button>
+        <textarea id="domanda" placeholder="Scrivi qui la tua domanda..."></textarea>
+        <button class="half-button green submit-button">Scrivi la tua domanda</button>
+    </div>
+
+    <!-- Area chat -->
+    <div id="chat-container" class="chat-container"></div>
+
+    <footer>Grazie per la domanda! Ti risponderemo al più presto.</footer>
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
