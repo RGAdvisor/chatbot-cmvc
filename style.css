@@ -90,11 +90,11 @@ textarea {
     padding: 10px;
     border-radius: 15px;
     text-align: left;
-    max-width: 100%; /* Larghezza del 100% del contenitore */
+    width: 100%; /* Larghezza del 100% del contenitore */
     word-wrap: break-word;
 }
 
-/* Risposte del chatbot */
+/* Risposte del chatbot (rimuoviamo il pallino verde) */
 .gpt-message {
     background-color: white;
     border: 1px solid #000;
@@ -102,7 +102,7 @@ textarea {
     padding: 10px;
     border-radius: 15px;
     text-align: left;
-    max-width: 100%; /* Larghezza del 100% del contenitore */
+    width: 100%; /* Larghezza del 100% del contenitore */
     word-wrap: break-word;
 }
 
