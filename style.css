@@ -1,4 +1,3 @@
-/* Stile di base */
 body {
     font-family: Arial, sans-serif;
     background-color: #f1f1f1;
@@ -16,13 +15,11 @@ body {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Titolo */
-h1 {
+h1, h2 {
     text-align: center;
     color: #2a7f63; /* Verde */
 }
 
-/* I bottoni */
 .button-group {
     display: flex;
     flex-direction: column;
@@ -46,7 +43,6 @@ h1 {
     background-color: #1e5e45; /* Verde più scuro */
 }
 
-/* Input per la domanda dell'utente */
 textarea {
     width: 100%;
     height: 100px;
@@ -57,7 +53,6 @@ textarea {
     margin-top: 15px;
 }
 
-/* Pulsante di invio */
 .submit-button {
     background-color: #2a7f63;
     color: white;
@@ -74,41 +69,35 @@ textarea {
     background-color: #1e5e45;
 }
 
-/* Contenitore delle risposte e messaggi */
-#chat-container {
-    display: flex;
-    flex-direction: column;
-    gap: 10px; /* Spazio tra i messaggi */
-}
-
-/* Risposte dell'utente e del chatbot */
-.gpt-response, .user-message {
-    background-color: white;
-    border: 1px solid black; /* Bordo nero per le risposte */
-    border-radius: 10px; /* Angoli arrotondati */
-    padding: 10px;
-    margin-bottom: 10px;
-    width: 100%;
-    font-size: 16px;
-    min-height: 50px; /* Imposta un minimo per l'altezza */
-}
-
-/* Risposte fisse dei bottoni */
-.fixed-response {
-    background-color: white;
-    border: 1px solid black; /* Bordo nero */
-    border-radius: 10px; /* Angoli arrotondati */
-    padding: 10px;
-    margin-bottom: 10px;
-    width: 100%;
-    font-size: 16px;
-    min-height: 50px;
-}
-
-/* Footer */
 footer {
     text-align: center;
     margin-top: 20px;
     font-size: 14px;
     color: #555;
+}
+
+/* Contenitore della chat */
+#chat-container {
+    margin-top: 20px;
+}
+
+/* Messaggi utente */
+.user-message {
+    background-color: #4CAF50; /* Verde */
+    color: white;
+    padding: 10px;
+    border-radius: 15px;
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+/* Risposte chatbot */
+.gpt-message {
+    background-color: white;
+    border: 1px solid #000;
+    color: black;
+    padding: 10px;
+    border-radius: 15px;
+    margin-bottom: 10px;
+    text-align: left;
 }
