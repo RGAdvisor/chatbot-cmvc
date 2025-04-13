@@ -56,7 +56,7 @@ async function getGPTResponse(domanda) {
 }
 async function getGPTResponse(domanda) {
   try {
-    const response = await fetch("/.netlify/functions/askGPT", {
+    const response = await fetch("/.netlify/functions/askgpt", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
