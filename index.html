@@ -11,7 +11,6 @@
         <h1>Benvenuto al Centro Sanitario Valcuvia</h1>
         <h2>Come posso aiutarti oggi?</h2>
 
-        <!-- Gruppo di bottoni per le risposte automatiche -->
         <div class="button-group">
             <button id="button1" class="button" data-tipo="prenotazione">Come posso prenotare una visita?</button>
             <button id="button2" class="button" data-tipo="orari">Quali sono i vostri orari?</button>
@@ -19,20 +18,18 @@
             <button id="button4" class="button" data-tipo="specialita">Quali servizi fornite?</button>
         </div>
 
-        <!-- Layout alternato per domanda libera e risposte -->
         <div class="chat-container">
             <!-- Domanda dell'utente (a sinistra) -->
-            <div class="message-box user-message">
-                <textarea id="domanda" class="question-input" placeholder="Scrivi qui la tua domanda"></textarea>
+            <div class="user-message">
+                <textarea id="domanda" placeholder="Scrivi qui la tua domanda"></textarea>
             </div>
-
+            
             <!-- Risposta del chatbot (a destra) -->
-            <div class="message-box gpt-response">
-                <textarea id="risposte" class="response-box" placeholder="Risposte automatiche del chatbot" readonly></textarea>
+            <div class="gpt-response">
+                <textarea class="response-box" placeholder="Risposte automatiche del chatbot" readonly></textarea>
             </div>
         </div>
 
-        <!-- Pulsante per inviare la domanda -->
         <button class="submit-button">Invia</button>
 
         <footer>
