@@ -1,17 +1,16 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Centro Sanitario Valcuvia</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-
   <div class="container">
     <h1>Benvenuto al Centro Sanitario Valcuvia</h1>
 
-    <!-- Bottoni verdi -->
+    <!-- Bottoni domande fisse -->
     <div class="button-group">
       <button id="button1">Come posso prenotare una visita?</button>
       <button id="button2">Quali sono i vostri orari?</button>
@@ -22,21 +21,19 @@
     <!-- Risposta fissa -->
     <div id="risposta-fissa" class="response-box"></div>
 
-    <!-- Riga: bottone bianco + textarea verde -->
-    
-   <div class="input-row">
-  <button class="assist-button">Come posso aiutarti?</button>
-  <textarea id="domanda" class="green-textarea" placeholder="Scrivi qui la tua domanda..."></textarea>
-</div>
+    <!-- Riga input DOMANDA LIBERA -->
+    <div class="input-row">
+      <button class="assist-button">Come posso aiutarti?</button>
+    </div>
+    <div class="input-row">
+      <textarea id="domanda" class="green-textarea" placeholder="Scrivi qui la tua domanda..."></textarea>
+    </div>
 
-    <!-- Chat alternata -->
+    <!-- Chat (domanda + risposta) -->
     <div id="chat-container" class="chat-container"></div>
 
     <footer>
       Grazie per la domanda! Ti risponderemo al più presto.
     </footer>
   </div>
-
-  <script src="script.js"></script>
-</body>
-</html>
+  <
