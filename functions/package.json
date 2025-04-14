@@ -1,5 +1,5 @@
 {
-  "name": "funzioni-netlify",
+  "name": "netlify-functions",
   "version": "1.0.0",
   "main": "askgpt.js",
   "type": "module",
