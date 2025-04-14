@@ -16,16 +16,14 @@ function handleClick(tipo) {
             break;
     }
 
-    document.getElementById("risposta-fissa").textContent = risposta;
+    appendMessage("gpt", risposta);
 }
 
-// Listener bottoni fissi
 document.getElementById("button1").addEventListener("click", () => handleClick('prenotazione'));
 document.getElementById("button2").addEventListener("click", () => handleClick('orari'));
 document.getElementById("button3").addEventListener("click", () => handleClick('indirizzo'));
 document.getElementById("button4").addEventListener("click", () => handleClick('specialita'));
 
-// Invio domanda libera
 document.getElementById("domanda").addEventListener("keydown", async function (e) {
     if (e.key === "Enter" && !e.shiftKey) {
         e.preventDefault();
@@ -36,13 +34,19 @@ document.getElementById("domanda").addEventListener("keydown", async function (e
         }
 
         appendMessage("user", domanda);
-        const risposta = await getGPTResponse(domanda);
-        appendMessage("gpt", risposta);
+
+        try {
+            const risposta = await getGPTResponse(domanda);
+            appendMessage("gpt", risposta || "Nessuna risposta ricevuta.");
+        } catch (error) {
+            appendMessage("gpt", "Errore durante la richiesta. Riprova più tardi.");
+            console.error("Errore nella risposta GPT:", error);
+        }
+
         this.value = "";
     }
 });
 
-// Aggiunta dei messaggi nella chat
 function appendMessage(sender, message) {
     const container = document.getElementById("chat-container");
     const msg = document.createElement("div");
@@ -52,22 +56,26 @@ function appendMessage(sender, message) {
     container.scrollTop = container.scrollHeight;
 }
 
-// Funzione che chiama il backend
 async function getGPTResponse(domanda) {
-    try {
-        const response = await fetch("/.netlify/functions/askgpt", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ prompt: domanda }),
-        });
+    const response = await fetch("/.netlify/functions/askgpt", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ domanda })
+    });
 
-        const data = await response.json();
-        return data.risposta || "Nessuna risposta ricevuta.";
-
-    } catch (error) {
-        console.error("Errore:", error);
-        return "Si è verificato un errore. Riprova più tardi.";
+    if (!response.ok) {
+        console.error("Errore HTTP:", response.status, await response.text());
+        throw new Error("Errore nella chiamata alla funzione");
     }
+
+    const data = await response.json();
+
+    if (!data || !data.risposta) {
+        console.warn("Risposta non valida dalla funzione:", data);
+        return null;
+    }
+
+    return data.risposta;
 }
