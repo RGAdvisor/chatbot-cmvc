@@ -1,10 +1,11 @@
 {
-  "name": "centro-sanitario-chatbot",
+  "name": "askgpt-function",
   "version": "1.0.0",
-  "main": "functions/askgpt.js",
+  "description": "Funzione serverless per Netlify che interroga l'API OpenAI",
+  "main": "askgpt.js",
   "type": "module",
   "scripts": {
-    "start": "node functions/askgpt.js"
+    "start": "node askgpt.js"
   },
   "dependencies": {
     "openai": "^4.0.0"
