@@ -1,2 +1,6 @@
-[functions]
-  directory = "functions"
+[build]
+  functions = "functions"
+  publish = "."
+
+[dev]
+  functions = "functions"
