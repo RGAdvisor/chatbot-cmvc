@@ -1,6 +1,6 @@
 [build]
-  functions = "functions"
-  publish = "."
+functions = "functions"
+publish = "."
 
 [dev]
-  functions = "functions"
+functions = "functions"
