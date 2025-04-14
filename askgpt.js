@@ -1,47 +1,37 @@
-import { OpenAI } from 'openai';
+import { Configuration, OpenAIApi } from "openai";
 
-const openai = new OpenAI({
+const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 });
+const openai = new OpenAIApi(configuration);
 
-export async function handler(event, context) {
+export default async (req, res) => {
   try {
-    const { prompt } = JSON.parse(event.body);
+    const { prompt } = req.body;
 
-    if (!prompt) {
-      return {
-        statusCode: 400,
-        body: JSON.stringify({ error: "Prompt mancante" }),
-      };
+    if (!prompt || typeof prompt !== "string") {
+      return res.status(400).json({
+        error: {
+          message: "Prompt mancante o non valido",
+        },
+      });
     }
 
-    const completion = await openai.chat.completions.create({
+    const completion = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
-      messages: [
-        {
-          role: "system",
-          content:
-            "Sei un assistente di un centro sanitario. Rispondi in modo gentile, chiaro e informativo.",
-        },
-        {
-          role: "user",
-          content: prompt,
-        },
-      ],
+      messages: [{ role: "user", content: prompt }],
     });
 
-    const risposta = completion.choices[0].message.content;
+    const risposta = completion.data.choices[0].message.content;
+    res.status(200).json({ risposta });
 
-    return {
-      statusCode: 200,
-      body: JSON.stringify({ risposta }),
-    };
   } catch (error) {
-    console.error("Errore GPT:", error);
-
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: error.message || "Errore generico" }),
-    };
+    console.error("Errore lato server:", error.response?.data || error.message);
+    res.status(500).json({
+      error: {
+        message: "Errore nella generazione della risposta",
+        detail: error.response?.data || error.message,
+      },
+    });
   }
-}
+};
