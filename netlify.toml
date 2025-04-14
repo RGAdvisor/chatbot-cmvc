@@ -1,7 +1,11 @@
 [build]
   functions = "functions"
-  command = "npm install --prefix functions"
+  publish = "."
 
-[functions]
-  directory = "functions"
-  node_bundler = "esbuild"
+[dev]
+  functions = "functions"
+
+[[redirects]]
+  from = "/.netlify/functions/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
