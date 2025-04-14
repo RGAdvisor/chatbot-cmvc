@@ -1,9 +1,5 @@
-[build]
-  functions = "functions"
-  publish = "."
-  command = "cd functions && npm install"
-
 [[redirects]]
-  from = "/.netlify/functions/*"
-  to = "/.netlify/functions/:splat"
-  status = 200
+from = "/api/*"
+to = "/.netlify/functions/:splat"
+status = 200
+
