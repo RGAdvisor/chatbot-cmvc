@@ -58,7 +58,8 @@ async function getGPTResponse(domanda) {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ prompt: domanda })
+     body: JSON.stringify({ prompt: domanda })
+
     });
 
     const data = await response.json();
