@@ -57,7 +57,7 @@ function appendMessage(sender, message) {
 }
 
 async function getGPTResponse(domanda) {
-    const response = await fetch("/.netlify/functions/askgpt", {
+    const response = await fetch("/.netlify/functions/chatgpt", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
