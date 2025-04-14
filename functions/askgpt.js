@@ -1,7 +1,8 @@
+// askgpt.js
 const { Configuration, OpenAIApi } = require("openai");
 
 const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY, // Assicurati che questa variabile sia impostata su Netlify
+  apiKey: process.env.OPENAI_API_KEY,
 });
 
 const openai = new OpenAIApi(configuration);
@@ -12,7 +13,7 @@ exports.handler = async (event) => {
     const domanda = body.domanda;
 
     const response = await openai.createChatCompletion({
-      model: "gpt-3.5-turbo", // o "gpt-4" se hai accesso
+      model: "gpt-3.5-turbo",
       messages: [{ role: "user", content: domanda }],
     });
 
@@ -30,4 +31,3 @@ exports.handler = async (event) => {
     };
   }
 };
-
