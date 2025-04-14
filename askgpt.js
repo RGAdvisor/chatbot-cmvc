@@ -9,28 +9,27 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
+  let body;
   try {
-    // Netlify invia il body come stringa, va parsato
-    let body;
-    try {
-      body = JSON.parse(req.body);
-    } catch (e) {
-      return res.status(400).json({ error: "JSON malformato" });
-    }
+    body = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
+  } catch (err) {
+    console.error("Errore nel parsing del body:", err);
+    return res.status(400).json({ error: "Corpo della richiesta non valido" });
+  }
 
-    const domanda = body?.domanda;
+  const domanda = body?.domanda;
 
-    if (!domanda || typeof domanda !== "string") {
-      return res.status(400).json({ error: "Domanda non valida" });
-    }
+  if (!domanda || typeof domanda !== "string") {
+    return res.status(400).json({ error: "Domanda non valida" });
+  }
 
-    // Chiamata corretta alle API OpenAI (v4)
-    const response = await openai.chat.completions.create({
+  try {
+    const completion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
       messages: [
         {
           role: "system",
-          content: "Rispondi come se fossi un assistente del Centro Sanitario Valcuvia.",
+          content: "Sei l'assistente virtuale del Centro Sanitario Valcuvia. Rispondi in modo chiaro e gentile.",
         },
         {
           role: "user",
@@ -40,14 +39,19 @@ export default async function handler(req, res) {
       temperature: 0.5,
     });
 
-    const risposta = response.choices[0]?.message?.content?.trim() || "Nessuna risposta generata.";
+    const risposta = completion.choices?.[0]?.message?.content?.trim();
+
+    if (!risposta) {
+      throw new Error("La risposta generata è vuota.");
+    }
+
     return res.status(200).json({ risposta });
 
-  } catch (error) {
-    console.error("Errore interno:", error);
+  } catch (err) {
+    console.error("Errore GPT:", err);
     return res.status(500).json({
-      error: "Errore durante la generazione della risposta GPT.",
-      dettagli: error.message,
+      error: "Errore interno GPT",
+      dettagli: err.message || "Errore sconosciuto",
     });
   }
 }
