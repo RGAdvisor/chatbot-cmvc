@@ -2,6 +2,7 @@
   "name": "chatbot-cmvc",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "dependencies": {
     "openai": "^4.0.0"
   }
