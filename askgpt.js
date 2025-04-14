@@ -18,7 +18,7 @@ export async function handler(event, context) {
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ reply: response.choices[0].message.content })
+      body: JSON.stringify({ risposta: response.choices[0].message.content })
     };
 
   } catch (error) {
