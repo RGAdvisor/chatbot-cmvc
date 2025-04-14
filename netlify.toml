@@ -1,6 +1,6 @@
 [build]
-functions = "functions"
-publish = "."
+  publish = "./"
+  functions = "functions"
 
-[dev]
-functions = "functions"
+[functions]
+  directory = "functions"
