@@ -1,37 +1,53 @@
-import { Configuration, OpenAIApi } from "openai";
+import OpenAI from "openai";
 
-const configuration = new Configuration({
+const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-const openai = new OpenAIApi(configuration);
-
-export default async (req, res) => {
+export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
   try {
-    const { domanda } = req.body;
+    // Netlify invia il body come stringa, va parsato
+    let body;
+    try {
+      body = JSON.parse(req.body);
+    } catch (e) {
+      return res.status(400).json({ error: "JSON malformato" });
+    }
+
+    const domanda = body?.domanda;
 
     if (!domanda || typeof domanda !== "string") {
       return res.status(400).json({ error: "Domanda non valida" });
     }
 
-    const response = await openai.createChatCompletion({
-      model: "gpt-3.5-turbo", // oppure "gpt-4" se hai accesso
+    // Chiamata corretta alle API OpenAI (v4)
+    const response = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo",
       messages: [
-        { role: "system", content: "Rispondi come se fossi un assistente del Centro Sanitario Valcuvia." },
-        { role: "user", content: domanda }
+        {
+          role: "system",
+          content: "Rispondi come se fossi un assistente del Centro Sanitario Valcuvia.",
+        },
+        {
+          role: "user",
+          content: domanda,
+        },
       ],
       temperature: 0.5,
     });
 
-    const risposta = response.data.choices[0]?.message?.content || "Nessuna risposta generata.";
-    res.status(200).json({ risposta });
+    const risposta = response.choices[0]?.message?.content?.trim() || "Nessuna risposta generata.";
+    return res.status(200).json({ risposta });
 
   } catch (error) {
     console.error("Errore interno:", error);
-    res.status(500).json({ error: "Errore durante la generazione della risposta GPT." });
+    return res.status(500).json({
+      error: "Errore durante la generazione della risposta GPT.",
+      dettagli: error.message,
+    });
   }
-};
+}
