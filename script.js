@@ -42,6 +42,7 @@ document.getElementById("domanda").addEventListener("keydown", async function (e
     }
 });
 
+// Aggiunta dei messaggi nella chat
 function appendMessage(sender, message) {
     const container = document.getElementById("chat-container");
     const msg = document.createElement("div");
@@ -51,22 +52,22 @@ function appendMessage(sender, message) {
     container.scrollTop = container.scrollHeight;
 }
 
+// Funzione che chiama il backend
 async function getGPTResponse(domanda) {
-  try {
-    const response = await fetch("/.netlify/functions/askgpt", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-     body: JSON.stringify({ prompt: domanda })
+    try {
+        const response = await fetch("/.netlify/functions/askgpt", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ prompt: domanda }),
+        });
 
-    });
+        const data = await response.json();
+        return data.risposta || "Nessuna risposta ricevuta.";
 
-    const data = await response.json();
-    return data.risposta;
-
-  } catch (error) {
-    console.error("Errore:", error);
-    return "Si è verificato un errore. Riprova più tardi.";
-  }
+    } catch (error) {
+        console.error("Errore:", error);
+        return "Si è verificato un errore. Riprova più tardi.";
+    }
 }
