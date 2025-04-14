@@ -1,8 +1,11 @@
 {
-  "name": "chatbot-cmvc",
+  "name": "centro-sanitario-chatbot",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "functions/askgpt.js",
   "type": "module",
+  "scripts": {
+    "start": "node functions/askgpt.js"
+  },
   "dependencies": {
     "openai": "^4.0.0"
   }
