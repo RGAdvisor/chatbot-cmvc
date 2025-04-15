@@ -24,34 +24,28 @@ export default async (req, res) => {
         {
           role: "system",
           content:
-            "Rispondi come assistente del nostro centro in modo gentile, empatico e informativo. Non menzionare mai il nome del centro o il medico di famiglia. Non suggerire mai di andare al pronto soccorso. Indirizza sempre a contattare il nostro centro per concordare un trattamento adeguato.",
+            "Rispondi come assistente del centro sanitario in modo empatico, gentile e informativo. Evita frasi generiche. Se l'utente riferisce un malessere, consiglia sempre di contattare il centro per concordare un trattamento adeguato. Non usare il nome del centro.",
         },
         { role: "user", content: domanda },
       ],
       temperature: 0.5,
     });
 
-    let risposta =
-      response.data.choices[0]?.message?.content ||
-      "Nessuna risposta generata.";
+    // Ottieni la risposta
+    let risposta = response.data.choices[0]?.message?.content || "Nessuna risposta generata.";
 
-    // Correzioni automatiche
-    risposta = risposta
-      .replace(/Centro Sanitario Valcuvia/gi, "il nostro centro")
-      .replace(/medico di famiglia/gi, "il nostro centro")
-      .replace(/pronto soccorso/gi, "il nostro centro");
+    // Rimuove il nome del centro, se presente
+    risposta = risposta.replace(/Centro Sanitario Valcuvia/gi, "il nostro centro");
 
-    // Aggiunge la firma finale se non già presente
+    // Aggiunge sempre la frase di contatto se manca
+    const firma = "Contattaci presso il nostro centro telefonando allo 0332 624820 per concordare un trattamento adeguato.";
     if (!risposta.includes("0332 624820")) {
-      risposta +=
-        "\n\nPer concordare un trattamento adeguato, contattaci presso il nostro centro telefonando allo 0332 624820.";
+      risposta += "\n\n" + firma;
     }
 
     res.status(200).json({ risposta });
   } catch (error) {
     console.error("Errore interno:", error);
-    res
-      .status(500)
-      .json({ error: "Errore durante la generazione della risposta GPT." });
+    res.status(500).json({ error: "Errore durante la generazione della risposta GPT." });
   }
 };
