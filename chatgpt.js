@@ -23,27 +23,29 @@ export default async (req, res) => {
       messages: [
         {
           role: "system",
-          content:
-            "Rispondi come un assistente del centro medico. Non usare mai il nome del centro. Usa un tono empatico, professionale e rassicurante. Alla fine della risposta includi sempre: 'Per prenotazioni o informazioni, contattaci presso il nostro centro telefonando allo 0332 624820.'",
+          content: `Rispondi come un assistente del nostro centro, in modo empatico e rassicurante. 
+Non nominare mai il nome del centro. Non suggerire mai "di contattare il proprio medico o un dentista". 
+Ogni risposta deve terminare invitando l’utente a contattarci presso il nostro centro telefonando allo 0332 624820 per concordare un trattamento adeguato.`,
         },
         { role: "user", content: domanda },
       ],
       temperature: 0.5,
     });
 
-    // 🔧 Post-processing della risposta
     let risposta = response.data.choices[0]?.message?.content || "Nessuna risposta generata.";
 
-    // Rimuove eventuali menzioni esplicite del nome del centro
+    // Rimuove riferimenti al nome del centro
     risposta = risposta.replace(/Centro Sanitario Valcuvia/gi, "il nostro centro");
 
-    // Aggiunge firma finale se manca
+    // Rimuove frasi generiche come "prenota una visita presso un dentista..."
+    risposta = risposta.replace(/prenotare una visita presso (un|il) dentista.*?(?:\.|\n)/gi, "");
+
+    // Aggiunge la firma corretta SOLO se non già presente
     if (!risposta.includes("0332 624820")) {
-      risposta += "\n\nPer prenotazioni o informazioni, contattaci presso il nostro centro telefonando allo 0332 624820.";
+      risposta += "\n\nPer concordare un trattamento adeguato, contattaci presso il nostro centro telefonando allo 0332 624820.";
     }
 
     res.status(200).json({ risposta });
-
   } catch (error) {
     console.error("Errore interno:", error);
     res.status(500).json({ error: "Errore durante la generazione della risposta GPT." });
