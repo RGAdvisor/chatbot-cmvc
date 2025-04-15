@@ -1,41 +1,39 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
   <title>Centro Sanitario Valcuvia</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="stile.css">
 </head>
 <body>
-  <div class="container">
-    <h1>Benvenuto al Centro Sanitario Valcuvia</h1>
+  <h1>Benvenuto al Centro Sanitario Valcuvia</h1>
 
-    <!-- Bottoni domande fisse -->
-    <div class="button-group">
-      <button id="button1">Come posso prenotare una visita?</button>
-      <button id="button2">Quali sono i vostri orari?</button>
-      <button id="button3">Dove si trova il Centro?</button>
-      <button id="button4">Quali servizi fornite?</button>
-    </div>
+  <button class="bottone">Come posso prenotare una visita?</button>
+  <button class="bottone">Quali sono i vostri orari?</button>
+  <button class="bottone">Dove si trova il Centro?</button>
+  <button class="bottone">Quali servizi fornite?</button>
 
-    <!-- Risposta fissa -->
-    <div id="risposta-fissa" class="response-box"></div>
+  <p class="domanda">Come posso aiutarti?</p>
+  <textarea placeholder="Scrivi qui la tua domanda..."></textarea>
 
-    <!-- Riga input DOMANDA LIBERA -->
-    <div class="input-row">
-      <div class="assist-button">Come posso aiutarti?</div>
-    </div>
-    <div class="input-row">
-      <textarea id="domanda" class="green-textarea" placeholder="Scrivi qui la tua domanda..."></textarea>
-    </div>
-
-    <!-- Chat (domanda + risposta) -->
-    <div id="chat-container" class="chat-container"></div>
-
-    <footer>
-      Grazie per la averci contattato. Buona giornata!
-    </footer>
+  <!-- RISPOSTE FISSE FORMATTATE CORRETTAMENTE -->
+  <div class="risposta-fissa">
+    Il centro ha una divisione dentale e una di polispecialistica: Odontoiatria, ginecologia, cardiologia, chirurgia vascolare, pneumologia, dietologia, fisioterapia.
   </div>
-  <script src="script.js"></script>
+
+  <div class="risposta-fissa">
+    Ci trovi in Via Enrico Fermi, 6 – 21030 Cuvio (VA)
+  </div>
+
+  <div class="risposta-fissa">
+    Lunedì, Mercoledì e Venerdì: 9–12 / 14–19.30<br>
+    Martedì: 14–19.30<br>
+    Giovedì: 9–12<br>
+    Sabato: 9–13
+  </div>
+
+  <div class="risposta-fissa">
+    Grazie per la averci contattato. Buona giornata!
+  </div>
 </body>
 </html>
