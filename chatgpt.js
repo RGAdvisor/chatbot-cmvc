@@ -27,10 +27,11 @@ exports.handler = async function (event, context) {
     const response = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
       messages: [
-        {
-          role: "system",
-          content:
-            "Rispondi come assistente del Centro Sanitario Valcuvia in modo gentile e informativo.",
+        { 
+  role: "system", 
+  content: "Rispondi come un assistente gentile ed empatico del Centro Sanitario Valcuvia. Mostra comprensione e invita sempre a contattare il Centro allo 0332 624820 per fissare un appuntamento. Solo il personale medico potrà valutare il caso e consigliare il trattamento più adatto. Non offrire diagnosi o cure specifiche." 
+},
+
         },
         { role: "user", content: domanda },
       ],
