@@ -37,10 +37,12 @@ textarea {
   border-radius: 8px;
   border: 1px solid #ccc;
   resize: none;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
 }
 
 .risposta-fissa {
-  background-color: #dffaf1; /* Verde chiaro */
+  background-color: #dffaf1;
   padding: 12px 24px;
   border-radius: 25px;
   margin: 10px 0;
