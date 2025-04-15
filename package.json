@@ -1,11 +1,7 @@
 {
-  "name": "askgpt-function",
+  "name": "netlify-chatgpt",
   "version": "1.0.0",
-  "main": "askgpt.js",
-  "type": "module",
-  "scripts": {
-    "start": "node askgpt.js"
-  },
+  "type": "commonjs",
   "dependencies": {
     "openai": "^4.0.0"
   }
