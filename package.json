@@ -1,8 +1,6 @@
 {
-  "name": "netlify-chatgpt",
-  "version": "1.0.0",
   "type": "commonjs",
   "dependencies": {
-    "openai": "^4.0.0"
+    "openai": "^3.2.1"
   }
 }
