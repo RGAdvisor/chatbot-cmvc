@@ -1,3 +1,4 @@
+/* Stile generale */
 body {
   font-family: Arial, sans-serif;
   background-color: #f8f8f8;
@@ -7,11 +8,14 @@ body {
   margin: auto;
 }
 
+/* Titolo */
 h1 {
   color: #00695c;
   text-align: center;
+  margin-bottom: 30px;
 }
 
+/* Bottoni verdi */
 .bottone {
   background-color: #008066;
   color: white;
@@ -22,13 +26,20 @@ h1 {
   margin: 10px 0;
   font-size: 16px;
   cursor: pointer;
+  transition: background-color 0.2s;
 }
 
+.bottone:hover {
+  background-color: #006653;
+}
+
+/* Domanda */
 .domanda {
   margin-top: 20px;
   font-weight: bold;
 }
 
+/* Area testo */
 textarea {
   width: 100%;
   height: 80px;
@@ -41,12 +52,14 @@ textarea {
   font-size: 14px;
 }
 
+/* Risposte fisse */
 .risposta-fissa {
   background-color: #dffaf1;
-  padding: 12px 24px;
+  padding: 16px 24px;
   border-radius: 25px;
   margin: 10px 0;
   width: 100%;
   box-sizing: border-box;
   font-size: 16px;
+  line-height: 1.6;
 }
