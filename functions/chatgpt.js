@@ -1,4 +1,4 @@
-// functions/chatgpt.js
+// File: functions/chatgpt.js
 const { Configuration, OpenAIApi } = require("openai");
 
 const configuration = new Configuration({
@@ -30,23 +30,28 @@ exports.handler = async function (event, context) {
       messages: [
         {
           role: "system",
-          content: "Rispondi come assistente del Centro Sanitario Valcuvia in modo gentile e informativo.",
+          content:
+            "Rispondi come assistente del Centro Sanitario Valcuvia in modo gentile e informativo.",
         },
-        { role: "user", content: domanda }
+        { role: "user", content: domanda },
       ],
       temperature: 0.5,
     });
 
     const risposta = response.data.choices[0].message.content;
+
     return {
       statusCode: 200,
       body: JSON.stringify({ risposta }),
     };
   } catch (error) {
-    console.error("Errore interno:", error);
+    console.error("Errore interno:", error.message);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: "Errore durante la generazione della risposta GPT." }),
+      body: JSON.stringify({
+        error: "Errore durante la generazione della risposta GPT.",
+        dettaglio: error.message,
+      }),
     };
   }
 };
