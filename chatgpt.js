@@ -24,24 +24,24 @@ export default async (req, res) => {
         {
           role: "system",
           content:
-            "Rispondi come assistente del centro sanitario in modo empatico, gentile e informativo. Evita frasi generiche. Se l'utente riferisce un malessere, consiglia sempre di contattare il centro per concordare un trattamento adeguato. Non usare il nome del centro.",
+            "Rispondi come assistente del nostro centro sanitario in modo gentile e informativo. Non citare mai il nome del centro. Invita sempre a contattarci al numero 0332 624820 per ogni informazione o per concordare un trattamento adeguato.",
         },
         { role: "user", content: domanda },
       ],
       temperature: 0.5,
     });
 
-    // Ottieni la risposta
     let risposta = response.data.choices[0]?.message?.content || "Nessuna risposta generata.";
 
-    // Rimuove il nome del centro, se presente
+    // Rimuove ogni uso di "Centro Sanitario Valcuvia"
     risposta = risposta.replace(/Centro Sanitario Valcuvia/gi, "il nostro centro");
 
-    // Aggiunge sempre la frase di contatto se manca
-    const firma = "Contattaci presso il nostro centro telefonando allo 0332 624820 per concordare un trattamento adeguato.";
-    if (!risposta.includes("0332 624820")) {
-      risposta += "\n\n" + firma;
-    }
+    // Elimina espressioni generiche di contatto
+    risposta = risposta.replace(/contattaci[^.?!]*[.?!]/gi, "");
+    risposta = risposta.replace(/non esitare a contattarci[^.?!]*[.?!]/gi, "");
+
+    // Firma fissa alla fine
+    risposta += "\n\nContattaci presso il nostro centro telefonando allo 0332 624820 per concordare un trattamento adeguato.";
 
     res.status(200).json({ risposta });
   } catch (error) {
