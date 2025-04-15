@@ -3,7 +3,58 @@
 <head>
   <meta charset="UTF-8">
   <title>Centro Sanitario Valcuvia</title>
-  <link rel="stylesheet" href="stile.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f8f8;
+      color: #003d33;
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+    }
+
+    h1 {
+      color: #00695c;
+      text-align: center;
+    }
+
+    .bottone {
+      background-color: #008066;
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 25px;
+      width: 100%;
+      margin: 10px 0;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .domanda {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+    textarea {
+      width: 100%;
+      height: 80px;
+      margin: 10px 0 20px 0;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      resize: none;
+    }
+
+    .risposta-fissa {
+      background-color: #dffaf1;
+      padding: 12px 24px;
+      border-radius: 25px;
+      margin: 10px 0;
+      width: 100%;
+      box-sizing: border-box;
+      font-size: 16px;
+    }
+  </style>
 </head>
 <body>
   <h1>Benvenuto al Centro Sanitario Valcuvia</h1>
@@ -16,7 +67,6 @@
   <p class="domanda">Come posso aiutarti?</p>
   <textarea placeholder="Scrivi qui la tua domanda..."></textarea>
 
-  <!-- RISPOSTE FISSE FORMATTATE CORRETTAMENTE -->
   <div class="risposta-fissa">
     Il centro ha una divisione dentale e una di polispecialistica: Odontoiatria, ginecologia, cardiologia, chirurgia vascolare, pneumologia, dietologia, fisioterapia.
   </div>
