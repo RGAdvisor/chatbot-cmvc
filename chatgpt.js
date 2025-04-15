@@ -23,32 +23,35 @@ export default async (req, res) => {
       messages: [
         {
           role: "system",
-          content: `Sei un assistente virtuale gentile e professionale del nostro centro. NON devi mai scrivere "Centro Sanitario Valcuvia", né suggerire di contattare il medico di famiglia o il pronto soccorso.
-
-Ogni tua risposta deve SEMPRE concludersi con questa frase esatta, senza modificarla:
-
-"Per concordare un trattamento adeguato, contattaci presso il nostro centro telefonando allo 0332 624820."
-
-Anche se l’utente ti parla di dolore, malessere, problemi ai denti o altri sintomi, non devi mai consigliare di rivolgersi altrove. Devi invece rassicurare, dare qualche consiglio generale e chiudere SEMPRE con la frase indicata. Non aggiungere mai nulla dopo quella frase.`,
+          content:
+            "Rispondi come assistente del nostro centro in modo gentile, empatico e informativo. Non menzionare mai il nome del centro o il medico di famiglia. Non suggerire mai di andare al pronto soccorso. Indirizza sempre a contattare il nostro centro per concordare un trattamento adeguato.",
         },
-        { role: "user", content: domanda }
+        { role: "user", content: domanda },
       ],
       temperature: 0.5,
     });
 
-    let risposta = response.data.choices[0]?.message?.content || "Nessuna risposta generata.";
+    let risposta =
+      response.data.choices[0]?.message?.content ||
+      "Nessuna risposta generata.";
 
-    // Correzioni automatiche nel testo generato
-    risposta = risposta.replace(/Centro Sanitario Valcuvia/gi, "il nostro centro");
+    // Correzioni automatiche
+    risposta = risposta
+      .replace(/Centro Sanitario Valcuvia/gi, "il nostro centro")
+      .replace(/medico di famiglia/gi, "il nostro centro")
+      .replace(/pronto soccorso/gi, "il nostro centro");
 
+    // Aggiunge la firma finale se non già presente
     if (!risposta.includes("0332 624820")) {
-      risposta += "\n\nPer concordare un trattamento adeguato, contattaci presso il nostro centro telefonando allo 0332 624820.";
+      risposta +=
+        "\n\nPer concordare un trattamento adeguato, contattaci presso il nostro centro telefonando allo 0332 624820.";
     }
 
     res.status(200).json({ risposta });
-
   } catch (error) {
     console.error("Errore interno:", error);
-    res.status(500).json({ error: "Errore durante la generazione della risposta GPT." });
+    res
+      .status(500)
+      .json({ error: "Errore durante la generazione della risposta GPT." });
   }
 };
