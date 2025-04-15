@@ -1,3 +1,4 @@
+// functions/chatgpt.js
 const { Configuration, OpenAIApi } = require("openai");
 
 const configuration = new Configuration({
@@ -29,10 +30,9 @@ exports.handler = async function (event, context) {
       messages: [
         {
           role: "system",
-          content:
-            "Rispondi come assistente del Centro Sanitario Valcuvia in modo gentile e informativo.",
+          content: "Rispondi come assistente del Centro Sanitario Valcuvia in modo gentile e informativo.",
         },
-        { role: "user", content: domanda },
+        { role: "user", content: domanda }
       ],
       temperature: 0.5,
     });
