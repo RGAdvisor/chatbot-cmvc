@@ -1,51 +1,49 @@
-import { Configuration, OpenAIApi } from "openai";
+const { Configuration, OpenAIApi } = require("openai");
 
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 });
-
 const openai = new OpenAIApi(configuration);
 
-export default async (req, res) => {
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
-  }
-
+exports.handler = async function (event, context) {
   try {
-    const { domanda } = req.body;
-
-    if (!domanda || typeof domanda !== "string") {
-      return res.status(400).json({ error: "Domanda non valida" });
-    }
+    const body = JSON.parse(event.body);
+    const domanda = body.domanda;
 
     const response = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
       messages: [
         {
           role: "system",
-          content: "Rispondi come assistente del centro, in modo gentile, informativo ed empatico. Non devi mai consigliare medici generici o il pronto soccorso. In caso di sintomi, invita sempre a contattare il nostro centro telefonando allo 0332 624820 per concordare un trattamento adeguato."
+          content:
+            "Rispondi come assistente del centro sanitario in modo gentile, empatico e informativo. Le risposte devono essere chiare e rassicuranti. Evita di citare nomi specifici come 'Centro Sanitario Valcuvia' o fornire email generiche. Se il paziente manifesta un malessere, invita sempre a contattare il centro telefonicamente per concordare un trattamento adeguato.",
         },
-        {
-          role: "user",
-          content: domanda
-        }
+        { role: "user", content: domanda },
       ],
       temperature: 0.5,
     });
 
-    let risposta = response.data.choices[0]?.message?.content || "Nessuna risposta generata.";
+    let risposta =
+      response.data.choices[0]?.message?.content || "Nessuna risposta generata.";
 
-    // Rimuove menzioni esplicite
+    // Rimuove nomi, email e numeri generici o errati
     risposta = risposta.replace(/Centro Sanitario Valcuvia/gi, "il nostro centro");
+    risposta = risposta.replace(/\S+@\S+\.\S+/g, "");
+    risposta = risposta.replace(/(?:\b\d{6,}\b|X{6,}|\d{2,}\s?\d{2,}\s?\d{2,})/g, "");
 
-    // Firma automatica
-    if (!risposta.includes("0332 624820")) {
-      risposta += "\n\nPer prenotazioni o informazioni, contattaci presso il nostro centro telefonando allo 0332 624820.";
-    }
+    // Aggiunge sempre la firma corretta
+    risposta +=
+      "\n\nPer prenotazioni o informazioni, contattaci presso il nostro centro telefonando allo 0332 624820.";
 
-    res.status(200).json({ risposta });
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ risposta }),
+    };
   } catch (error) {
-    console.error("Errore interno:", error);
-    res.status(500).json({ error: "Errore durante la generazione della risposta GPT." });
+    console.error("Errore nella risposta GPT:", error);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: "Errore nel generare una risposta." }),
+    };
   }
 };
