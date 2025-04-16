@@ -5,31 +5,16 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
-// Prestazioni disponibili
+// Elenco prestazioni disponibili
 const prestazioniDisponibili = [
-  "Addominoplastica",
-  "Agopuntura",
-  "Bleforaplastica",
-  "Carico immediato",
-  "Chirurgia estetica del seno",
-  "ECG",
-  "ECG sotto sforzo",
-  "Ecocardiocolordoppler",
-  "Ecografie",
-  "Holter cardiaco",
-  "Holter pressorio",
-  "Igiene dentale",
-  "Lipoemulsione sottocutanea",
-  "Liposcultura",
-  "Liposuzione",
-  "Mammografia",
-  "Otoplastica",
-  "Otturazioni",
-  "Visita cardiologica",
-  "Visita ginecologica"
+  "Addominoplastica", "Agopuntura", "Bleforaplastica", "Carico immediato",
+  "Chirurgia estetica del seno", "ECG", "ECG sotto sforzo", "Ecocardiocolordoppler",
+  "Ecografie", "Holter cardiaco", "Holter pressorio", "Igiene dentale",
+  "Lipoemulsione sottocutanea", "Liposcultura", "Liposuzione", "Mammografia",
+  "Otoplastica", "Otturazioni", "Visita cardiologica", "Visita ginecologica"
 ];
 
-// Utility per normalizzazione
+// Funzioni di supporto
 function normalizzaTesto(testo) {
   return testo.toLowerCase()
     .replace(/[^a-zàèéìòù\s]/gi, "")
@@ -37,39 +22,29 @@ function normalizzaTesto(testo) {
     .trim();
 }
 
-// Riconoscimento domande generiche
 function èDomandaGenerica(testo) {
   const frasi = ["ciao", "salve", "buongiorno", "buonasera", "grazie", "ok", "va bene"];
   const testoNorm = normalizzaTesto(testo);
   return frasi.includes(testoNorm);
 }
 
-// Verifica prestazioni (singolari e plurali)
 function contienePrestazione(domanda) {
   const testoDomanda = normalizzaTesto(domanda);
   return prestazioniDisponibili.some(prestazione => {
     const base = normalizzaTesto(prestazione);
-    const pluraleI = base.replace(/a$/, "e"); // visita → visite
-    const pluraleE = base.replace(/o$/, "i"); // ecocardiocolordoppler → ecocardiocolordoppleri
+    const pluraleI = base.replace(/a$/, "e");
+    const pluraleE = base.replace(/o$/, "i");
     return testoDomanda.includes(base) || testoDomanda.includes(pluraleI) || testoDomanda.includes(pluraleE);
   });
 }
 
-// Verifica se contiene malesseri
-function contieneMalessere(domanda) {
-  const paroleChiave = ["mal di", "dolore", "mi fa male", "non sto bene", "mi sento male"];
-  const testo = normalizzaTesto(domanda);
-  return paroleChiave.some(p => testo.includes(p));
-}
-
+// Main handler
 exports.handler = async function (event, context) {
   try {
     const body = JSON.parse(event.body);
     const domanda = body.domanda;
 
-    const brochureLink = "https://drive.google.com/file/d/1JOPK-rAAu5D330BwCY_7sOcHmkBwD6HD/view?usp=drive_link";
-
-    // Risposta a domande generiche
+    // Risposta generica
     if (èDomandaGenerica(domanda)) {
       return {
         statusCode: 200,
@@ -77,27 +52,20 @@ exports.handler = async function (event, context) {
       };
     }
 
-    // Risposta per indirizzo
-    const testoNorm = normalizzaTesto(domanda);
-    if (testoNorm.includes("dove") && (testoNorm.includes("siete") || testoNorm.includes("vi trovo") || testoNorm.includes("indirizzo"))) {
+    // Verifica prestazione
+    if (!contienePrestazione(domanda)) {
+      const risposta = `
+Mi dispiace, ma al momento il servizio richiesto non è tra quelli offerti dal nostro centro.<br><br>
+📄 <a href="https://drive.google.com/file/d/1JOPK-rAAu5D330BwCY_7sOcHmkBwD6HD/view?usp=drive_link" target="_blank">SCARICA ELENCO PRESTAZIONI CSV</a><br><br>
+📞 Per ulteriori informazioni o per fissare un appuntamento: chiama lo <strong>0332 624820</strong> oppure scrivi a 📧 <strong>segreteria@csvcuvio.it</strong>.
+      `;
       return {
         statusCode: 200,
-        body: JSON.stringify({
-          risposta: `Ci troviamo a Cuvio (VA), in via Enrico Fermi, 6 – 21030.\n\n📞 Per qualsiasi informazione o per fissare un appuntamento: chiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.`
-        }),
+        body: JSON.stringify({ risposta }),
       };
     }
 
-    // Se la prestazione NON è disponibile
-    if (!contienePrestazione(domanda)) {
-      const risposta = `Mi dispiace, ma al momento il servizio richiesto non è tra quelli offerti dal nostro centro.  
-📄 <a href="https://drive.google.com/file/d/1JOPK-rAAu5D330BwCY_7sOcHmkBwD6HD/view?usp=drive_link" target="_blank">SCARICA ELENCO PRESTAZIONI CSV</a>  
-📞 Per ulteriori informazioni o per fissare un appuntamento: chiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.`;
-
-      };
-    }
-
-    // Richiesta gestita da OpenAI
+    // Chiamata a OpenAI
     const response = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
       messages: [
@@ -106,17 +74,19 @@ exports.handler = async function (event, context) {
           content: `
 Sei un assistente virtuale del Centro Sanitario Valcuvia. Rispondi in modo gentile, corretto grammaticalmente e informativo.
 
-✅ Se l’utente segnala un malessere, consiglia di contattare il centro e aggiungi un solo consiglio pratico (es. bere acqua, riposo, impacchi, ecc.).
+✅ Se l’utente segnala un malessere (es: "ho mal di pancia", "ho mal di denti", ecc.), dopo aver consigliato di contattare il centro, puoi aggiungere solo un breve consiglio utile (riposo, impacchi, bere acqua, ecc.).
 
-❌ Non fornire consigli sanitari se non c’è un malessere dichiarato.
+❌ Non fornire mai consigli sanitari generici se non c'è un malessere esplicito.
 
-❌ Non usare mai "il tuo medico", "dentista di fiducia", "pronto soccorso". Rivolgi sempre al nostro centro.
+❌ Evita frasi come “contatta il tuo medico”, “dentista di fiducia” o “pronto soccorso”. Indirizza sempre al nostro centro.
 
-📍 Indirizzo: Via Enrico Fermi, 6 – 21030 Cuvio (VA)
+✅ I contatti devono essere sempre presenti:
 📞 0332 624820
 📧 segreteria@csvcuvio.it
 
-❗ Controlla grammatica e sintassi prima di rispondere.
+📍 L'indirizzo corretto è: Via Enrico Fermi, 6 – 21030 Cuvio (VA)
+
+❗Controlla grammatica e sintassi prima di inviare la risposta.
           `
         },
         { role: "user", content: domanda }
@@ -126,15 +96,15 @@ Sei un assistente virtuale del Centro Sanitario Valcuvia. Rispondi in modo genti
 
     let risposta = response.data.choices[0]?.message?.content || "Nessuna risposta generata.";
 
-    // Pulizia
+    // Pulizia testo
     risposta = risposta
       .replace(/(medico|dentista)( di fiducia)?/gi, "il nostro centro sanitario")
       .replace(/pronto soccorso/gi, "il nostro centro sanitario")
       .replace(/Centro Sanitario Valcuvia/gi, "il nostro centro")
       .replace(/contatta(ci)? (un|il) (professionista|specialista)/gi, "contattaci presso il nostro centro");
 
-    // Se non ci sono i contatti, aggiungili
-    const contatti = `\n\n📞 Per informazioni o per fissare un appuntamento: chiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.`;
+    const contatti = `<br><br>📞 Per informazioni o per fissare un appuntamento:<br>Chiama lo <strong>0332 624820</strong> oppure scrivi a 📧 <strong>segreteria@csvcuvio.it</strong>.`;
+
     if (!risposta.includes("0332 624820") && !risposta.includes("segreteria@csvcuvio.it")) {
       risposta += contatti;
     }
@@ -143,7 +113,6 @@ Sei un assistente virtuale del Centro Sanitario Valcuvia. Rispondi in modo genti
       statusCode: 200,
       body: JSON.stringify({ risposta }),
     };
-
   } catch (error) {
     console.error("Errore:", error);
     return {
