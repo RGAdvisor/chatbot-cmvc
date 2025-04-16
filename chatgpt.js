@@ -5,7 +5,7 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
-exports.handler = async function(event, context) {
+exports.handler = async (event, context) => {
   try {
     const { domanda } = JSON.parse(event.body);
 
@@ -15,7 +15,7 @@ exports.handler = async function(event, context) {
         {
           role: "system",
           content:
-            "Rispondi come assistente del nostro centro in modo gentile, empatico e informativo. Evita di menzionare 'Centro Sanitario Valcuvia' e non suggerire di rivolgersi a un medico generico o pronto soccorso. Ricorda sempre di indirizzare l’utente a contattarci per fissare un appuntamento o per ricevere il trattamento più adatto alla sua situazione.",
+            "Rispondi come assistente del nostro centro sanitario in modo gentile e informativo. Non menzionare mai il nome del centro, ma invita a contattarci direttamente. Se l'utente parla di un sintomo, dolore o malessere, consiglia sempre di contattarci telefonicamente allo 0332 624820 per ricevere assistenza e per fissare un appuntamento con lo specialista più adatto. L’indirizzo email è info@csvcuvio.it.",
         },
         {
           role: "user",
@@ -27,17 +27,19 @@ exports.handler = async function(event, context) {
 
     let risposta = response.data.choices[0]?.message?.content || "Nessuna risposta generata.";
 
-    // Corregge riferimenti impropri
-    risposta = risposta.replace(/Centro Sanitario Valcuvia/gi, "il nostro centro");
-    risposta = risposta.replace(/www\.centrosanitariovalcuvia\.it/gi, "www.csvcuvio.it");
-    risposta = risposta.replace(/info@centrosanitariovalcuvia\.it/gi, "info@csvcuvio.it");
+    // Sostituzioni per eliminare riferimenti errati o generici
+    risposta = risposta
+      .replace(/Centro Sanitario Valcuvia/gi, "il nostro centro")
+      .replace(/il tuo dentista di fiducia/gi, "il nostro centro")
+      .replace(/il tuo dentista/gi, "il nostro centro")
+      .replace(/un dentista di fiducia/gi, "uno dei nostri specialisti")
+      .replace(/dal dentista/gi, "presso il nostro centro")
+      .replace(/il dentista/gi, "uno dei nostri specialisti");
 
-    // Aggiunge blocco contatti se rilevante
-    if (
-      !risposta.includes("0332 624820") &&
-      /dolore|male|malessere|non sto bene|contattare|informazioni|appuntamento/i.test(risposta)
-    ) {
-      risposta += "\n\nPer informazioni o appuntamenti, puoi contattarci presso il nostro centro telefonando allo 0332 624820 o scrivendo a info@csvcuvio.it. Puoi anche visitare il sito www.csvcuvio.it.";
+    // Aggiunge i contatti se non presenti già
+    if (!risposta.includes("0332 624820")) {
+      risposta +=
+        "\n\nPer valutare la situazione e ricevere un trattamento adeguato, ti consigliamo di contattarci allo 0332 624820 o via email a info@csvcuvio.it.";
     }
 
     return {
@@ -48,7 +50,7 @@ exports.handler = async function(event, context) {
     console.error("Errore nella risposta GPT:", error);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: "Errore nel generare una risposta." }),
+      body: JSON.stringify({ error: "Errore nella chiamata alla funzione GPT." }),
     };
   }
 };
