@@ -1,65 +1,35 @@
 const { Configuration, OpenAIApi } = require("openai");
-const pluralize = require("pluralize"); // Assicurati di installare questo modulo
-const fs = require("fs");
-const path = require("path");
-const xlsx = require("xlsx");
 
-// Inizializza OpenAI
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 });
 const openai = new OpenAIApi(configuration);
-
-// Carica le prestazioni dall'excel
-const workbook = xlsx.readFile(path.resolve(__dirname, "elenco prestazioni.xlsx"));
-const sheetName = workbook.SheetNames[0];
-const sheet = workbook.Sheets[sheetName];
-const rows = xlsx.utils.sheet_to_json(sheet);
-
-// Estrae in minuscolo le prestazioni per il match
-const prestazioniDisponibili = rows.map(row =>
-  pluralize.singular((row["Prestazione"] || "").toLowerCase().trim())
-);
-
-// Funzione per cercare prestazioni nel testo
-function trovaPrestazione(domanda) {
-  const parole = domanda.toLowerCase().split(/\W+/);
-  for (let parola of parole) {
-    const singolare = pluralize.singular(parola);
-    if (prestazioniDisponibili.includes(singolare)) {
-      return singolare;
-    }
-  }
-  return null;
-}
 
 exports.handler = async function (event, context) {
   try {
     const body = JSON.parse(event.body);
     const domanda = body.domanda;
 
-    const prestazioneTrovata = trovaPrestazione(domanda);
-
-    // Se non troviamo la prestazione, rispondiamo che non è disponibile
-    if (!prestazioneTrovata) {
-      return {
-        statusCode: 200,
-        body: JSON.stringify({
-          risposta:
-            "Ci dispiace, ma al momento il servizio richiesto non è disponibile presso il nostro centro. " +
-            "📞 Per ulteriori informazioni puoi contattarci al numero 0332 624820 oppure via mail all’indirizzo 📧 segreteria@csvcuvio.it.",
-        }),
-      };
-    }
-
-    // Chiamata a OpenAI per una risposta su quella prestazione
     const response = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
       messages: [
         {
           role: "system",
-          content:
-            "Rispondi come assistente del Centro Sanitario Valcuvia. Usa un linguaggio gentile, informativo e grammaticalmente corretto. Se l’utente parla di un malessere, puoi aggiungere un consiglio utile ma semplice (es. bere acqua, riposare), MA solo dopo aver consigliato di contattare il centro.",
+          content: `
+Sei un assistente virtuale del Centro Sanitario Valcuvia. Rispondi sempre in modo gentile, grammaticalmente corretto e informativo.
+
+📌 Quando l’utente segnala un malessere (es. "mal di pancia", "mi fa male", "non sto bene", ecc.), dopo aver suggerito di contattare il nostro centro, puoi includere un breve consiglio pratico utile (es. riposo, bere acqua, impacchi, ecc.).
+
+❌ Se l’utente NON segnala sintomi o problemi di salute, NON fornire consigli sanitari generici.
+
+❌ Non fare riferimento a "il tuo medico", "il dentista di fiducia", "il pronto soccorso" o "uno specialista". Tutti gli inviti devono essere rivolti al nostro centro.
+
+✔️ I contatti devono essere sempre presenti:
+📞 0332 624820
+📧 segreteria@csvcuvio.it
+
+❗Correggi eventuali errori grammaticali o di sintassi prima di restituire la risposta.
+        `,
         },
         { role: "user", content: domanda },
       ],
@@ -68,27 +38,21 @@ exports.handler = async function (event, context) {
 
     let risposta = response.data.choices[0]?.message?.content || "Nessuna risposta generata.";
 
-    // Pulizia e reindirizzamento
+    // Pulizia e sostituzioni di sicurezza
     risposta = risposta
       .replace(/(medico|dentista)( di fiducia)?/gi, "il nostro centro sanitario")
       .replace(/pronto soccorso/gi, "il nostro centro sanitario")
-      .replace(/(rivolgiti|contatta) (un|il) (professionista|specialista)/gi, "contattaci presso il nostro centro")
-      .replace(/Centro Sanitario Valcuvia/gi, "il nostro centro");
+      .replace(/Centro Sanitario Valcuvia/gi, "il nostro centro")
+      .replace(/contatta(ci)? (un|il) (professionista|specialista)/gi, "contattaci presso il nostro centro");
 
-    // Controlla se ci sono sintomi per dare un consiglio (solo se parliamo di malessere)
-    const malessere = /(mal di|dolore|nausea|febbre|vomito|non sto bene|sintomi|malessere)/i.test(domanda);
-    const consiglioSalute = malessere
-      ? "\n\n💡 In attesa della visita, cerca di riposare, mantenerti idratato e monitorare i sintomi. Evita cibi pesanti e stancanti."
-      : "";
+    // Verifica se ha già fornito i contatti
+    const telefono = "0332 624820";
+    const mail = "segreteria@csvcuvio.it";
+    const contatti = `\n\n📞 Per informazioni o per fissare un appuntamento:\nChiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.`;
 
-    // Aggiungi contatti se non presenti
-    if (!risposta.includes("0332 624820")) {
-      risposta +=
-        "\n\n📞 Per informazioni o per fissare un appuntamento, puoi contattarci al numero 0332 624820 oppure via mail all’indirizzo 📧 segreteria@csvcuvio.it.";
+    if (!risposta.includes("0332 624820") && !risposta.includes("segreteria@csvcuvio.it")) {
+      risposta += contatti;
     }
-
-    // Aggiunta finale opzionale
-    risposta += consiglioSalute;
 
     return {
       statusCode: 200,
