@@ -90,10 +90,10 @@ exports.handler = async function (event, context) {
 
     // Se la prestazione NON è disponibile
     if (!contienePrestazione(domanda)) {
-      const risposta = `Mi dispiace, ma al momento il servizio richiesto non è tra quelli offerti dal nostro centro.\n📄 SCARICA ELENCO PRESTAZIONI CSV: ${brochureLink}\n\n📞 Per ulteriori informazioni o per fissare un appuntamento: chiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.`;
-      return {
-        statusCode: 200,
-        body: JSON.stringify({ risposta }),
+     const risposta = `Mi dispiace, ma al momento il servizio richiesto non è tra quelli offerti dal nostro centro.  
+📄 <a href="https://drive.google.com/file/d/1JOPK-rAAu5D330BwCY_7sOcHmkBwD6HD/view?usp=drive_link" target="_blank">SCARICA ELENCO PRESTAZIONI CSV</a>  
+📞 Per ulteriori informazioni o per fissare un appuntamento: chiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.`;
+
       };
     }
 
