@@ -53,6 +53,13 @@ function èDomandaInformativa(testo) {
   const testoNorm = normalizzaTesto(testo);
   return frasiChiave.some(f => testoNorm.includes(f));
 }
+function èDomandaSuPosizione(testo) {
+  const frasi = [
+    "dove siete", "dove vi trovate", "dove siete situati", "dove vi trovo", "indirizzo", "sede", "come raggiungervi"
+  ];
+  const testoNorm = normalizzaTesto(testo);
+  return frasi.some(frase => testoNorm.includes(frase));
+}
 
 // Verifica prestazioni (singolare/plurale)
 function contienePrestazione(domanda) {
@@ -71,7 +78,14 @@ exports.handler = async function (event, context) {
     const domanda = body.domanda;
 
     // Risposta a saluti generici
-    if (èDomandaGenerica(domanda)) {
+      if (èDomandaSuPosizione(domanda)) {
+  const risposta = `Ci troviamo a Cuvio (VA), in via Milano 19. 📍\nPer qualsiasi informazione o per fissare un appuntamento:\n📞 0332 624820 – 📧 segreteria@csvcuvio.it`;
+  return {
+    statusCode: 200,
+    body: JSON.stringify({ risposta }),
+  };
+}
+
       return {
         statusCode: 200,
         body: JSON.stringify({ risposta: "Ciao! Come posso aiutarti oggi?" }),
