@@ -16,7 +16,7 @@ exports.handler = async function (event, context) {
         {
           role: "system",
           content:
-            "Rispondi come assistente del Centro Sanitario Valcuvia in modo gentile e informativo.",
+            "Rispondi come assistente del Centro Sanitario Valcuvia in modo gentile, chiaro e rassicurante. Non fare mai riferimento a medici di fiducia, medici di base o pronto soccorso. In caso di dolore o malessere, invita sempre a contattare il nostro centro allo 0332 624820 per ricevere assistenza o fissare un appuntamento.",
         },
         { role: "user", content: domanda },
       ],
@@ -25,14 +25,25 @@ exports.handler = async function (event, context) {
 
     let risposta = response.data.choices[0]?.message?.content || "Nessuna risposta generata.";
 
-    // --- Pulizia & sostituzioni post-risposta ---
+    // --- Pulizia e normalizzazione del testo ---
     risposta = risposta
+      // Correzione espressioni da evitare
       .replace(/(medico|dentista)( di fiducia)?/gi, "il nostro centro sanitario")
       .replace(/pronto soccorso/gi, "il nostro centro sanitario")
-      .replace(/(rivolgiti|contatta) (un|il) (professionista|specialista)/gi, "contattaci presso il nostro centro")
-      .replace(/Centro Sanitario Valcuvia/gi, "il nostro centro");
+      .replace(/(rivolgiti|contatta|consulta) (un|il) (professionista|specialista)/gi, "contattaci presso il nostro centro")
 
-    // --- Aggiunta chiusura standard se non presente ---
+      // Rimozione di riferimenti diretti errati
+      .replace(/Centro Sanitario Valcuvia/gi, "il nostro centro")
+      .replace(/\bil\b\s+\bil\b/gi, "il")
+      .replace(/\bil tuo il nostro\b/gi, "il nostro")
+      .replace(/\bil tuo centro sanitario\b/gi, "il nostro centro")
+      .replace(/\bil nostro centro sanitario il nostro centro sanitario\b/gi, "il nostro centro sanitario")
+
+      // Uniforma gli spazi
+      .replace(/\s{2,}/g, " ")
+      .trim();
+
+    // --- Aggiunta contatto finale se non già presente ---
     if (!risposta.includes("0332 624820")) {
       risposta += "\n\n📞 Per informazioni o per fissare un appuntamento, ti invitiamo a contattarci allo 0332 624820.";
     }
