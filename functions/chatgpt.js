@@ -5,7 +5,7 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
-// Elenco prestazioni disponibili
+// Prestazioni disponibili
 const prestazioniDisponibili = [
   "Addominoplastica",
   "Agopuntura",
@@ -29,36 +29,37 @@ const prestazioniDisponibili = [
   "Visita ginecologica"
 ];
 
-// Utility di normalizzazione testo
+// Utility per normalizzazione
 function normalizzaTesto(testo) {
   return testo.toLowerCase()
-    .replace(/[^a-zàèéìòù\s]/gi, "")
+    .replace(/[^a-zà-ù\s]/gi, "")
     .replace(/\s+/g, " ")
     .trim();
 }
 
-// Riconoscimento di domande generiche
+// Riconoscimento domande generiche
 function èDomandaGenerica(testo) {
-  const frasi = ["ciao", "salve", "buongiorno", "buonasera", "grazie", "ok"];
-  return frasi.includes(normalizzaTesto(testo));
+  const frasi = ["ciao", "salve", "buongiorno", "buonasera", "grazie", "ok", "va bene"];
+  const testoNorm = normalizzaTesto(testo);
+  return frasi.includes(testoNorm);
 }
 
-// Riconoscimento di domande sull’indirizzo
-function èDomandaIndirizzo(testo) {
-  const frasi = ["dove siete", "dove vi trovo", "dove si trova il centro", "sede", "indirizzo"];
-  const normalizzato = normalizzaTesto(testo);
-  return frasi.some(f => normalizzato.includes(f));
-}
-
-// Verifica se la prestazione è tra quelle erogate
+// Verifica prestazioni (singolari e plurali)
 function contienePrestazione(domanda) {
   const testoDomanda = normalizzaTesto(domanda);
   return prestazioniDisponibili.some(prestazione => {
     const base = normalizzaTesto(prestazione);
-    const pluraleA = base.replace(/a$/, "e");
-    const pluraleO = base.replace(/o$/, "i");
-    return testoDomanda.includes(base) || testoDomanda.includes(pluraleA) || testoDomanda.includes(pluraleO);
+    const pluraleI = base.replace(/a$/, "e");
+    const pluraleE = base.replace(/o$/, "i");
+    return testoDomanda.includes(base) || testoDomanda.includes(pluraleI) || testoDomanda.includes(pluraleE);
   });
+}
+
+// Controllo indirizzo e localizzazione
+function èRichiestaPosizione(testo) {
+  const frasi = ["dove siete", "dove vi trovo", "indirizzo", "sede", "dove si trova"];
+  const testoNorm = normalizzaTesto(testo);
+  return frasi.some(f => testoNorm.includes(f));
 }
 
 exports.handler = async function (event, context) {
@@ -66,7 +67,17 @@ exports.handler = async function (event, context) {
     const body = JSON.parse(event.body);
     const domanda = body.domanda;
 
-    // Risposte predefinite
+    // Risposta posizione
+    if (èRichiestaPosizione(domanda)) {
+      const risposta = `Ci troviamo a Cuvio (VA), in Via Enrico Fermi, 6 – 21030.
+📞 Per qualsiasi informazione o per fissare un appuntamento: chiama lo 0332 624820 – 📧 segreteria@csvcuvio.it`;
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ risposta }),
+      };
+    }
+
+    // Risposta generica
     if (èDomandaGenerica(domanda)) {
       return {
         statusCode: 200,
@@ -74,20 +85,12 @@ exports.handler = async function (event, context) {
       };
     }
 
-    if (èDomandaIndirizzo(domanda)) {
-      return {
-        statusCode: 200,
-        body: JSON.stringify({
-          risposta: `📍 Ci troviamo a **Cuvio, Via Enrico Fermi, 6 (VA)**.\n\n📞 Per qualsiasi informazione o per fissare un appuntamento:\nchiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.`
-        }),
-      };
-    }
-
+    // Se la prestazione NON è disponibile
     if (!contienePrestazione(domanda)) {
-     const risposta = `Mi dispiace, ma al momento il servizio richiesto non è tra quelli offerti dal nostro centro.  
-📄 [SCARICA ELENCO PRESTAZIONI CSV](https://drive.google.com/file/d/1JOPK-rAAu5D330BwCY_7sOcHmkBwD6HD/view?usp=drive_link)  
-📞 Per ulteriori informazioni o per fissare un appuntamento: chiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.`;
+      const risposta = `Mi dispiace, ma al momento il servizio richiesto non è tra quelli offerti dal nostro centro. 
+📄 SCARICA ELENCO PRESTAZIONI CSV: https://drive.google.com/file/d/1JOPK-rAAu5D330BwCY_7sOcHmkBwD6HD/view
 
+📞 Per ulteriori informazioni o per fissare un appuntamento: chiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.`;
       return {
         statusCode: 200,
         body: JSON.stringify({ risposta }),
@@ -101,18 +104,19 @@ exports.handler = async function (event, context) {
         {
           role: "system",
           content: `
-Sei un assistente virtuale del Centro Sanitario Valcuvia. Rispondi in modo gentile, corretto e informativo.
+Sei un assistente virtuale del Centro Sanitario Valcuvia. Rispondi sempre in modo gentile, corretto grammaticalmente e informativo.
 
-✅ Se l’utente segnala un malessere (es. “ho mal di pancia”), suggerisci di contattare il centro e puoi aggiungere un consiglio pratico (bere acqua, riposo, impacchi).
+✅ Se l’utente segnala un malessere (es: \"ho mal di pancia\", \"mi sento male\"), dopo aver consigliato di contattare il centro, aggiungi solo un consiglio utile (riposo, impacchi, bere acqua, ecc.).
 
-❌ Non fornire consigli sanitari generici se non si parla di sintomi.
+❌ Non fornire mai consigli sanitari generici se non c'è un malessere esplicito.
 
-❌ Non usare espressioni come “contatta il tuo medico”, “dentista di fiducia” o “pronto soccorso”. Devi sempre dire “il nostro centro”.
+❌ Evita frasi come “contatta il tuo medico”, “dentista di fiducia” o “pronto soccorso”. Devi sempre indirizzare al nostro centro.
 
-✅ Includi sempre i contatti:
-📞 0332 624820 – 📧 segreteria@csvcuvio.it
+✅ I contatti devono sempre essere presenti:
+📞 0332 624820
+📧 segreteria@csvcuvio.it
 
-❗ Controlla grammatica e sintassi prima di rispondere.
+❗Controlla sempre grammatica e sintassi prima di restituire la risposta.
           `
         },
         { role: "user", content: domanda }
@@ -122,7 +126,7 @@ Sei un assistente virtuale del Centro Sanitario Valcuvia. Rispondi in modo genti
 
     let risposta = response.data.choices[0]?.message?.content || "Nessuna risposta generata.";
 
-    // Pulizia testo
+    // Pulizia
     risposta = risposta
       .replace(/(medico|dentista)( di fiducia)?/gi, "il nostro centro sanitario")
       .replace(/pronto soccorso/gi, "il nostro centro sanitario")
