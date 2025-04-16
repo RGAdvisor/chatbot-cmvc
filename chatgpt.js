@@ -1,54 +1,32 @@
 const { Configuration, OpenAIApi } = require("openai");
-const fs = require("fs");
-const path = require("path");
 
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 });
 const openai = new OpenAIApi(configuration);
 
-// Elenco delle prestazioni disponibili
+// Prestazioni disponibili
 const prestazioniDisponibili = [
-  "liposcultura",
-  "addominoplastice",
-  "mammografia",
-  "otoplastica",
-  "otturazioni",
-  "carico immediati",
-  "mammografie",
-  "ecg sotto sforzo",
-  "lipoemulsione sottocutanee",
-  "visite cardiologica",
-  "addominoplastica",
-  "ecografiei",
-  "ecocardiocolordoppleri",
-  "liposculture",
-  "ecgi",
-  "lipoemulsione sottocutanea",
-  "chirurgia estetica del seno",
-  "holter pressorii",
-  "ecocardiocolordoppler",
-  "carico immediato",
-  "visite ginecologica",
-  "ecografie",
-  "igiene dentalei",
-  "liposuzionei",
-  "visita ginecologica",
-  "holter cardiaco",
-  "blefaroplastica",
-  "ecg sotto sforzi",
-  "holter pressorio",
-  "chirurgia estetica del seni",
-  "igiene dentale",
-  "agopuntura",
-  "holter cardiaci",
-  "liposuzione",
-  "visita cardiologica",
-  "blefaroplastice",
-  "otoplastice",
-  "otturazionii",
-  "agopunture",
-  "ecg"
+  "Addominoplastica",
+  "Agopuntura",
+  "Bleforaplastica",
+  "Carico immediato",
+  "Chirurgia estetica del seno",
+  "ECG",
+  "ECG sotto sforzo",
+  "Ecocardiocolordoppler",
+  "Ecografie",
+  "Holter cardiaco",
+  "Holter pressorio",
+  "Igiene dentale",
+  "Lipoemulsione sottocutanea",
+  "Liposcultura",
+  "Liposuzione",
+  "Mammografia", "Mammografie"
+  "Otoplastica",
+  "Otturazioni", "Otturazione"
+  "Visita cardiologica", "Visite cardiologiche"
+  "Visita ginecologica", "Visite ginecologiche",
 ];
 
 // Utility per confronto singolare/plurale
@@ -63,8 +41,14 @@ function contienePrestazione(domanda) {
   const testoDomanda = normalizzaTesto(domanda);
   return prestazioniDisponibili.some(prestazione => {
     const base = normalizzaTesto(prestazione);
-    return testoDomanda.includes(base) || testoDomanda.includes(base + "s");
+    return testoDomanda.includes(base) || testoDomanda.includes(base + "i") || testoDomanda.includes(base + "e") || testoDomanda.includes(base + "s");
   });
+}
+
+function èDomandaGenerica(testo) {
+  const frasiGeneriche = ["ciao", "buongiorno", "salve", "come va", "grazie", "ok"];
+  const normalizzato = normalizzaTesto(testo);
+  return frasiGeneriche.some(f => normalizzato === f);
 }
 
 exports.handler = async function (event, context) {
@@ -72,7 +56,14 @@ exports.handler = async function (event, context) {
     const body = JSON.parse(event.body);
     const domanda = body.domanda;
 
-    // Se la prestazione non è disponibile
+    if (èDomandaGenerica(domanda)) {
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ risposta: "Ciao! Come posso aiutarti oggi?" }),
+      };
+    }
+
+    // Se la prestazione NON è disponibile
     if (!contienePrestazione(domanda)) {
       const risposta = `Mi dispiace, ma al momento il servizio richiesto non è tra quelli offerti dal nostro centro. 
 Puoi consultare l’elenco completo delle nostre prestazioni nella brochure disponibile in formato PDF. 
@@ -83,7 +74,7 @@ Puoi consultare l’elenco completo delle nostre prestazioni nella brochure disp
       };
     }
 
-    // Chiamata a OpenAI
+    // Chiamata a OpenAI per messaggi validi
     const response = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
       messages: [
@@ -103,7 +94,7 @@ Sei un assistente virtuale del Centro Sanitario Valcuvia. Rispondi sempre in mod
 📧 segreteria@csvcuvio.it
 
 ❗Controlla sempre grammatica e sintassi prima di restituire la risposta.
-        `
+          `
         },
         { role: "user", content: domanda }
       ],
@@ -112,7 +103,7 @@ Sei un assistente virtuale del Centro Sanitario Valcuvia. Rispondi sempre in mod
 
     let risposta = response.data.choices[0]?.message?.content || "Nessuna risposta generata.";
 
-    // Pulizia finale
+    // Pulizia di sicurezza
     risposta = risposta
       .replace(/(medico|dentista)( di fiducia)?/gi, "il nostro centro sanitario")
       .replace(/pronto soccorso/gi, "il nostro centro sanitario")
