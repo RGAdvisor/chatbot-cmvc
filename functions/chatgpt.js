@@ -22,14 +22,14 @@ const prestazioniDisponibili = [
   "Lipoemulsione sottocutanea",
   "Liposcultura",
   "Liposuzione",
-  "Mammografia", "Mammografie"
+  "Mammografia",
   "Otoplastica",
-  "Otturazioni", "Otturazione"
-  "Visita cardiologica", "Visite cardiologiche"
-  "Visita ginecologica", "Visite ginecologiche",
+  "Otturazioni",
+  "Visita cardiologica",
+  "Visita ginecologica"
 ];
 
-// Utility per confronto singolare/plurale
+// Utility per normalizzazione
 function normalizzaTesto(testo) {
   return testo.toLowerCase()
     .replace(/[^a-zàèéìòù\s]/gi, "")
@@ -37,18 +37,22 @@ function normalizzaTesto(testo) {
     .trim();
 }
 
+// Riconoscimento domande generiche
+function èDomandaGenerica(testo) {
+  const frasi = ["ciao", "salve", "buongiorno", "buonasera", "grazie", "ok", "va bene"];
+  const testoNorm = normalizzaTesto(testo);
+  return frasi.includes(testoNorm);
+}
+
+// Verifica prestazioni (singolari e plurali)
 function contienePrestazione(domanda) {
   const testoDomanda = normalizzaTesto(domanda);
   return prestazioniDisponibili.some(prestazione => {
     const base = normalizzaTesto(prestazione);
-    return testoDomanda.includes(base) || testoDomanda.includes(base + "i") || testoDomanda.includes(base + "e") || testoDomanda.includes(base + "s");
+    const pluraleI = base.replace(/a$/, "e"); // es: visita → visite
+    const pluraleE = base.replace(/o$/, "i"); // es: ecocardiocolordoppler → ecocardiocolordoppleri
+    return testoDomanda.includes(base) || testoDomanda.includes(pluraleI) || testoDomanda.includes(pluraleE);
   });
-}
-
-function èDomandaGenerica(testo) {
-  const frasiGeneriche = ["ciao", "buongiorno", "salve", "come va", "grazie", "ok"];
-  const normalizzato = normalizzaTesto(testo);
-  return frasiGeneriche.some(f => normalizzato === f);
 }
 
 exports.handler = async function (event, context) {
@@ -56,6 +60,7 @@ exports.handler = async function (event, context) {
     const body = JSON.parse(event.body);
     const domanda = body.domanda;
 
+    // Risposta immediata a interazioni generiche
     if (èDomandaGenerica(domanda)) {
       return {
         statusCode: 200,
@@ -74,7 +79,7 @@ Puoi consultare l’elenco completo delle nostre prestazioni nella brochure disp
       };
     }
 
-    // Chiamata a OpenAI per messaggi validi
+    // Chiamata a OpenAI
     const response = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
       messages: [
@@ -103,7 +108,7 @@ Sei un assistente virtuale del Centro Sanitario Valcuvia. Rispondi sempre in mod
 
     let risposta = response.data.choices[0]?.message?.content || "Nessuna risposta generata.";
 
-    // Pulizia di sicurezza
+    // Pulizia
     risposta = risposta
       .replace(/(medico|dentista)( di fiducia)?/gi, "il nostro centro sanitario")
       .replace(/pronto soccorso/gi, "il nostro centro sanitario")
