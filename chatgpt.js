@@ -32,7 +32,7 @@ const prestazioniDisponibili = [
 // Utility per normalizzazione
 function normalizzaTesto(testo) {
   return testo.toLowerCase()
-    .replace(/[^a-zà-ù\s]/gi, "")
+    .replace(/[^a-zàèéìòù\s]/gi, "")
     .replace(/\s+/g, " ")
     .trim();
 }
@@ -49,17 +49,17 @@ function contienePrestazione(domanda) {
   const testoDomanda = normalizzaTesto(domanda);
   return prestazioniDisponibili.some(prestazione => {
     const base = normalizzaTesto(prestazione);
-    const pluraleI = base.replace(/a$/, "e");
-    const pluraleE = base.replace(/o$/, "i");
+    const pluraleI = base.replace(/a$/, "e"); // visita → visite
+    const pluraleE = base.replace(/o$/, "i"); // ecocardiocolordoppler → ecocardiocolordoppleri
     return testoDomanda.includes(base) || testoDomanda.includes(pluraleI) || testoDomanda.includes(pluraleE);
   });
 }
 
-// Controllo indirizzo e localizzazione
-function èRichiestaPosizione(testo) {
-  const frasi = ["dove siete", "dove vi trovo", "indirizzo", "sede", "dove si trova"];
-  const testoNorm = normalizzaTesto(testo);
-  return frasi.some(f => testoNorm.includes(f));
+// Verifica se contiene malesseri
+function contieneMalessere(domanda) {
+  const paroleChiave = ["mal di", "dolore", "mi fa male", "non sto bene", "mi sento male"];
+  const testo = normalizzaTesto(domanda);
+  return paroleChiave.some(p => testo.includes(p));
 }
 
 exports.handler = async function (event, context) {
@@ -67,17 +67,9 @@ exports.handler = async function (event, context) {
     const body = JSON.parse(event.body);
     const domanda = body.domanda;
 
-    // Risposta posizione
-    if (èRichiestaPosizione(domanda)) {
-      const risposta = `Ci troviamo a Cuvio (VA), in Via Enrico Fermi, 6 – 21030.
-📞 Per qualsiasi informazione o per fissare un appuntamento: chiama lo 0332 624820 – 📧 segreteria@csvcuvio.it`;
-      return {
-        statusCode: 200,
-        body: JSON.stringify({ risposta }),
-      };
-    }
+    const brochureLink = "https://drive.google.com/file/d/1JOPK-rAAu5D330BwCY_7sOcHmkBwD6HD/view?usp=drive_link";
 
-    // Risposta generica
+    // Risposta a domande generiche
     if (èDomandaGenerica(domanda)) {
       return {
         statusCode: 200,
@@ -85,38 +77,46 @@ exports.handler = async function (event, context) {
       };
     }
 
+    // Risposta per indirizzo
+    const testoNorm = normalizzaTesto(domanda);
+    if (testoNorm.includes("dove") && (testoNorm.includes("siete") || testoNorm.includes("vi trovo") || testoNorm.includes("indirizzo"))) {
+      return {
+        statusCode: 200,
+        body: JSON.stringify({
+          risposta: `Ci troviamo a Cuvio (VA), in via Enrico Fermi, 6 – 21030.\n\n📞 Per qualsiasi informazione o per fissare un appuntamento: chiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.`
+        }),
+      };
+    }
+
     // Se la prestazione NON è disponibile
     if (!contienePrestazione(domanda)) {
-      const risposta = `Mi dispiace, ma al momento il servizio richiesto non è tra quelli offerti dal nostro centro. 
-📄 SCARICA ELENCO PRESTAZIONI CSV: https://drive.google.com/file/d/1JOPK-rAAu5D330BwCY_7sOcHmkBwD6HD/view
-
-📞 Per ulteriori informazioni o per fissare un appuntamento: chiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.`;
+      const risposta = `Mi dispiace, ma al momento il servizio richiesto non è tra quelli offerti dal nostro centro.\n📄 SCARICA ELENCO PRESTAZIONI CSV: ${brochureLink}\n\n📞 Per ulteriori informazioni o per fissare un appuntamento: chiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.`;
       return {
         statusCode: 200,
         body: JSON.stringify({ risposta }),
       };
     }
 
-    // Chiamata a OpenAI
+    // Richiesta gestita da OpenAI
     const response = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
       messages: [
         {
           role: "system",
           content: `
-Sei un assistente virtuale del Centro Sanitario Valcuvia. Rispondi sempre in modo gentile, corretto grammaticalmente e informativo.
+Sei un assistente virtuale del Centro Sanitario Valcuvia. Rispondi in modo gentile, corretto grammaticalmente e informativo.
 
-✅ Se l’utente segnala un malessere (es: \"ho mal di pancia\", \"mi sento male\"), dopo aver consigliato di contattare il centro, aggiungi solo un consiglio utile (riposo, impacchi, bere acqua, ecc.).
+✅ Se l’utente segnala un malessere, consiglia di contattare il centro e aggiungi un solo consiglio pratico (es. bere acqua, riposo, impacchi, ecc.).
 
-❌ Non fornire mai consigli sanitari generici se non c'è un malessere esplicito.
+❌ Non fornire consigli sanitari se non c’è un malessere dichiarato.
 
-❌ Evita frasi come “contatta il tuo medico”, “dentista di fiducia” o “pronto soccorso”. Devi sempre indirizzare al nostro centro.
+❌ Non usare mai "il tuo medico", "dentista di fiducia", "pronto soccorso". Rivolgi sempre al nostro centro.
 
-✅ I contatti devono sempre essere presenti:
+📍 Indirizzo: Via Enrico Fermi, 6 – 21030 Cuvio (VA)
 📞 0332 624820
 📧 segreteria@csvcuvio.it
 
-❗Controlla sempre grammatica e sintassi prima di restituire la risposta.
+❗ Controlla grammatica e sintassi prima di rispondere.
           `
         },
         { role: "user", content: domanda }
@@ -133,8 +133,8 @@ Sei un assistente virtuale del Centro Sanitario Valcuvia. Rispondi sempre in mod
       .replace(/Centro Sanitario Valcuvia/gi, "il nostro centro")
       .replace(/contatta(ci)? (un|il) (professionista|specialista)/gi, "contattaci presso il nostro centro");
 
-    const contatti = `\n\n📞 Per informazioni o per fissare un appuntamento:\nChiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.`;
-
+    // Se non ci sono i contatti, aggiungili
+    const contatti = `\n\n📞 Per informazioni o per fissare un appuntamento: chiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.`;
     if (!risposta.includes("0332 624820") && !risposta.includes("segreteria@csvcuvio.it")) {
       risposta += contatti;
     }
@@ -143,6 +143,7 @@ Sei un assistente virtuale del Centro Sanitario Valcuvia. Rispondi sempre in mod
       statusCode: 200,
       body: JSON.stringify({ risposta }),
     };
+
   } catch (error) {
     console.error("Errore:", error);
     return {
