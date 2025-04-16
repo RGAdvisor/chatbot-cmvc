@@ -23,10 +23,10 @@ Sei un assistente del Centro Sanitario Valcuvia. Rispondi in modo gentile, chiar
 - NON usare espressioni come “medico di fiducia”, “pronto soccorso” o “specialista”.
 - Indirizza SEMPRE l’utente a contattare il nostro centro telefonicamente allo 0332 624820.
 - NON ripetere parole tipo “il il”, “il tuo il nostro” ecc.
-- Se l’utente riporta un malessere, concludi sempre con l’invito a chiamare 📞 0332 624820.
+- Se l’utente riporta un malessere, indica di contattarci 📞 0332 624820 e POI aggiungi un piccolo consiglio pratico o comportamentale utile (es. bere acqua, evitare cibi irritanti, riposare, ecc.) se coerente con la situazione.
 
 Parla sempre a nome del nostro centro e non usare espressioni impersonali come “si consiglia”.
-        `.trim(),
+          `.trim()
         },
         { role: "user", content: domanda },
       ],
@@ -35,20 +35,14 @@ Parla sempre a nome del nostro centro e non usare espressioni impersonali come �
 
     let risposta = response.data.choices[0]?.message?.content || "Nessuna risposta generata.";
 
-    // --- Pulizia automatica ---
+    // Correzioni automatiche extra
     risposta = risposta
       .replace(/(medico|dentista)( di fiducia)?/gi, "il nostro centro sanitario")
       .replace(/pronto soccorso/gi, "il nostro centro sanitario")
-      .replace(/(rivolgiti|contatta|consulta) (un|il) (professionista|specialista)/gi, "contattaci presso il nostro centro")
-      .replace(/Centro Sanitario Valcuvia/gi, "il nostro centro")
-      .replace(/\bil\b\s+\bil\b/gi, "il")
-      .replace(/\bil tuo il nostro\b/gi, "il nostro")
-      .replace(/\bil tuo centro sanitario\b/gi, "il nostro centro")
-      .replace(/\bil nostro centro sanitario il nostro centro sanitario\b/gi, "il nostro centro sanitario")
-      .replace(/\s{2,}/g, " ")
-      .trim();
+      .replace(/(rivolgiti|contatta) (un|il) (professionista|specialista)/gi, "contattaci presso il nostro centro")
+      .replace(/Centro Sanitario Valcuvia/gi, "il nostro centro");
 
-    // --- Invito al contatto se mancante ---
+    // Aggiunta recapito se non incluso
     if (!risposta.includes("0332 624820")) {
       risposta += "\n\n📞 Per informazioni o per fissare un appuntamento, ti invitiamo a contattarci allo 0332 624820.";
     }
