@@ -14,7 +14,7 @@ exports.handler = async function(event, context) {
       messages: [
         {
           role: "system",
-          content: `Rispondi come assistente di un centro medico. Non usare il nome del centro. Se l'utente segnala sintomi, dolori o malesseri, invita sempre a contattare telefonicamente il centro per essere indirizzato allo specialista adeguato. Sii empatico e rassicurante. Usa 'il nostro centro' invece del nome.`,
+          content: `Rispondi come un assistente gentile e professionale. Non usare mai il nome "Centro Sanitario Valcuvia": usa sempre "il nostro centro". Se l'utente accenna a malesseri, dolori o disagi fisici, concludi la risposta dicendo: "Ti consigliamo di chiamarci allo 0332 624820 in modo da poterti indirizzare allo specialista più indicato per il tuo caso."`,
         },
         {
           role: "user",
@@ -26,13 +26,11 @@ exports.handler = async function(event, context) {
 
     let risposta = response.data.choices[0]?.message?.content || "Nessuna risposta generata.";
 
-    // Sostituisce "Centro Sanitario Valcuvia" con "il nostro centro"
+    // Sostituisce ogni occorrenza del nome del centro con "il nostro centro"
     risposta = risposta.replace(/Centro Sanitario Valcuvia/gi, "il nostro centro");
 
-    // Frase da aggiungere sempre per sintomi/dolori
-    const firma = "Ti consigliamo di chiamarci allo 0332 624820 in modo da poterti indirizzare allo specialista più indicato per il tuo caso.";
-
     // Aggiunge la frase finale se non già inclusa
+    const firma = "Ti consigliamo di chiamarci allo 0332 624820 in modo da poterti indirizzare allo specialista più indicato per il tuo caso.";
     if (!risposta.includes("0332 624820")) {
       risposta += `\n\n${firma}`;
     }
