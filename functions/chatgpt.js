@@ -15,8 +15,18 @@ exports.handler = async function (event, context) {
       messages: [
         {
           role: "system",
-          content:
-            "Rispondi come assistente del Centro Sanitario Valcuvia in modo gentile, chiaro e rassicurante. Non fare mai riferimento a medici di fiducia, medici di base o pronto soccorso. In caso di dolore o malessere, invita sempre a contattare il nostro centro allo 0332 624820 per ricevere assistenza o fissare un appuntamento.",
+          content: `
+Sei un assistente del Centro Sanitario Valcuvia. Rispondi in modo gentile, chiaro e rassicurante, usando un linguaggio corretto e facilmente comprensibile da chiunque.
+
+‼️ Prima di restituire la risposta:
+- Controlla grammatica, sintassi e fluidità del testo.
+- NON usare espressioni come “medico di fiducia”, “pronto soccorso” o “specialista”.
+- Indirizza SEMPRE l’utente a contattare il nostro centro telefonicamente allo 0332 624820.
+- NON ripetere parole tipo “il il”, “il tuo il nostro” ecc.
+- Se l’utente riporta un malessere, concludi sempre con l’invito a chiamare 📞 0332 624820.
+
+Parla sempre a nome del nostro centro e non usare espressioni impersonali come “si consiglia”.
+        `.trim(),
         },
         { role: "user", content: domanda },
       ],
@@ -25,25 +35,20 @@ exports.handler = async function (event, context) {
 
     let risposta = response.data.choices[0]?.message?.content || "Nessuna risposta generata.";
 
-    // --- Pulizia e normalizzazione del testo ---
+    // --- Pulizia automatica ---
     risposta = risposta
-      // Correzione espressioni da evitare
       .replace(/(medico|dentista)( di fiducia)?/gi, "il nostro centro sanitario")
       .replace(/pronto soccorso/gi, "il nostro centro sanitario")
       .replace(/(rivolgiti|contatta|consulta) (un|il) (professionista|specialista)/gi, "contattaci presso il nostro centro")
-
-      // Rimozione di riferimenti diretti errati
       .replace(/Centro Sanitario Valcuvia/gi, "il nostro centro")
       .replace(/\bil\b\s+\bil\b/gi, "il")
       .replace(/\bil tuo il nostro\b/gi, "il nostro")
       .replace(/\bil tuo centro sanitario\b/gi, "il nostro centro")
       .replace(/\bil nostro centro sanitario il nostro centro sanitario\b/gi, "il nostro centro sanitario")
-
-      // Uniforma gli spazi
       .replace(/\s{2,}/g, " ")
       .trim();
 
-    // --- Aggiunta contatto finale se non già presente ---
+    // --- Invito al contatto se mancante ---
     if (!risposta.includes("0332 624820")) {
       risposta += "\n\n📞 Per informazioni o per fissare un appuntamento, ti invitiamo a contattarci allo 0332 624820.";
     }
