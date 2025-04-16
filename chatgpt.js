@@ -32,13 +32,13 @@ const prestazioniDisponibili = [
 // Utility per normalizzazione
 function normalizzaTesto(testo) {
   return testo.toLowerCase()
-    .replace(/[^a-zàèéìòù\s]/gi, "")
+    .replace(/[^a-zà-ü\s]/gi, "")
     .replace(/\s+/g, " ")
     .trim();
 }
 
 // Riconoscimento domande generiche
-function èDomandaGenerica(testo) {
+function eDomandaGenerica(testo) {
   const frasi = ["ciao", "salve", "buongiorno", "buonasera", "grazie", "ok", "va bene"];
   const testoNorm = normalizzaTesto(testo);
   return frasi.includes(testoNorm);
@@ -49,9 +49,9 @@ function contienePrestazione(domanda) {
   const testoDomanda = normalizzaTesto(domanda);
   return prestazioniDisponibili.some(prestazione => {
     const base = normalizzaTesto(prestazione);
-    const pluraleI = base.replace(/a$/, "e"); // es: visita → visite
-    const pluraleE = base.replace(/o$/, "i"); // es: ecocardiocolordoppler → ecocardiocolordoppleri
-    return testoDomanda.includes(base) || testoDomanda.includes(pluraleI) || testoDomanda.includes(pluraleE);
+    const pluraleA = base.replace(/a$/, "e");
+    const pluraleO = base.replace(/o$/, "i");
+    return testoDomanda.includes(base) || testoDomanda.includes(pluraleA) || testoDomanda.includes(pluraleO);
   });
 }
 
@@ -60,19 +60,17 @@ exports.handler = async function (event, context) {
     const body = JSON.parse(event.body);
     const domanda = body.domanda;
 
-    // Risposta immediata a interazioni generiche
-    if (èDomandaGenerica(domanda)) {
+    // Risposta a domande generiche
+    if (eDomandaGenerica(domanda)) {
       return {
         statusCode: 200,
         body: JSON.stringify({ risposta: "Ciao! Come posso aiutarti oggi?" }),
       };
     }
 
-    // Se la prestazione NON è disponibile
+    // Se la prestazione non è disponibile
     if (!contienePrestazione(domanda)) {
-      const risposta = `Mi dispiace, ma al momento il servizio richiesto non è tra quelli offerti dal nostro centro. 
-Puoi consultare l’elenco completo delle nostre prestazioni nella brochure disponibile in formato PDF. 
-📞 Per ulteriori informazioni o per fissare un appuntamento: chiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.`;
+      const risposta = `Mi dispiace, ma al momento il servizio richiesto non è tra quelli offerti dal nostro centro.\n\nPuoi consultare l’elenco completo delle nostre prestazioni nella brochure disponibile in formato PDF: https://drive.google.com/file/d/1JOPK-rAAu5D330BwCY_7sOcHmkBwD6HD/view?usp=drive_link\n\n📞 Per ulteriori informazioni o per fissare un appuntamento: chiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.`;
       return {
         statusCode: 200,
         body: JSON.stringify({ risposta }),
