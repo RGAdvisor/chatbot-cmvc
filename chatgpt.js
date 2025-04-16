@@ -78,16 +78,16 @@ exports.handler = async function (event, context) {
       return {
         statusCode: 200,
         body: JSON.stringify({
-          risposta: `📍 Ci troviamo a **Via Enrico Fermi, 6 – 21030 Cuvio (VA)**.\n\n📞 Per qualsiasi informazione o per fissare un appuntamento:\nchiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.`
+          risposta: `📍 Ci troviamo a **Cuvio, Via Enrico Fermi, 6 (VA)**.\n\n📞 Per qualsiasi informazione o per fissare un appuntamento:\nchiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.`
         }),
       };
     }
 
     if (!contienePrestazione(domanda)) {
-      const risposta = `Mi dispiace, ma al momento il servizio richiesto non è tra quelli offerti dal nostro centro.  
-📄 Puoi consultare l’elenco completo nella brochure in PDF:  
-👉 https://drive.google.com/file/d/1JOPK-rAAu5D330BwCY_7sOcHmkBwD6HD/view?usp=drive_link  
+     const risposta = `Mi dispiace, ma al momento il servizio richiesto non è tra quelli offerti dal nostro centro.  
+📄 [SCARICA ELENCO PRESTAZIONI CSV](https://drive.google.com/file/d/1JOPK-rAAu5D330BwCY_7sOcHmkBwD6HD/view?usp=drive_link)  
 📞 Per ulteriori informazioni o per fissare un appuntamento: chiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.`;
+
       return {
         statusCode: 200,
         body: JSON.stringify({ risposta }),
