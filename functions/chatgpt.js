@@ -15,18 +15,14 @@ exports.handler = async function (event, context) {
       messages: [
         {
           role: "system",
-          content: `
-Sei un assistente del Centro Sanitario Valcuvia. Rispondi in modo gentile, chiaro e rassicurante, usando un linguaggio corretto e facilmente comprensibile da chiunque.
-
-‼️ Prima di restituire la risposta:
-- Controlla grammatica, sintassi e fluidità del testo.
-- NON usare espressioni come “medico di fiducia”, “pronto soccorso” o “specialista”.
-- Indirizza SEMPRE l’utente a contattare il nostro centro telefonicamente allo 0332 624820.
-- NON ripetere parole tipo “il il”, “il tuo il nostro” ecc.
-- Se l’utente riporta un malessere, indica di contattarci 📞 0332 624820 e POI aggiungi un piccolo consiglio pratico o comportamentale utile (es. bere acqua, evitare cibi irritanti, riposare, ecc.) se coerente con la situazione.
-
-Parla sempre a nome del nostro centro e non usare espressioni impersonali come “si consiglia”.
-          `.trim()
+          content:
+            `Rispondi come assistente del Centro Sanitario Valcuvia, in modo gentile, corretto grammaticalmente e informativo. 
+Evita qualsiasi riferimento a medici di base, dentisti di fiducia o pronto soccorso. 
+Invita sempre a contattare il nostro centro telefonicamente o via mail.
+Se la domanda riguarda un malessere, aggiungi alla fine della risposta uno o due consigli pratici e generici (acqua, riposo, impacchi, ecc.) ma solo dopo aver invitato a contattarci.
+Se l’utente chiede un contatto, indica chiaramente:
+📞 0332 624820 
+📧 segreteria@csvcuvio.it`,
         },
         { role: "user", content: domanda },
       ],
@@ -35,16 +31,18 @@ Parla sempre a nome del nostro centro e non usare espressioni impersonali come �
 
     let risposta = response.data.choices[0]?.message?.content || "Nessuna risposta generata.";
 
-    // Correzioni automatiche extra
+    // Correzioni e pulizia post-risposta
     risposta = risposta
-      .replace(/(medico|dentista)( di fiducia)?/gi, "il nostro centro sanitario")
+      .replace(/\b(tuo|il tuo|proprio) (medico|dentista)( di fiducia)?\b/gi, "il nostro centro sanitario")
       .replace(/pronto soccorso/gi, "il nostro centro sanitario")
-      .replace(/(rivolgiti|contatta) (un|il) (professionista|specialista)/gi, "contattaci presso il nostro centro")
-      .replace(/Centro Sanitario Valcuvia/gi, "il nostro centro");
+      .replace(/Centro Sanitario Valcuvia/gi, "il nostro centro")
+      .replace(/\bcontatta(ci)? (un|il) (professionista|specialista)\b/gi, "contattaci presso il nostro centro")
+      .replace(/\s+/g, " ") // normalizza eventuali spazi multipli
+      .trim();
 
-    // Aggiunta recapito se non incluso
+    // Inserimento contatto, se non presente
     if (!risposta.includes("0332 624820")) {
-      risposta += "\n\n📞 Per informazioni o per fissare un appuntamento, ti invitiamo a contattarci allo 0332 624820.";
+      risposta += "\n\n📞 Per informazioni o appuntamenti, chiamaci allo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.";
     }
 
     return {
