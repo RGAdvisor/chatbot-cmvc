@@ -2,30 +2,113 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Centro Sanitario Valcuvia</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chatbot CSV</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      padding: 20px;
+    }
+    .chat-container {
+      max-width: 600px;
+      margin: auto;
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .message {
+      margin-bottom: 15px;
+      padding: 10px;
+      border-radius: 5px;
+    }
+    .user {
+      background: #e6f7ff;
+      text-align: right;
+    }
+    .bot {
+      background: #f0f0f0;
+    }
+    #output {
+      margin-top: 10px;
+    }
+    input[type="text"] {
+      width: calc(100% - 20px);
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+    button {
+      margin-top: 10px;
+      padding: 10px 15px;
+      font-size: 16px;
+      background: #2b7a78;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #205e5c;
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Benvenuto al Centro Sanitario Valcuvia</h1>
-
-    <!-- Bottoni domande fisse -->
-    <div class="button-group">
-      <button id="button1">Come posso prenotare una visita?</button>
-      <button id="button2">Quali sono i vostri orari?</button>
-      <button id="button3">Dove si trova il Centro?</button>
-      <button id="button4">Quali servizi fornite?</button>
+  <div class="chat-container">
+    <h2>💬 Assistente Centro Sanitario Valcuvia</h2>
+    <div id="chatlog">
+      <!-- Chat messages will appear here -->
     </div>
-
-    <!-- Box per risposta fissa -->
-    <div id="risposta-fissa" class="risposta-fissa"></div>
-
-    <!-- Chat -->
-    <div class="chat-box" id="chat-container"></div>
-    <textarea id="domanda" placeholder="Scrivi qui la tua domanda..."></textarea>
+    <input type="text" id="userInput" placeholder="Scrivi qui la tua domanda..." />
+    <button onclick="inviaDomanda()">Invia</button>
   </div>
 
-  <script src="script.js"></script>
+  <script>
+    async function inviaDomanda() {
+      const input = document.getElementById("userInput");
+      const chatlog = document.getElementById("chatlog");
+
+      const domanda = input.value.trim();
+      if (!domanda) return;
+
+      // Mostra la domanda dell’utente
+      const divUtente = document.createElement("div");
+      divUtente.className = "message user";
+      divUtente.textContent = domanda;
+      chatlog.appendChild(divUtente);
+
+      input.value = "";
+
+      try {
+        const res = await fetch("/.netlify/functions/chatbot", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ domanda })
+        });
+
+        const data = await res.json();
+
+        const divBot = document.createElement("div");
+        divBot.className = "message bot";
+
+        // ATTENZIONE: interpretazione HTML nella risposta
+        divBot.innerHTML = data.risposta;
+
+        chatlog.appendChild(divBot);
+        chatlog.scrollTop = chatlog.scrollHeight;
+      } catch (err) {
+        const divError = document.createElement("div");
+        divError.className = "message bot";
+        divError.textContent = "⚠️ Errore durante la richiesta. Riprova più tardi.";
+        chatlog.appendChild(divError);
+      }
+    }
+
+    document.getElementById("userInput").addEventListener("keydown", function (e) {
+      if (e.key === "Enter") inviaDomanda();
+    });
+  </script>
 </body>
 </html>
