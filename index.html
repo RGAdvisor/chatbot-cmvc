@@ -1,34 +1,39 @@
 <!DOCTYPE html>
 <html lang="it">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Centro Sanitario Valcuvia</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-  <div class="container">
-    <h1>Sanitario Valcuvia</h1>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Assistente Centro Sanitario Valcuvia</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>
+        <span class="icon">💬</span>
+        Assistente Centro Sanitario Valcuvia
+      </h1>
 
-    <!-- Bottoni domande fisse -->
-    <div class="button-group">
-      <button class="question-button" id="button1">Come posso prenotare una visita?</button>
-      <button class="question-button" id="button2">Quali sono i vostri orari?</button>
-      <button class="question-button" id="button3">Dove si trova il Centro?</button>
-      <button class="question-button" id="button4">Quali servizi fornite?</button>
+      <!-- Bottoni domande fisse -->
+      <div class="button-group">
+        <button class="question-button">Come posso prenotare una visita?</button>
+        <button class="question-button">Quali sono i vostri orari?</button>
+        <button class="question-button">Dove si trova il Centro?</button>
+        <button class="question-button">Quali servizi fornite?</button>
+      </div>
+
+      <!-- Box risposta fissa (inizialmente nascosto) -->
+      <div id="risposta-fissa" class="risposta-fissa"></div>
+
+      <!-- Box chat -->
+      <div id="chat" class="chat-box"></div>
+
+      <!-- Input domanda -->
+      <div class="input-area">
+        <textarea id="domanda" placeholder="Scrivi qui la tua domanda..."></textarea>
+        <button id="invia" class="send-button">Invia</button>
+      </div>
     </div>
 
-    <!-- Box per risposta fissa -->
-    <div id="risposta-fissa" class="risposta-fissa"></div>
-
-    <!-- Chat -->
-    <div class="chat-box" id="chat-container"></div>
-
-    <!-- Input utente -->
-    <textarea id="domanda" placeholder="Scrivi qui la tua domanda..."></textarea>
-    <button id="invia" class="send-button">Invia</button>
-  </div>
-
-  <script src="script.js"></script>
-</body>
+    <script src="script.js"></script>
+  </body>
 </html>
