@@ -1,4 +1,3 @@
-// chatbot-function.js
 const { Configuration, OpenAIApi } = require("openai");
 
 const configuration = new Configuration({
@@ -6,95 +5,122 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
-// Prestazioni disponibili
+// Lista prestazioni offerte
 const prestazioniDisponibili = [
-  "Addominoplastica", "Agopuntura", "Bleforaplastica", "Carico immediato",
-  "Chirurgia estetica del seno", "ECG", "ECG sotto sforzo",
-  "Ecocardiocolordoppler", "Ecografie", "Holter cardiaco", "Holter pressorio",
-  "Igiene dentale", "Lipoemulsione sottocutanea", "Liposcultura", "Liposuzione",
-  "Mammografia", "Otoplastica", "Otturazioni", "Visita cardiologica",
+  "Addominoplastica",
+  "Agopuntura",
+  "Bleforaplastica",
+  "Carico immediato",
+  "Chirurgia estetica del seno",
+  "ECG",
+  "ECG sotto sforzo",
+  "Ecocardiocolordoppler",
+  "Ecografie",
+  "Holter cardiaco",
+  "Holter pressorio",
+  "Igiene dentale",
+  "Lipoemulsione sottocutanea",
+  "Liposcultura",
+  "Liposuzione",
+  "Mammografia",
+  "Otoplastica",
+  "Otturazioni",
+  "Visita cardiologica",
   "Visita ginecologica"
 ];
 
-const brochureLink =
-  '<a href="https://drive.google.com/file/d/1JOPK-rAAu5D330BwCY_7sOcHmkBwD6HD/view?usp=drive_link" target="_blank">📄 SCARICA ELENCO PRESTAZIONI CSV</a>';
-
+// Normalizza il testo per il confronto
 function normalizzaTesto(testo) {
   return testo.toLowerCase()
-    .replace(/[^a-zà-ü\s]/gi, "")
+    .replace(/[^a-zàèéìòù\s]/gi, "")
     .replace(/\s+/g, " ")
     .trim();
 }
 
+// Frasi generiche (ciao, grazie, ecc.)
 function èDomandaGenerica(testo) {
-  const frasi = ["ciao", "salve", "buongiorno", "buonasera", "grazie", "ok", "va bene", "come state", "da dove vieni"];
+  const frasi = ["ciao", "salve", "buongiorno", "buonasera", "grazie", "ok"];
   return frasi.includes(normalizzaTesto(testo));
 }
 
-function domandaSuPosizione(testo) {
-  return /dove (siete|vi trovo|si trova|trovate)/i.test(testo);
+// Malesseri comuni
+function segnalaMalessere(testo) {
+  const paroleChiave = ["mal di", "dolore", "non sto bene", "mi sento male", "mi fa male", "sintomi"];
+  const testoNorm = normalizzaTesto(testo);
+  return paroleChiave.some(parola => testoNorm.includes(parola));
 }
 
+// Prestazione presente?
 function contienePrestazione(domanda) {
-  const testo = normalizzaTesto(domanda);
-  return prestazioniDisponibili.some(prest => {
-    const base = normalizzaTesto(prest);
-    const pluraleA = base.replace(/a$/, "e");
-    const pluraleO = base.replace(/o$/, "i");
-    return testo.includes(base) || testo.includes(pluraleA) || testo.includes(pluraleO);
+  const testoDomanda = normalizzaTesto(domanda);
+  return prestazioniDisponibili.some(prestazione => {
+    const base = normalizzaTesto(prestazione);
+    const pluraleE = base.replace(/a$/, "e");
+    const pluraleI = base.replace(/o$/, "i");
+    return testoDomanda.includes(base) || testoDomanda.includes(pluraleE) || testoDomanda.includes(pluraleI);
   });
 }
 
-exports.handler = async function (event, context) {
+exports.handler = async function (event) {
   try {
     const body = JSON.parse(event.body);
     const domanda = body.domanda;
 
+    // DOMANDE GENERICHE
     if (èDomandaGenerica(domanda)) {
       return {
         statusCode: 200,
-        body: JSON.stringify({ risposta: "Ciao! Come posso aiutarti oggi?" }),
+        body: JSON.stringify({
+          risposta: `👋 Ciao! Come posso aiutarti oggi?`,
+        }),
       };
     }
 
-    if (domandaSuPosizione(domanda)) {
-      const risposta = `Ci troviamo a Cuvio (VA), in via Enrico Fermi 6. 📍 Per informazioni o appuntamenti: ☎️ 0332 624820 – 📧 segreteria@csvcuvio.it.`;
+    // MALESSERE
+    if (segnalaMalessere(domanda)) {
+      const risposta = `
+Siamo spiacenti che tu non ti senta bene. Ti consigliamo di <strong>contattare subito il nostro centro</strong> per una valutazione accurata. 
+Nel frattempo, puoi provare a <strong>bere acqua</strong>, <strong>riposare</strong> ed eventualmente <strong>applicare un impacco freddo o caldo</strong> sulla zona interessata.
+
+📞 <strong>0332 624820</strong><br>
+📧 <strong>segreteria@csvcuvio.it</strong>
+`;
       return {
         statusCode: 200,
         body: JSON.stringify({ risposta }),
       };
     }
 
+    // SE NON È UNA PRESTAZIONE DISPONIBILE
     if (!contienePrestazione(domanda)) {
-      const risposta = `Mi dispiace, ma al momento il servizio richiesto non è tra quelli offerti dal nostro centro.<br><br>
-      ${brochureLink}<br><br>
-      ☎️ Per ulteriori informazioni o per fissare un appuntamento: chiama lo <strong>0332 624820</strong> oppure scrivi a 📧 <strong>segreteria@csvcuvio.it</strong>.`;
+      const risposta = `
+Mi dispiace, ma al momento il servizio richiesto non è tra quelli offerti dal nostro centro.<br><br>📄 
+<a href="https://drive.google.com/file/d/1JOPK-rAAu5D330BwCY_7sOcHmkBwD6HD/view?usp=drive_link" target="_blank">SCARICA ELENCO PRESTAZIONI CSV</a><br><br>📞 Per ulteriori informazioni o per fissare un appuntamento: chiama lo <strong>0332 624820</strong> oppure scrivi a 📧 <strong>segreteria@csvcuvio.it</strong>.
+`;
       return {
         statusCode: 200,
         body: JSON.stringify({ risposta }),
       };
     }
 
-    // Risposta con OpenAI
+    // Altrimenti... GPT risponde per prestazione esistente
     const response = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
+      temperature: 0.5,
       messages: [
         {
           role: "system",
-          content: `Sei un assistente virtuale del Centro Sanitario Valcuvia. Rispondi in modo gentile, corretto e informativo.
+          content: `
+Sei l'assistente virtuale del Centro Sanitario Valcuvia. Rispondi sempre in italiano corretto, educato e professionale. Non dire mai "rivolgiti al tuo medico" ma sempre "contatta il nostro centro".
 
-✅ Se l'utente segnala un malessere (es: mal di denti), invita a contattare il nostro centro e aggiungi un piccolo consiglio utile (es. riposo, impacchi freddi/caldi, ecc.).
-❌ Non dare consigli se non si parla di sintomi.
-❌ Non usare: medico di base, dentista di fiducia, pronto soccorso. Usa sempre "il nostro centro sanitario".
-✅ I contatti devono sempre essere presenti:
-  ☎️ 0332 624820
-  📧 segreteria@csvcuvio.it
-  
-❗Correggi grammatica e sintassi prima della risposta.`
+📞 0332 624820
+📧 segreteria@csvcuvio.it
+
+Non dare consigli sanitari se non richiesti da un malessere. Controlla grammatica e sintassi prima di rispondere.
+          `
         },
-        { role: "user", content: domanda },
+        { role: "user", content: domanda }
       ],
-      temperature: 0.5,
     });
 
     let risposta = response.data.choices[0]?.message?.content || "Nessuna risposta generata.";
@@ -105,10 +131,9 @@ exports.handler = async function (event, context) {
       .replace(/Centro Sanitario Valcuvia/gi, "il nostro centro")
       .replace(/contatta(ci)? (un|il) (professionista|specialista)/gi, "contattaci presso il nostro centro");
 
-    const contatti = `<br><br>☎️ Per informazioni o per fissare un appuntamento:<br>Chiama lo <strong>0332 624820</strong> oppure scrivi a 📧 <strong>segreteria@csvcuvio.it</strong>`;
-
+    // Aggiungi contatti se non presenti
     if (!risposta.includes("0332 624820") && !risposta.includes("segreteria@csvcuvio.it")) {
-      risposta += contatti;
+      risposta += `<br><br>📞 <strong>0332 624820</strong><br>📧 <strong>segreteria@csvcuvio.it</strong>`;
     }
 
     return {
@@ -119,7 +144,9 @@ exports.handler = async function (event, context) {
     console.error("Errore:", error);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: "Errore durante la generazione della risposta." }),
+      body: JSON.stringify({
+        risposta: "⚠️ Errore durante la richiesta. Riprova più tardi.",
+      }),
     };
   }
 };
