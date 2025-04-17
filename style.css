@@ -1,89 +1,104 @@
+// style.css
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f1f1f1;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f8f9fa;
   margin: 0;
   padding: 0;
 }
 
 .container {
-  width: 90%;
-  max-width: 600px;
+  max-width: 700px;
   margin: 30px auto;
-  background-color: #fff;
-  padding: 20px;
+  background: #fff;
+  padding: 25px;
   border-radius: 12px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
   text-align: center;
-  color: #1e7b5a;
+  color: #116943;
+  margin-bottom: 30px;
 }
 
 .button-group {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 10px;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 
-button {
-  padding: 12px;
-  border: none;
-  background-color: #1e7b5a;
+.faq-button {
+  background-color: #116943;
   color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 30px;
   font-weight: bold;
-  border-radius: 20px;
   cursor: pointer;
+  transition: background-color 0.2s;
 }
 
-button:hover {
-  background-color: #145d44;
+.faq-button:hover {
+  background-color: #0e5a38;
 }
 
 .risposta-fissa {
-  min-height: 50px;
-  border: 1px solid #1e7b5a;
+  background-color: #fff3cd;
+  border: 1px solid #ffeeba;
+  color: #856404;
+  padding: 15px;
   border-radius: 10px;
-  padding: 10px;
   margin-bottom: 20px;
-  color: #333;
+  display: none;
 }
 
 .chat-box {
-  max-height: 300px;
+  background-color: #eef7ff;
+  padding: 20px;
+  border-radius: 10px;
+  height: 300px;
   overflow-y: auto;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 
-.user-message,
-.gpt-response {
-  max-width: 80%;
-  padding: 10px;
-  margin: 8px;
-  border-radius: 16px;
-  clear: both;
-  word-wrap: break-word;
+.message {
+  margin-bottom: 15px;
+  line-height: 1.4;
 }
 
-.user-message {
-  background-color: #1e7b5a;
-  color: white;
-  align-self: flex-end;
-  float: right;
+.message.user {
+  text-align: right;
+  font-weight: bold;
 }
 
-.gpt-response {
-  background-color: #e0e0e0;
-  float: left;
+.message.bot {
+  text-align: left;
+  color: #333;
 }
 
 textarea {
   width: 100%;
-  height: 60px;
   padding: 10px;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-  resize: none;
+  font-family: monospace;
   font-size: 14px;
+  resize: vertical;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+}
+
+button {
+  padding: 10px 20px;
+  background-color: #116943;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+button:hover {
+  background-color: #0e5a38;
 }
