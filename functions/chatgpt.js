@@ -42,17 +42,21 @@ exports.handler = async function (event, context) {
     ];
     const contieneSintomi = segnaliMalessere.some((s) => domanda.includes(s));
 
-    // Se la prestazione NON è offerta
-    if (!richiestaPrestazione) {
+    // Rileva se la domanda è generica
+    const domandeGeneriche = ["ciao", "salve", "grazie", "ok", "buongiorno", "buonasera"];
+    const èDomandaGenerica = domandeGeneriche.includes(domanda.trim());
+
+    // Se la prestazione NON è offerta e non è un saluto o malessere
+    if (!richiestaPrestazione && !contieneSintomi && !èDomandaGenerica) {
       return {
         statusCode: 200,
         body: JSON.stringify({
-          risposta:
-            "Ci dispiace, ma al momento questa prestazione non è disponibile presso il nostro centro.\n\n📄 Puoi consultare l’elenco completo delle prestazioni nella nostra brochure: [Scarica Brochure](https://www.csvcuvio.it/brochure_prestazioni.pdf)",
+          risposta: `Ci dispiace, ma al momento questa prestazione non è disponibile presso il nostro centro.<br><br>📄 <a href="https://www.csvcuvio.it/brochure_prestazioni.pdf" target="_blank">SCARICA ELENCO PRESTAZIONI CSV</a><br><br>📞 Per ulteriori informazioni o per fissare un appuntamento: chiama lo <strong>0332 624820</strong> oppure scrivi a 📧 <strong>segreteria@csvcuvio.it</strong>.`,
         }),
       };
     }
 
+    // Chiamata a OpenAI
     const response = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
       messages: [
@@ -71,34 +75,31 @@ Sei un assistente virtuale del Centro Sanitario Valcuvia. Rispondi sempre in mod
 📞 0332 624820
 📧 segreteria@csvcuvio.it
 
-❗Correggi eventuali errori grammaticali o di sintassi prima di restituire la risposta.
-        `,
+❗Correggi eventuali errori grammaticali o di sintassi prima di restituire la risposta.`,
         },
         { role: "user", content: domandaOriginale },
       ],
       temperature: 0.4,
     });
 
-    let risposta =
-      response.data.choices[0]?.message?.content || "Nessuna risposta generata.";
+    let risposta = response.data.choices[0]?.message?.content || "Nessuna risposta generata.";
 
     // Pulizia della risposta
     risposta = risposta
       .replace(/(medico|dentista)( di fiducia)?/gi, "il nostro centro sanitario")
       .replace(/pronto soccorso/gi, "il nostro centro sanitario")
       .replace(/Centro Sanitario Valcuvia/gi, "il nostro centro")
-      .replace(
-        /(rivolgiti|contatta)[^.!?]*[.!?]/gi,
-        "Ti consigliamo di contattare il nostro centro sanitario per maggiori informazioni."
-      );
+      .replace(/(rivolgiti|contatta)[^.]*[.!?]/gi, "Ti consigliamo di contattare il nostro centro sanitario per maggiori informazioni.");
+
+    // In caso di sintomi, aggiungi un consiglio utile
+    if (contieneSintomi) {
+      risposta += `\n\n⚕️ Ti consigliamo di contattare il nostro centro. Nel frattempo, può essere utile riposare, bere acqua e applicare impacchi freddi o caldi sulla zona interessata.`;
+    }
 
     // Aggiunta contatti, se non presenti
     const contatti = `\n\n📞 Per informazioni o per fissare un appuntamento:\nChiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.`;
 
-    if (
-      !risposta.includes("0332 624820") &&
-      !risposta.includes("segreteria@csvcuvio.it")
-    ) {
+    if (!risposta.includes("0332 624820") && !risposta.includes("segreteria@csvcuvio.it")) {
       risposta += contatti;
     }
 
@@ -116,4 +117,3 @@ Sei un assistente virtuale del Centro Sanitario Valcuvia. Rispondi sempre in mod
     };
   }
 };
-
