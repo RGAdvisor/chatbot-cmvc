@@ -5,105 +5,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Centro Sanitario Valcuvia</title>
   <link rel="stylesheet" href="style.css" />
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f8f8f8;
-      padding: 20px;
-    }
-    .container {
-      max-width: 600px;
-      margin: 0 auto;
-      background-color: #fff;
-      border-radius: 10px;
-      padding: 20px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    h1 {
-      font-size: 1.5rem;
-      display: flex;
-      align-items: center;
-    }
-    h1::before {
-      content: "\1F4AC";
-      margin-right: 10px;
-    }
-    .chat-box {
-      background-color: #f0f8ff;
-      padding: 10px;
-      min-height: 80px;
-      border-radius: 5px;
-      margin-bottom: 15px;
-    }
-    .chat-message {
-      margin: 5px 0;
-      padding: 8px 12px;
-      border-radius: 10px;
-      max-width: 80%;
-      clear: both;
-    }
-    .utente {
-      background-color: #cce5ff;
-      align-self: flex-end;
-      margin-left: auto;
-      text-align: right;
-    }
-    .assistente {
-      background-color: #e8e8e8;
-      align-self: flex-start;
-      margin-right: auto;
-      text-align: left;
-    }
-    textarea {
-      width: 100%;
-      padding: 10px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      margin-bottom: 10px;
-    }
-    .button-group button {
-      margin: 5px 5px 5px 0;
-      padding: 8px 12px;
-      border: none;
-      border-radius: 5px;
-      background-color: #006400;
-      color: white;
-      cursor: pointer;
-    }
-    .button-group {
-      margin-bottom: 10px;
-    }
-    .risposta-fissa {
-      padding: 10px;
-      background-color: #fff3cd;
-      border-left: 5px solid #ffeeba;
-      margin-bottom: 10px;
-      display: none;
-    }
-  </style>
 </head>
 <body>
   <div class="container">
-    <h1>Assistente Centro Sanitario Valcuvia</h1>
+    <h1>💬 Assistente Centro Sanitario Valcuvia</h1>
 
     <!-- Bottoni domande fisse -->
     <div class="button-group">
-      <button id="button1">Come posso prenotare una visita?</button>
-      <button id="button2">Quali sono i vostri orari?</button>
-      <button id="button3">Dove si trova il Centro?</button>
-      <button id="button4">Quali servizi fornite?</button>
+      <button class="fixed-question" data-domanda="Come posso prenotare una visita?">Come posso prenotare una visita?</button>
+      <button class="fixed-question" data-domanda="Quali sono i vostri orari?">Quali sono i vostri orari?</button>
+      <button class="fixed-question" data-domanda="Dove si trova il Centro?">Dove si trova il Centro?</button>
+      <button class="fixed-question" data-domanda="Quali servizi fornite?">Quali servizi fornite?</button>
     </div>
 
-    <!-- Box risposta fissa -->
-    <div id="risposta-fissa" class="risposta-fissa"></div>
+    <!-- Box chat -->
+    <div class="chat-box" id="chat-box"></div>
 
-    <!-- Chat -->
-    <div class="chat-box" id="chat-container"></div>
-
-    <textarea id="domanda" placeholder="Scrivi qui la tua domanda..."></textarea>
-    <button onclick="inviaDomanda()" style="background-color: #0b6c2b; color: white; padding: 8px 20px; border-radius: 5px; border: none; cursor: pointer;">Invia</button>
+    <!-- Input + invio -->
+    <div class="input-group">
+      <textarea id="domanda" placeholder="Scrivi qui la tua domanda..."></textarea>
+      <button id="invia">Invia</button>
+    </div>
   </div>
 
-  <script src="chatbot.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
