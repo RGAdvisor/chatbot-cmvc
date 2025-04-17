@@ -1,89 +1,104 @@
+/* Style per Assistente Centro Sanitario Valcuvia */
+
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f1f1f1;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f9f9f9;
   margin: 0;
-  padding: 0;
+  padding: 2rem;
+  color: #333;
 }
 
 .container {
-  width: 90%;
-  max-width: 600px;
-  margin: 30px auto;
-  background-color: #fff;
-  padding: 20px;
+  max-width: 720px;
+  margin: auto;
+  background: #ffffff;
   border-radius: 12px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  padding: 2rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.08);
 }
 
 h1 {
-  text-align: center;
-  color: #1e7b5a;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+h1::before {
+  content: "\1F4AC"; /* emoji fumetto */
+  font-size: 1.4rem;
+}
+
+.chat-box {
+  min-height: 250px;
+  background-color: #f0f8ff;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  overflow-y: auto;
+  font-size: 1rem;
+}
+
+textarea {
+  width: calc(100% - 100px);
+  padding: 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  resize: none;
+  font-size: 1rem;
+}
+
+button {
+  background-color: #00723a;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.2rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+  margin-left: 0.5rem;
+}
+
+button:hover {
+  background-color: #005f30;
 }
 
 .button-group {
   display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-bottom: 15px;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
 }
 
-button {
-  padding: 12px;
-  border: none;
-  background-color: #1e7b5a;
-  color: white;
+.button-group button {
+  background-color: #f0f0f0;
+  color: #333;
+  border: 1px solid #ccc;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  border-radius: 6px;
+}
+
+.button-group button:hover {
+  background-color: #e6e6e6;
+}
+
+.user {
   font-weight: bold;
-  border-radius: 20px;
-  cursor: pointer;
+  margin-top: 1rem;
 }
 
-button:hover {
-  background-color: #145d44;
+.bot {
+  margin: 0.5rem 0 1rem 0;
 }
 
 .risposta-fissa {
-  min-height: 50px;
-  border: 1px solid #1e7b5a;
-  border-radius: 10px;
-  padding: 10px;
-  margin-bottom: 20px;
-  color: #333;
-}
-
-.chat-box {
-  max-height: 300px;
-  overflow-y: auto;
-  margin-bottom: 10px;
-}
-
-.user-message,
-.gpt-response {
-  max-width: 80%;
-  padding: 10px;
-  margin: 8px;
-  border-radius: 16px;
-  clear: both;
-  word-wrap: break-word;
-}
-
-.user-message {
-  background-color: #1e7b5a;
-  color: white;
-  align-self: flex-end;
-  float: right;
-}
-
-.gpt-response {
-  background-color: #e0e0e0;
-  float: left;
-}
-
-textarea {
-  width: 100%;
-  height: 60px;
-  padding: 10px;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-  resize: none;
-  font-size: 14px;
+  background-color: #fef9e7;
+  border: 1px solid #f4e2c5;
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
 }
