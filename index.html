@@ -3,123 +3,107 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Assistente Centro Sanitario Valcuvia</title>
+  <title>Centro Sanitario Valcuvia</title>
+  <link rel="stylesheet" href="style.css" />
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #f9f9f9;
-      margin: 0;
-      padding: 0;
+      background-color: #f8f8f8;
+      padding: 20px;
     }
     .container {
-      max-width: 700px;
-      margin: 40px auto;
-      background: #fff;
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #fff;
+      border-radius: 10px;
       padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-    .header {
-      font-size: 20px;
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
-    .chat-box {
-      border: 1px solid #e5e5e5;
-      border-radius: 6px;
-      padding: 10px;
-      height: 300px;
-      overflow-y: auto;
-      margin-bottom: 15px;
-      background-color: #f2f9ff;
-    }
-    .message {
-      margin: 8px 0;
-    }
-    .user {
-      font-weight: bold;
-      color: #007a5e;
-    }
-    .bot {
-      color: #444;
-    }
-    .input-area {
+    h1 {
+      font-size: 1.5rem;
       display: flex;
+      align-items: center;
     }
-    input[type="text"] {
-      flex: 1;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
+    h1::before {
+      content: "\1F4AC";
       margin-right: 10px;
     }
-    button {
-      padding: 10px 15px;
-      background-color: #007a5e;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    .error {
-      background: #f8d7da;
-      color: #721c24;
+    .chat-box {
+      background-color: #f0f8ff;
       padding: 10px;
-      border-radius: 6px;
+      min-height: 80px;
+      border-radius: 5px;
       margin-bottom: 15px;
     }
-    a {
-      color: #007a5e;
-      font-weight: bold;
-      text-decoration: none;
+    .chat-message {
+      margin: 5px 0;
+      padding: 8px 12px;
+      border-radius: 10px;
+      max-width: 80%;
+      clear: both;
+    }
+    .utente {
+      background-color: #cce5ff;
+      align-self: flex-end;
+      margin-left: auto;
+      text-align: right;
+    }
+    .assistente {
+      background-color: #e8e8e8;
+      align-self: flex-start;
+      margin-right: auto;
+      text-align: left;
+    }
+    textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      margin-bottom: 10px;
+    }
+    .button-group button {
+      margin: 5px 5px 5px 0;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 5px;
+      background-color: #006400;
+      color: white;
+      cursor: pointer;
+    }
+    .button-group {
+      margin-bottom: 10px;
+    }
+    .risposta-fissa {
+      padding: 10px;
+      background-color: #fff3cd;
+      border-left: 5px solid #ffeeba;
+      margin-bottom: 10px;
+      display: none;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="header">💬 Assistente Centro Sanitario Valcuvia</div>
-    <div id="chat" class="chat-box"></div>
-    <div id="error" class="error" style="display:none;">⚠️ Errore durante la richiesta. Riprova più tardi.</div>
-    <div class="input-area">
-      <input type="text" id="input" placeholder="Scrivi qui la tua domanda..." />
-      <button onclick="sendMessage()">Invia</button>
+    <h1>Assistente Centro Sanitario Valcuvia</h1>
+
+    <!-- Bottoni domande fisse -->
+    <div class="button-group">
+      <button id="button1">Come posso prenotare una visita?</button>
+      <button id="button2">Quali sono i vostri orari?</button>
+      <button id="button3">Dove si trova il Centro?</button>
+      <button id="button4">Quali servizi fornite?</button>
     </div>
+
+    <!-- Box risposta fissa -->
+    <div id="risposta-fissa" class="risposta-fissa"></div>
+
+    <!-- Chat -->
+    <div class="chat-box" id="chat-container"></div>
+
+    <textarea id="domanda" placeholder="Scrivi qui la tua domanda..."></textarea>
+    <button onclick="inviaDomanda()" style="background-color: #0b6c2b; color: white; padding: 8px 20px; border-radius: 5px; border: none; cursor: pointer;">Invia</button>
   </div>
 
-  <script>
-    async function sendMessage() {
-      const input = document.getElementById("input");
-      const chat = document.getElementById("chat");
-      const errorBox = document.getElementById("error");
-
-      const domanda = input.value.trim();
-      if (!domanda) return;
-
-      const userMsg = document.createElement("div");
-      userMsg.className = "message user";
-      userMsg.innerText = `Utente: ${domanda}`;
-      chat.appendChild(userMsg);
-
-      input.value = "";
-      errorBox.style.display = "none";
-
-      try {
-        const res = await fetch("/.netlify/functions/chatbot", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ domanda }),
-        });
-        const data = await res.json();
-        const botMsg = document.createElement("div");
-        botMsg.className = "message bot";
-        botMsg.innerHTML = data.risposta;
-        chat.appendChild(botMsg);
-        chat.scrollTop = chat.scrollHeight;
-      } catch (error) {
-        console.error("Errore fetch:", error);
-        errorBox.style.display = "block";
-      }
-    }
-  </script>
+  <script src="chatbot.js"></script>
 </body>
 </html>
