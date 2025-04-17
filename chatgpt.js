@@ -1,139 +1,105 @@
 const { Configuration, OpenAIApi } = require("openai");
+const xlsx = require("xlsx");
+const fs = require("fs");
+const path = require("path");
 
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 });
 const openai = new OpenAIApi(configuration);
 
-// Lista prestazioni offerte
-const prestazioniDisponibili = [
-  "Addominoplastica",
-  "Agopuntura",
-  "Bleforaplastica",
-  "Carico immediato",
-  "Chirurgia estetica del seno",
-  "ECG",
-  "ECG sotto sforzo",
-  "Ecocardiocolordoppler",
-  "Ecografie",
-  "Holter cardiaco",
-  "Holter pressorio",
-  "Igiene dentale",
-  "Lipoemulsione sottocutanea",
-  "Liposcultura",
-  "Liposuzione",
-  "Mammografia",
-  "Otoplastica",
-  "Otturazioni",
-  "Visita cardiologica",
-  "Visita ginecologica"
-];
+// Carica l'elenco delle prestazioni dal file Excel
+const workbook = xlsx.readFile(path.join(__dirname, "elenco prestazioni.xlsx"));
+const sheetName = workbook.SheetNames[0];
+const data = xlsx.utils.sheet_to_json(workbook.Sheets[sheetName]);
 
-// Normalizza il testo per il confronto
-function normalizzaTesto(testo) {
-  return testo.toLowerCase()
-    .replace(/[^a-zàèéìòù\s]/gi, "")
-    .replace(/\s+/g, " ")
-    .trim();
-}
+// Crea un Set di prestazioni offerte (includendo singolare/plurale)
+const prestazioniOfferte = new Set();
+data.forEach((row) => {
+  const voce = row["Prestazione"]?.toLowerCase().trim();
+  if (voce) {
+    prestazioniOfferte.add(voce);
+    if (voce.endsWith("e") || voce.endsWith("i")) {
+      prestazioniOfferte.add(voce.slice(0, -1)); // versione singolare
+    }
+  }
+});
 
-// Frasi generiche (ciao, grazie, ecc.)
-function èDomandaGenerica(testo) {
-  const frasi = ["ciao", "salve", "buongiorno", "buonasera", "grazie", "ok"];
-  return frasi.includes(normalizzaTesto(testo));
-}
-
-// Malesseri comuni
-function segnalaMalessere(testo) {
-  const paroleChiave = ["mal di", "dolore", "non sto bene", "mi sento male", "mi fa male", "sintomi"];
-  const testoNorm = normalizzaTesto(testo);
-  return paroleChiave.some(parola => testoNorm.includes(parola));
-}
-
-// Prestazione presente?
-function contienePrestazione(domanda) {
-  const testoDomanda = normalizzaTesto(domanda);
-  return prestazioniDisponibili.some(prestazione => {
-    const base = normalizzaTesto(prestazione);
-    const pluraleE = base.replace(/a$/, "e");
-    const pluraleI = base.replace(/o$/, "i");
-    return testoDomanda.includes(base) || testoDomanda.includes(pluraleE) || testoDomanda.includes(pluraleI);
-  });
-}
-
-exports.handler = async function (event) {
+exports.handler = async function (event, context) {
   try {
     const body = JSON.parse(event.body);
-    const domanda = body.domanda;
+    const domandaOriginale = body.domanda || "";
+    const domanda = domandaOriginale.toLowerCase();
 
-    // DOMANDE GENERICHE
-    if (èDomandaGenerica(domanda)) {
+    // Rileva se si parla di prestazione
+    const richiestaPrestazione = Array.from(prestazioniOfferte).some((p) =>
+      domanda.includes(p)
+    );
+
+    // Rileva se l'utente riferisce un malessere
+    const segnaliMalessere = [
+      "mal di", "non sto bene", "dolore", "mi fa male", "nausea", "bruciore", "sento male", "male a", "malessere"
+    ];
+    const contieneSintomi = segnaliMalessere.some((s) => domanda.includes(s));
+
+    // Se la prestazione NON è offerta
+    if (!richiestaPrestazione) {
       return {
         statusCode: 200,
         body: JSON.stringify({
-          risposta: `👋 Ciao! Come posso aiutarti oggi?`,
+          risposta:
+            "Ci dispiace, ma al momento questa prestazione non è disponibile presso il nostro centro.\n\n📄 Puoi consultare l’elenco completo delle prestazioni nella nostra brochure: [Scarica Brochure](https://www.csvcuvio.it/brochure_prestazioni.pdf)",
         }),
       };
     }
 
-    // MALESSERE
-    if (segnalaMalessere(domanda)) {
-      const risposta = `
-Siamo spiacenti che tu non ti senta bene. Ti consigliamo di <strong>contattare subito il nostro centro</strong> per una valutazione accurata. 
-Nel frattempo, puoi provare a <strong>bere acqua</strong>, <strong>riposare</strong> ed eventualmente <strong>applicare un impacco freddo o caldo</strong> sulla zona interessata.
-
-📞 <strong>0332 624820</strong><br>
-📧 <strong>segreteria@csvcuvio.it</strong>
-`;
-      return {
-        statusCode: 200,
-        body: JSON.stringify({ risposta }),
-      };
-    }
-
-    // SE NON È UNA PRESTAZIONE DISPONIBILE
-    if (!contienePrestazione(domanda)) {
-      const risposta = `
-Mi dispiace, ma al momento il servizio richiesto non è tra quelli offerti dal nostro centro.<br><br>📄 
-<a href="https://drive.google.com/file/d/1JOPK-rAAu5D330BwCY_7sOcHmkBwD6HD/view?usp=drive_link" target="_blank">SCARICA ELENCO PRESTAZIONI CSV</a><br><br>📞 Per ulteriori informazioni o per fissare un appuntamento: chiama lo <strong>0332 624820</strong> oppure scrivi a 📧 <strong>segreteria@csvcuvio.it</strong>.
-`;
-      return {
-        statusCode: 200,
-        body: JSON.stringify({ risposta }),
-      };
-    }
-
-    // Altrimenti... GPT risponde per prestazione esistente
     const response = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
-      temperature: 0.5,
       messages: [
         {
           role: "system",
           content: `
-Sei l'assistente virtuale del Centro Sanitario Valcuvia. Rispondi sempre in italiano corretto, educato e professionale. Non dire mai "rivolgiti al tuo medico" ma sempre "contatta il nostro centro".
+Sei un assistente virtuale del Centro Sanitario Valcuvia. Rispondi sempre in modo gentile, grammaticalmente corretto e informativo.
 
+📌 Quando l’utente segnala un malessere (es. "mal di pancia", "mi fa male", "non sto bene", ecc.), dopo aver suggerito di contattare il nostro centro, puoi includere un breve consiglio pratico utile (es. riposo, bere acqua, impacchi, ecc.).
+
+❌ Se l’utente NON segnala sintomi o problemi di salute, NON fornire consigli sanitari generici.
+
+❌ Non fare riferimento a "il tuo medico", "il dentista di fiducia", "il pronto soccorso" o "uno specialista". Tutti gli inviti devono essere rivolti al nostro centro.
+
+✔️ I contatti devono essere sempre presenti:
 📞 0332 624820
 📧 segreteria@csvcuvio.it
 
-Non dare consigli sanitari se non richiesti da un malessere. Controlla grammatica e sintassi prima di rispondere.
-          `
+❗Correggi eventuali errori grammaticali o di sintassi prima di restituire la risposta.
+        `,
         },
-        { role: "user", content: domanda }
+        { role: "user", content: domandaOriginale },
       ],
+      temperature: 0.4,
     });
 
-    let risposta = response.data.choices[0]?.message?.content || "Nessuna risposta generata.";
+    let risposta =
+      response.data.choices[0]?.message?.content || "Nessuna risposta generata.";
 
+    // Pulizia della risposta
     risposta = risposta
       .replace(/(medico|dentista)( di fiducia)?/gi, "il nostro centro sanitario")
       .replace(/pronto soccorso/gi, "il nostro centro sanitario")
       .replace(/Centro Sanitario Valcuvia/gi, "il nostro centro")
-      .replace(/contatta(ci)? (un|il) (professionista|specialista)/gi, "contattaci presso il nostro centro");
+      .replace(
+        /(rivolgiti|contatta)[^.!?]*[.!?]/gi,
+        "Ti consigliamo di contattare il nostro centro sanitario per maggiori informazioni."
+      );
 
-    // Aggiungi contatti se non presenti
-    if (!risposta.includes("0332 624820") && !risposta.includes("segreteria@csvcuvio.it")) {
-      risposta += `<br><br>📞 <strong>0332 624820</strong><br>📧 <strong>segreteria@csvcuvio.it</strong>`;
+    // Aggiunta contatti, se non presenti
+    const contatti = `\n\n📞 Per informazioni o per fissare un appuntamento:\nChiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.`;
+
+    if (
+      !risposta.includes("0332 624820") &&
+      !risposta.includes("segreteria@csvcuvio.it")
+    ) {
+      risposta += contatti;
     }
 
     return {
@@ -145,8 +111,9 @@ Non dare consigli sanitari se non richiesti da un malessere. Controlla grammatic
     return {
       statusCode: 500,
       body: JSON.stringify({
-        risposta: "⚠️ Errore durante la richiesta. Riprova più tardi.",
+        error: "Errore durante la generazione della risposta.",
       }),
     };
   }
 };
+
