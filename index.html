@@ -3,112 +3,119 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Chatbot CSV</title>
+  <title>Assistente Centro Sanitario Valcuvia</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #f9f9f9;
-      padding: 20px;
+      background-color: #fafafa;
+      display: flex;
+      justify-content: center;
+      padding: 30px;
     }
     .chat-container {
-      max-width: 600px;
-      margin: auto;
-      background: #ffffff;
-      padding: 20px;
+      background: white;
       border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 700px;
+      padding: 20px;
     }
-    .message {
-      margin-bottom: 15px;
+    .chat-header {
+      font-weight: bold;
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+    .messages {
+      background: #f0f8ff;
       padding: 10px;
-      border-radius: 5px;
+      border-radius: 8px;
+      margin-bottom: 10px;
     }
-    .user {
-      background: #e6f7ff;
-      text-align: right;
+    .error {
+      background: #f2f2f2;
+      padding: 10px;
+      border-left: 5px solid #f39c12;
+      color: #333;
+      margin-bottom: 10px;
     }
-    .bot {
-      background: #f0f0f0;
+    .input-container {
+      display: flex;
+      gap: 10px;
     }
-    #output {
-      margin-top: 10px;
-    }
-    input[type="text"] {
-      width: calc(100% - 20px);
+    input {
+      flex: 1;
       padding: 10px;
       border-radius: 5px;
       border: 1px solid #ccc;
-      font-size: 16px;
     }
     button {
-      margin-top: 10px;
       padding: 10px 15px;
-      font-size: 16px;
-      background: #2b7a78;
-      color: #fff;
       border: none;
+      background-color: #198754;
+      color: white;
       border-radius: 5px;
       cursor: pointer;
     }
-    button:hover {
-      background: #205e5c;
+    a {
+      color: #0066cc;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
   <div class="chat-container">
-    <h2>💬 Assistente Centro Sanitario Valcuvia</h2>
-    <div id="chatlog">
-      <!-- Chat messages will appear here -->
+    <div class="chat-header">💬 Assistente Centro Sanitario Valcuvia</div>
+    <div id="messages" class="messages"></div>
+    <div id="error" class="error" style="display: none;"></div>
+    <div class="input-container">
+      <input id="domanda" type="text" placeholder="Scrivi qui la tua domanda..." />
+      <button onclick="invia()">Invia</button>
     </div>
-    <input type="text" id="userInput" placeholder="Scrivi qui la tua domanda..." />
-    <button onclick="inviaDomanda()">Invia</button>
   </div>
 
   <script>
-    async function inviaDomanda() {
-      const input = document.getElementById("userInput");
-      const chatlog = document.getElementById("chatlog");
+    async function invia() {
+      const domanda = document.getElementById('domanda').value;
+      const messages = document.getElementById('messages');
+      const errorBox = document.getElementById('error');
+      errorBox.style.display = 'none';
 
-      const domanda = input.value.trim();
-      if (!domanda) return;
+      if (!domanda.trim()) return;
 
-      // Mostra la domanda dell’utente
-      const divUtente = document.createElement("div");
-      divUtente.className = "message user";
-      divUtente.textContent = domanda;
-      chatlog.appendChild(divUtente);
-
-      input.value = "";
+      messages.innerHTML += `<div><strong>Utente:</strong> ${domanda}</div>`;
+      document.getElementById('domanda').value = '';
 
       try {
-        const res = await fetch("/.netlify/functions/chatbot", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ domanda })
+        const response = await fetch('/.netlify/functions/chatbot', {
+          method: 'POST',
+          body: JSON.stringify({ domanda }),
         });
 
-        const data = await res.json();
+        if (!response.ok) throw new Error('Errore nella richiesta');
 
-        const divBot = document.createElement("div");
-        divBot.className = "message bot";
-
-        // ATTENZIONE: interpretazione HTML nella risposta
-        divBot.innerHTML = data.risposta;
-
-        chatlog.appendChild(divBot);
-        chatlog.scrollTop = chatlog.scrollHeight;
-      } catch (err) {
-        const divError = document.createElement("div");
-        divError.className = "message bot";
-        divError.textContent = "⚠️ Errore durante la richiesta. Riprova più tardi.";
-        chatlog.appendChild(divError);
+        const data = await response.json();
+        messages.innerHTML += `<div><strong>Assistente:</strong> ${formatHtml(data.risposta)}</div>`;
+      } catch (error) {
+        console.error(error);
+        errorBox.style.display = 'block';
+        errorBox.textContent = "⚠️ Errore durante la richiesta. Riprova più tardi.";
       }
     }
 
-    document.getElementById("userInput").addEventListener("keydown", function (e) {
-      if (e.key === "Enter") inviaDomanda();
-    });
+    function formatHtml(text) {
+      // Trasforma il testo in HTML sicuro (basic)
+      return text
+        .replace(/\n/g, '<br>')
+        .replace(/(https:\/\/[^\s]+)/g, url => {
+          if (url.includes("drive.google.com")) {
+            return `<a href="${url}" target="_blank"><strong>📄 SCARICA ELENCO PRESTAZIONI CSV</strong></a>`;
+          }
+          return `<a href="${url}" target="_blank">${url}</a>`;
+        });
+    }
   </script>
 </body>
 </html>
