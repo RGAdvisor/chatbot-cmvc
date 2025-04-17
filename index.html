@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Centro Sanitario Valcuvia</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Assistente Centro Sanitario Valcuvia</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
@@ -15,20 +15,20 @@
 
     <!-- Bottoni domande fisse -->
     <div class="button-group">
-      <button class="preset" id="button1">Come posso prenotare una visita?</button>
-      <button class="preset" id="button2">Quali sono i vostri orari?</button>
-      <button class="preset" id="button3">Dove si trova il Centro?</button>
-      <button class="preset" id="button4">Quali servizi fornite?</button>
+      <button onclick="inviaDomandaFissa('Come posso prenotare una visita?')">Come posso prenotare una visita?</button>
+      <button onclick="inviaDomandaFissa('Quali sono i vostri orari?')">Quali sono i vostri orari?</button>
+      <button onclick="inviaDomandaFissa('Dove si trova il Centro?')">Dove si trova il Centro?</button>
+      <button onclick="inviaDomandaFissa('Quali servizi fornite?')">Quali servizi fornite?</button>
     </div>
 
-    <!-- Box risposte -->
+    <!-- Chat -->
     <div class="chat-box" id="chat-container"></div>
 
-    <!-- Input + invio -->
-    <div class="input-group">
+    <!-- Form domanda -->
+    <form id="chat-form">
       <textarea id="domanda" placeholder="Scrivi qui la tua domanda..."></textarea>
-      <button id="invia">Invia</button>
-    </div>
+      <button type="submit">Invia</button>
+    </form>
   </div>
 
   <script src="script.js"></script>
