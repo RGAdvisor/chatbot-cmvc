@@ -2,94 +2,105 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Assistente Centro Sanitario Valcuvia</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #fafafa;
-      display: flex;
-      justify-content: center;
-      margin-top: 50px;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 0;
     }
     .container {
-      background: white;
+      max-width: 700px;
+      margin: 40px auto;
+      background: #fff;
       padding: 20px;
-      width: 600px;
       border-radius: 12px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
     }
-    h1 {
-      font-size: 1.4rem;
-      display: flex;
-      align-items: center;
+    .header {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 10px;
     }
-    h1::before {
-      content: "💬";
-      margin-right: 10px;
-    }
-    .response-box {
-      background: #f0f8ff;
-      padding: 10px;
-      min-height: 30px;
-      margin-top: 15px;
+    .chat-box {
+      border: 1px solid #e5e5e5;
       border-radius: 6px;
-      font-size: 1rem;
+      padding: 10px;
+      height: 300px;
+      overflow-y: auto;
+      margin-bottom: 15px;
+      background-color: #f2f9ff;
     }
-    form {
+    .message {
+      margin: 8px 0;
+    }
+    .user {
+      font-weight: bold;
+      color: #007a5e;
+    }
+    .bot {
+      color: #444;
+    }
+    .input-area {
       display: flex;
-      margin-top: 15px;
     }
     input[type="text"] {
       flex: 1;
       padding: 10px;
-      font-size: 1rem;
       border: 1px solid #ccc;
       border-radius: 6px;
+      margin-right: 10px;
     }
     button {
-      padding: 10px 20px;
-      background: #14803f;
+      padding: 10px 15px;
+      background-color: #007a5e;
       color: white;
-      font-weight: bold;
       border: none;
-      margin-left: 10px;
       border-radius: 6px;
       cursor: pointer;
     }
     .error {
-      background-color: #eee;
-      color: #444;
-      padding: 8px;
-      margin-top: 10px;
+      background: #f8d7da;
+      color: #721c24;
+      padding: 10px;
       border-radius: 6px;
-      font-size: 0.95rem;
+      margin-bottom: 15px;
+    }
+    a {
+      color: #007a5e;
+      font-weight: bold;
+      text-decoration: none;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Assistente Centro Sanitario Valcuvia</h1>
-    <div id="response" class="response-box"></div>
-    <form id="chat-form">
-      <input type="text" id="user-input" placeholder="Scrivi qui la tua domanda..." required />
-      <button type="submit">Invia</button>
-    </form>
-    <div id="error" class="error" style="display: none;"></div>
+    <div class="header">💬 Assistente Centro Sanitario Valcuvia</div>
+    <div id="chat" class="chat-box"></div>
+    <div id="error" class="error" style="display:none;">⚠️ Errore durante la richiesta. Riprova più tardi.</div>
+    <div class="input-area">
+      <input type="text" id="input" placeholder="Scrivi qui la tua domanda..." />
+      <button onclick="sendMessage()">Invia</button>
+    </div>
   </div>
 
   <script>
-    const form = document.getElementById("chat-form");
-    const input = document.getElementById("user-input");
-    const responseBox = document.getElementById("response");
-    const errorBox = document.getElementById("error");
+    async function sendMessage() {
+      const input = document.getElementById("input");
+      const chat = document.getElementById("chat");
+      const errorBox = document.getElementById("error");
 
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
       const domanda = input.value.trim();
       if (!domanda) return;
 
-      responseBox.innerHTML = "⌛ Attendi un momento...";
+      const userMsg = document.createElement("div");
+      userMsg.className = "message user";
+      userMsg.innerText = `Utente: ${domanda}`;
+      chat.appendChild(userMsg);
+
+      input.value = "";
       errorBox.style.display = "none";
 
       try {
@@ -98,23 +109,17 @@
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ domanda }),
         });
-
         const data = await res.json();
-        if (data.risposta) {
-          responseBox.innerHTML = data.risposta;
-        } else {
-          responseBox.innerHTML = "";
-          errorBox.style.display = "block";
-          errorBox.textContent = "⚠️ Nessuna risposta generata.";
-        }
+        const botMsg = document.createElement("div");
+        botMsg.className = "message bot";
+        botMsg.innerHTML = data.risposta;
+        chat.appendChild(botMsg);
+        chat.scrollTop = chat.scrollHeight;
       } catch (error) {
-        responseBox.innerHTML = "";
+        console.error("Errore fetch:", error);
         errorBox.style.display = "block";
-        errorBox.textContent = "⚠️ Errore durante la richiesta. Riprova più tardi.";
       }
-
-      input.value = "";
-    });
+    }
   </script>
 </body>
 </html>
