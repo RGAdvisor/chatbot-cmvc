@@ -8,14 +8,14 @@
 </head>
 <body>
   <div class="container">
-    <h1>Benvenuto al Centro Sanitario Valcuvia</h1>
+    <h1 class="titolo">Sanitario Valcuvia</h1>
 
     <!-- Bottoni domande fisse -->
     <div class="button-group">
-      <button id="button1">Come posso prenotare una visita?</button>
-      <button id="button2">Quali sono i vostri orari?</button>
-      <button id="button3">Dove si trova il Centro?</button>
-      <button id="button4">Quali servizi fornite?</button>
+      <button class="chat-btn" onclick="inserisciDomanda('Come posso prenotare una visita?')">Come posso prenotare una visita?</button>
+      <button class="chat-btn" onclick="inserisciDomanda('Quali sono i vostri orari?')">Quali sono i vostri orari?</button>
+      <button class="chat-btn" onclick="inserisciDomanda('Dove si trova il Centro?')">Dove si trova il Centro?</button>
+      <button class="chat-btn" onclick="inserisciDomanda('Quali servizi fornite?')">Quali servizi fornite?</button>
     </div>
 
     <!-- Box per risposta fissa -->
@@ -23,7 +23,12 @@
 
     <!-- Chat -->
     <div class="chat-box" id="chat-container"></div>
-    <textarea id="domanda" placeholder="Scrivi qui la tua domanda..."></textarea>
+
+    <!-- Input domanda -->
+    <div class="input-wrapper">
+      <textarea id="domanda" placeholder="Scrivi qui la tua domanda..."></textarea>
+      <button id="invia" onclick="inviaDomanda()">Invia</button>
+    </div>
   </div>
 
   <script src="script.js"></script>
