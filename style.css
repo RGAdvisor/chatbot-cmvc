@@ -105,3 +105,39 @@ textarea {
 .submit-button:hover {
   background-color: #0f664b;
 }
+#chat-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+/* Messaggi utente (a destra, verdi) */
+.user-message {
+  align-self: flex-end;
+  background-color: #4CAF50;
+  color: white;
+  border-radius: 15px;
+  padding: 10px;
+  max-width: 60%;
+  word-wrap: break-word;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Messaggi GPT (a sinistra, bianchi con bordo) */
+.gpt-response {
+  align-self: flex-start;
+  background-color: #ffffff;
+  border: 2px solid #4CAF50;
+  border-radius: 15px;
+  padding: 10px;
+  max-width: 60%;
+  word-wrap: break-word;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
