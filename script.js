@@ -1,69 +1,44 @@
-function handleClick(tipo) {
-  let risposta = "";
+document.addEventListener('DOMContentLoaded', () => {
+  const buttons = document.querySelectorAll('.question-button');
+  const rispostaFissa = document.getElementById('risposta-fissa');
+  const chatContainer = document.getElementById('chat-container');
+  const textarea = document.getElementById('domanda');
+  const inviaButton = document.getElementById('invia');
 
-  switch (tipo) {
-    case 'prenotazione':
-      risposta = "Puoi prenotare chiamando lo 0332 624820 o scrivendo a segreteria@csvcuvio.it.";
-      break;
-    case 'orari':
-      risposta = "Lunedì, Mercoledì e Venerdì: 9–12 / 14–19.30\nMartedì: 14–19.30\nGiovedì: 9–12\nSabato: 9–13";
-      break;
-    case 'indirizzo':
-      risposta = "Ci trovi in Via Enrico Fermi, 6 – 21030 Cuvio (VA)";
-      break;
-    case 'specialita':
-      risposta = "Il centro ha una divisione dentale e una di polispecialistica: Odontoiatria, ginecologia, cardiologia, chirurgia vascolare, pneumologia, dietologia, fisioterapia.";
-      break;
-  }
+  const rispostePredefinite = {
+    "Come posso prenotare una visita?": "Puoi prenotare una visita chiamando il numero 0332 624820 o scrivendo a segreteria@csvcuvio.it.",
+    "Quali sono i vostri orari?": "Siamo aperti dal lunedì al venerdì, dalle 8:00 alle 18:00.",
+    "Dove si trova il Centro?": "Il Centro Sanitario Valcuvia si trova in Via Roma 10, Cuvio (VA).",
+    "Quali servizi fornite?": "Offriamo una vasta gamma di servizi sanitari, tra cui visite specialistiche, analisi di laboratorio e diagnostica per immagini."
+  };
 
-  document.getElementById("risposta-fissa").textContent = risposta;
-}
-
-// Listener bottoni fissi
-document.getElementById("button1").addEventListener("click", () => handleClick('prenotazione'));
-document.getElementById("button2").addEventListener("click", () => handleClick('orari'));
-document.getElementById("button3").addEventListener("click", () => handleClick('indirizzo'));
-document.getElementById("button4").addEventListener("click", () => handleClick('specialita'));
-
-// Gestione invio domanda
-document.getElementById("domanda").addEventListener("keydown", async function (e) {
-  if (e.key === "Enter" && !e.shiftKey) {
-    e.preventDefault();
-    const domanda = this.value.trim();
-    if (!domanda) return;
-
-    appendMessage("user", domanda);
-    this.value = "";
-
-    try {
-      const risposta = await getGPTResponse(domanda);
-      appendMessage("gpt", risposta);
-    } catch (err) {
-      appendMessage("gpt", "Errore durante la richiesta. Riprova più tardi.");
-    }
-  }
-});
-
-function appendMessage(sender, message) {
-  const container = document.getElementById("chat-container");
-  const msg = document.createElement("div");
-  msg.classList.add(sender === "user" ? "user-message" : "gpt-response");
-  msg.textContent = message;
-  container.appendChild(msg);
-  container.scrollTop = container.scrollHeight;
-}
-
-async function getGPTResponse(domanda) {
-  const response = await fetch("/.netlify/functions/chatgpt", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ domanda })
+  buttons.forEach(button => {
+    button.addEventListener('click', () => {
+      const domanda = button.textContent;
+      const risposta = rispostePredefinite[domanda] || "Mi dispiace, non ho una risposta predefinita per questa domanda.";
+      rispostaFissa.textContent = risposta;
+      rispostaFissa.style.display = 'block';
+    });
   });
 
-  if (!response.ok) throw new Error("Errore risposta GPT");
+  inviaButton.addEventListener('click', () => {
+    const domanda = textarea.value.trim();
+    if (domanda === '') return;
 
-  const data = await response.json();
-  return data.risposta || "Nessuna risposta ricevuta.";
-}
+    // Aggiungi il messaggio dell'utente alla chat
+    const userMessage = document.createElement('div');
+    userMessage.classList.add('message', 'user');
+    userMessage.textContent = domanda;
+    chatContainer.appendChild(userMessage);
+
+    // Simula una risposta del bot
+    const botMessage = document.createElement('div');
+    botMessage.classList.add('message', 'bot');
+    botMessage.textContent = "Grazie per la tua domanda. Ti risponderemo al più presto.";
+    chatContainer.appendChild(botMessage);
+
+    // Pulisci il campo di input
+    textarea.value = '';
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+  });
+});
