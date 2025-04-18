@@ -2,31 +2,26 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Centro Sanitario Valcuvia</title>
-  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="chat-container">
-    <h1>Sanitario Valcuvia</h1>
+  <div class="container">
+    <h1><span class="bubble">💬</span> Assistente Centro Sanitario Valcuvia</h1>
 
     <div class="button-group">
-      <button class="chat-btn" onclick="handleFixedQuestion('Come posso prenotare una visita?')">Come posso prenotare una visita?</button>
-      <button class="chat-btn" onclick="handleFixedQuestion('Quali sono i vostri orari?')">Quali sono i vostri orari?</button>
-      <button class="chat-btn" onclick="handleFixedQuestion('Dove si trova il Centro?')">Dove si trova il Centro?</button>
-      <button class="chat-btn" onclick="handleFixedQuestion('Quali servizi fornite?')">Quali servizi fornite?</button>
+      <button onclick="rispostaFissa('prenotazione')">Come posso prenotare una visita?</button>
+      <button onclick="rispostaFissa('orari')">Quali sono i vostri orari?</button>
+      <button onclick="rispostaFissa('dove')">Dove si trova il Centro?</button>
+      <button onclick="rispostaFissa('servizi')">Quali servizi fornite?</button>
     </div>
 
-    <div id="fixed-response" class="fixed-response-box"></div>
+    <div id="risposta-fissa" class="risposta-fissa"></div>
 
-    <div class="info-box">
-      Il centro ha una divisione dentale e una di polispecialistica: Odontoiatria, ginecologia, cardiologia, chirurgia vascolare, pneumologia, dietologia, fisioterapia.
-    </div>
-
-    <div id="chat-box" class="chat-box"></div>
-
-    <textarea id="user-input" placeholder="Scrivi qui la tua domanda..."></textarea>
-    <button id="send-btn" onclick="handleSend()">Invia</button>
+    <div class="chat-box" id="chat-container"></div>
+    <textarea id="domanda" placeholder="Scrivi qui la tua domanda..."></textarea>
+    <button onclick="inviaDomanda()">Invia</button>
   </div>
 
   <script src="script.js"></script>
