@@ -1,34 +1,29 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Centro Sanitario Valcuvia</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="container">
     <h1>Benvenuto al Centro Sanitario Valcuvia</h1>
     <p class="subtitle">Come posso aiutarti?</p>
 
-    <!-- Bottoni fissi -->
     <div class="button-group">
-      <button>Come prenoto una visita?</button>
-      <button>Quali sono gli orari?</button>
-      <button>Dove si trova il centro?</button>
-      <button>Che specialità avete?</button>
+      <button onclick="inviaDomanda('Come prenoto una visita?')">Come prenoto una visita?</button>
+      <button onclick="inviaDomanda('Quali sono gli orari?')">Quali sono gli orari?</button>
+      <button onclick="inviaDomanda('Dove si trova il centro?')">Dove si trova il centro?</button>
+      <button onclick="inviaDomanda('Che specialità avete?')">Che specialità avete?</button>
     </div>
 
-    <!-- Chat alternata -->
-    <div id="chat-container" class="chat-box"></div>
+    <div id="chat-container"></div>
 
-    <!-- Campo input -->
-    <div class="input-group">
-      <textarea id="domanda" placeholder="Scrivi qui la tua domanda..."></textarea>
-      <button id="invia">Invia</button>
-    </div>
+    <textarea id="domanda" placeholder="Scrivi qui la tua domanda..."></textarea>
+    <button onclick="inviaDomandaLibera()">Invia</button>
 
-    <p class="footer-note">Grazie per la domanda! Ti risponderemo al più presto.</p>
+    <p class="footer">Grazie per la domanda! Ti risponderemo al più presto.</p>
   </div>
 
   <script src="script.js"></script>
