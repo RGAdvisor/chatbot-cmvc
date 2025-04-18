@@ -1,89 +1,71 @@
-// Funzione per gestire il clic sui bottoni
+document.getElementById("button1").addEventListener("click", function () {
+  handleClick('prenotazione');
+});
+document.getElementById("button2").addEventListener("click", function () {
+  handleClick('orari');
+});
+document.getElementById("button3").addEventListener("click", function () {
+  handleClick('indirizzo');
+});
+document.getElementById("button4").addEventListener("click", function () {
+  handleClick('specialita');
+});
+
 function handleClick(tipo) {
-    let risposta = "";
-    switch (tipo) {
-        case 'prenotazione':
-            risposta = "Puoi prenotare chiamando lo 0332 624820 o scrivendo a segreteria@csvcuvio.it.";
-            break;
-        case 'orari':
-            risposta = "Lunedì, Mercoledì e Venerdì: 9–12 / 14–19.30\nMartedì: 14–19.30\nGiovedì: 9–12\nSabato: 9–13";
-            break;
-        case 'indirizzo':
-            risposta = "Ci trovi in Via Enrico Fermi, 6 – 21030 Cuvio (VA)";
-            break;
-        case 'specialita':
-            risposta = "Odontoiatria, ginecologia, cardiologia, chirurgia vascolare, pneumologia, dietologia, fisioterapia.";
-            break;
-    }
-    // Mostra la risposta nel campo di testo (textarea)
-    document.getElementById("domanda").value = risposta;
+  let risposta = "";
+  switch (tipo) {
+    case 'prenotazione':
+      risposta = "Puoi prenotare chiamando lo 0332 624820 o scrivendo a segreteria@csvcuvio.it.";
+      break;
+    case 'orari':
+      risposta = "Lunedì, Mercoledì e Venerdì: 9–12 / 14–19.30\nMartedì: 14–19.30\nGiovedì: 9–12\nSabato: 9–13";
+      break;
+    case 'indirizzo':
+      risposta = "Ci trovi in Via Enrico Fermi, 6 – 21030 Cuvio (VA)";
+      break;
+    case 'specialita':
+      risposta = "Il centro ha una divisione dentale e una di polispecialistica: Odontoiatria, ginecologia, cardiologia, chirurgia vascolare, pneumologia, dietologia, fisioterapia.";
+      break;
+  }
+
+  appendMessage("user", document.getElementById("domanda").value || tipo);
+  appendMessage("gpt", risposta);
+  document.getElementById("domanda").value = "";
 }
 
-// Gestire il clic sui bottoni
-document.getElementById("button1").addEventListener("click", function() {
-    handleClick('prenotazione');
+document.querySelector(".submit-button").addEventListener("click", function () {
+  handleInput();
 });
 
-document.getElementById("button2").addEventListener("click", function() {
-    handleClick('orari');
-});
-
-document.getElementById("button3").addEventListener("click", function() {
-    handleClick('indirizzo');
-});
-
-document.getElementById("button4").addEventListener("click", function() {
-    handleClick('specialita');
-});
-
-// Aggiungi il listener per il pulsante "Invia"
-document.querySelector(".submit-button").addEventListener("click", handleInput);
-
-// Funzione per gestire l'invio della domanda a GPT-3.5 e ricevere la risposta
 async function handleInput() {
-    const domanda = document.getElementById("domanda").value.trim();
-    let risposta = "Grazie per la domanda! Ti risponderemo al più presto.";
+  const domanda = document.getElementById("domanda").value.trim();
+  if (!domanda) return;
 
-    // Se la domanda non è vuota, invia una richiesta a GPT
-    if (domanda !== "") {
-        const apiKey = "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"; // Sostituisci con la tua chiave API OpenAI
-        const url = "https://api.openai.com/v1/chat/completions";
+  appendMessage("user", domanda);
 
-        const data = {
-            model: "gpt-3.5-turbo",
-            messages: [
-                { role: "user", content: domanda }
-            ],
-            max_tokens: 150,
-            temperature: 0.7,
-        };
+  let risposta = "Mi scuso, ma non sono in grado di rispondere ora.";
 
-        try {
-            const response = await fetch(url, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${apiKey}`,
-                },
-                body: JSON.stringify(data),
-            });
+  try {
+    const response = await fetch("/.netlify/functions/chatgpt", {
+      method: "POST",
+      body: JSON.stringify({ domanda }),
+    });
 
-            if (response.ok) {
-                const json = await response.json();
-                const gptResponse = json.choices[0].message.content.trim();
-                risposta = gptResponse;
-            } else {
-                console.error("Errore nella richiesta a GPT:", response.status);
-                const errorData = await response.json();
-                console.error("Dettagli errore:", errorData);
-                risposta = "Mi scuso, ma non sono in grado di rispondere ora. Errore: " + response.status;
-            }
-        } catch (error) {
-            console.error("Errore nella chiamata API:", error);
-            risposta = "Mi scuso, ma c'è stato un errore nella chiamata al server.";
-        }
-    }
+    const data = await response.json();
+    risposta = data.risposta;
+  } catch (err) {
+    console.error("Errore:", err);
+  }
 
-    // Visualizza la risposta di GPT nel campo di testo (textarea)
-    document.getElementById("domanda").value = risposta;
+  appendMessage("gpt", risposta);
+  document.getElementById("domanda").value = "";
+}
+
+function appendMessage(sender, text) {
+  const chatContainer = document.getElementById("chat-container");
+  const messageDiv = document.createElement("div");
+  messageDiv.className = sender === "user" ? "user-message" : "gpt-response";
+  messageDiv.innerText = text;
+  chatContainer.appendChild(messageDiv);
+  chatContainer.scrollTop = chatContainer.scrollHeight;
 }
