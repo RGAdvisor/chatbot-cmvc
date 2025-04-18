@@ -3,25 +3,29 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Assistente Centro Sanitario Valcuvia</title>
+  <title>Centro Sanitario Valcuvia</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
-    <h1>Sanitario Valcuvia</h1>
+    <h1>Benvenuto al Centro Sanitario Valcuvia</h1>
 
+    <!-- Bottoni domande fisse -->
     <div class="button-group">
-      <button class="question-button" id="btn1">Come posso prenotare una visita?</button>
-      <button class="question-button" id="btn2">Quali sono i vostri orari?</button>
-      <button class="question-button" id="btn3">Dove si trova il Centro?</button>
-      <button class="question-button" id="btn4">Quali servizi fornite?</button>
+      <button class="question-button">Come posso prenotare una visita?</button>
+      <button class="question-button">Quali sono i vostri orari?</button>
+      <button class="question-button">Dove si trova il Centro?</button>
+      <button class="question-button">Quali servizi fornite?</button>
     </div>
 
-    <div id="fixed-response" class="fixed-response"></div>
+    <!-- Box per risposta fissa -->
+    <div id="risposta-fissa" class="risposta-fissa"></div>
 
-    <div class="chat-box" id="chat-box"></div>
+    <!-- Chat -->
+    <div class="chat-box" id="chat-container"></div>
 
-    <div class="input-group">
+    <!-- Input utente -->
+    <div class="input-area">
       <textarea id="domanda" placeholder="Scrivi qui la tua domanda..."></textarea>
       <button id="invia">Invia</button>
     </div>
