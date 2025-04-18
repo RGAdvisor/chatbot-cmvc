@@ -1,6 +1,11 @@
 {
+  "name": "csv-chatbot",
+  "version": "1.0.0",
   "type": "commonjs",
+  "main": "index.js",
   "dependencies": {
-    "openai": "^3.2.1"
+    "openai": "^3.2.1",
+    "node-fetch": "^2.6.7",
+    "xlsx": "^0.18.5"
   }
 }
