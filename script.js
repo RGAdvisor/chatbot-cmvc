@@ -1,44 +1,32 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const buttons = document.querySelectorAll('.question-button');
-  const rispostaFissa = document.getElementById('risposta-fissa');
-  const chatContainer = document.getElementById('chat-container');
-  const textarea = document.getElementById('domanda');
-  const inviaButton = document.getElementById('invia');
+function rispostaFissa(tipo) {
+  const box = document.getElementById("risposta-fissa");
+  if (tipo === "prenotazione") {
+    box.innerHTML = "📅 Puoi prenotare una visita chiamando il 0332 624820 o scrivendo a segreteria@csvcuvio.it.";
+  } else if (tipo === "orari") {
+    box.innerHTML = "🕒 Siamo aperti dal lunedì al venerdì dalle 8:30 alle 19:00.";
+  } else if (tipo === "dove") {
+    box.innerHTML = "📍 Ci trovi in Via Enrico Fermi, 6 – 21030 Cuvio (VA).";
+  } else if (tipo === "servizi") {
+    box.innerHTML = "🏥 Il centro offre prestazioni dentistiche e polispecialistiche: ginecologia, cardiologia, dietologia, fisioterapia...";
+  }
+}
 
-  const rispostePredefinite = {
-    "Come posso prenotare una visita?": "Puoi prenotare una visita chiamando il numero 0332 624820 o scrivendo a segreteria@csvcuvio.it.",
-    "Quali sono i vostri orari?": "Siamo aperti dal lunedì al venerdì, dalle 8:00 alle 18:00.",
-    "Dove si trova il Centro?": "Il Centro Sanitario Valcuvia si trova in Via Roma 10, Cuvio (VA).",
-    "Quali servizi fornite?": "Offriamo una vasta gamma di servizi sanitari, tra cui visite specialistiche, analisi di laboratorio e diagnostica per immagini."
-  };
+function inviaDomanda() {
+  const domanda = document.getElementById("domanda").value.trim();
+  const container = document.getElementById("chat-container");
 
-  buttons.forEach(button => {
-    button.addEventListener('click', () => {
-      const domanda = button.textContent;
-      const risposta = rispostePredefinite[domanda] || "Mi dispiace, non ho una risposta predefinita per questa domanda.";
-      rispostaFissa.textContent = risposta;
-      rispostaFissa.style.display = 'block';
-    });
-  });
+  if (domanda === "") return;
 
-  inviaButton.addEventListener('click', () => {
-    const domanda = textarea.value.trim();
-    if (domanda === '') return;
+  const utente = document.createElement("div");
+  utente.className = "user";
+  utente.textContent = domanda;
+  container.appendChild(utente);
 
-    // Aggiungi il messaggio dell'utente alla chat
-    const userMessage = document.createElement('div');
-    userMessage.classList.add('message', 'user');
-    userMessage.textContent = domanda;
-    chatContainer.appendChild(userMessage);
+  const bot = document.createElement("div");
+  bot.className = "bot";
+  bot.textContent = "Grazie per la domanda! Ti risponderemo al più presto 😊";
+  container.appendChild(bot);
 
-    // Simula una risposta del bot
-    const botMessage = document.createElement('div');
-    botMessage.classList.add('message', 'bot');
-    botMessage.textContent = "Grazie per la tua domanda. Ti risponderemo al più presto.";
-    chatContainer.appendChild(botMessage);
-
-    // Pulisci il campo di input
-    textarea.value = '';
-    chatContainer.scrollTop = chatContainer.scrollHeight;
-  });
-});
+  document.getElementById("domanda").value = "";
+  container.scrollTop = container.scrollHeight;
+}
