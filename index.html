@@ -2,30 +2,33 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Centro Sanitario Valcuvia</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
     <h1>Benvenuto al Centro Sanitario Valcuvia</h1>
-    <p>Come posso aiutarti?</p>
+    <p class="subtitle">Come posso aiutarti?</p>
 
+    <!-- Bottoni fissi -->
     <div class="button-group">
-      <button class="faq-button">Come prenoto una visita?</button>
-      <button class="faq-button">Quali sono gli orari?</button>
-      <button class="faq-button">Dove si trova il centro?</button>
-      <button class="faq-button">Che specialità avete?</button>
+      <button>Come prenoto una visita?</button>
+      <button>Quali sono gli orari?</button>
+      <button>Dove si trova il centro?</button>
+      <button>Che specialità avete?</button>
     </div>
 
-    <div class="chat-box" id="chat-box"></div>
+    <!-- Chat alternata -->
+    <div id="chat-container" class="chat-box"></div>
 
-    <form id="chat-form">
-      <textarea id="user-input" placeholder="Scrivi qui la tua domanda..."></textarea>
-      <button type="submit" id="send-button">Invia</button>
-    </form>
+    <!-- Campo input -->
+    <div class="input-group">
+      <textarea id="domanda" placeholder="Scrivi qui la tua domanda..."></textarea>
+      <button id="invia">Invia</button>
+    </div>
 
-    <p class="footer-text">Grazie per la domanda! Ti risponderemo al più presto.</p>
+    <p class="footer-note">Grazie per la domanda! Ti risponderemo al più presto.</p>
   </div>
 
   <script src="script.js"></script>
