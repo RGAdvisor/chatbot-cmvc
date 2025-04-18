@@ -1,11 +1,3 @@
-// script.js aggiornato con alternanza visiva tra utente e assistente
-
-document.addEventListener("DOMContentLoaded", function () {
-  const form = document.querySelector("form");
-  const domandaInput = document.getElementById("domanda");
-  const rispostaDiv = document.getElementById("risposta");
-  const chatContainer = document.getElementById("chat-container");
-  const buttons = document.querySelectorAll(".question-button");
 
   // Aggiungi evento ai bottoni rapidi
   buttons.forEach((btn) => {
