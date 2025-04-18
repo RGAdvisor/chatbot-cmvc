@@ -1,58 +1,53 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const chatContainer = document.getElementById("chat-container");
+// script.js aggiornato con alternanza visiva tra utente e assistente
+
+document.addEventListener("DOMContentLoaded", function () {
+  const form = document.querySelector("form");
   const domandaInput = document.getElementById("domanda");
-  const inviaBtn = document.getElementById("invia");
+  const rispostaDiv = document.getElementById("risposta");
+  const chatContainer = document.getElementById("chat-container");
+  const buttons = document.querySelectorAll(".question-button");
 
-  const bottoniFissi = document.querySelectorAll(".button-group button");
-
-  bottoniFissi.forEach((bottone) => {
-    bottone.addEventListener("click", () => {
-      const domanda = bottone.textContent;
-      aggiungiMessaggioUtente(domanda);
+  // Aggiungi evento ai bottoni rapidi
+  buttons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const domanda = btn.textContent.trim();
       inviaDomanda(domanda);
     });
   });
 
-  inviaBtn.addEventListener("click", () => {
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
     const domanda = domandaInput.value.trim();
-    if (domanda) {
-      aggiungiMessaggioUtente(domanda);
-      inviaDomanda(domanda);
-      domandaInput.value = "";
-    }
+    if (!domanda) return;
+    inviaDomanda(domanda);
+    domandaInput.value = "";
   });
 
-  function aggiungiMessaggioUtente(testo) {
-    const div = document.createElement("div");
-    div.className = "user-message";
-    div.textContent = testo;
-    chatContainer.appendChild(div);
-  }
-
-  function aggiungiRispostaAssistant(testo) {
-    const div = document.createElement("div");
-    div.className = "gpt-response";
-    div.textContent = testo;
-    chatContainer.appendChild(div);
-    chatContainer.scrollTop = chatContainer.scrollHeight;
-  }
-
   async function inviaDomanda(domanda) {
+    aggiungiMessaggio(domanda, "user-message");
+
     try {
       const response = await fetch("/.netlify/functions/chatgpt", {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({ domanda }),
       });
 
       const data = await response.json();
-
-      if (data.risposta) {
-        aggiungiRispostaAssistant(data.risposta);
-      } else {
-        aggiungiRispostaAssistant("Mi scuso, non sono in grado di rispondere ora.");
-      }
+      const risposta = data.risposta || "Errore: risposta non disponibile.";
+      aggiungiMessaggio(risposta, "gpt-response");
     } catch (error) {
-      aggiungiRispostaAssistant("Errore: non riesco a contattare il server.");
+      aggiungiMessaggio("Mi scuso, ma non sono in grado di rispondere ora.", "gpt-response");
     }
+  }
+
+  function aggiungiMessaggio(testo, classe) {
+    const msg = document.createElement("div");
+    msg.className = classe;
+    msg.textContent = testo;
+    chatContainer.appendChild(msg);
+    chatContainer.scrollTop = chatContainer.scrollHeight;
   }
 });
