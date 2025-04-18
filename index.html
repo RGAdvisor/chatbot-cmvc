@@ -1,32 +1,33 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Centro Sanitario Valcuvia</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Centro Sanitario Valcuvia</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <div class="container">
-        <h1>Benvenuto al Centro Sanitario Valcuvia</h1>
-        <p>Come posso aiutarti?</p>
+  <div class="container">
+    <h1>Benvenuto al Centro Sanitario Valcuvia</h1>
+    <p>Come posso aiutarti?</p>
 
-        <div class="button-group">
-            <button id="button1" class="button" data-tipo="prenotazione">Come prenoto una visita?</button>
-            <button id="button2" class="button" data-tipo="orari">Quali sono gli orari?</button>
-            <button id="button3" class="button" data-tipo="indirizzo">Dove si trova il centro?</button>
-            <button id="button4" class="button" data-tipo="specialita">Che specialità avete?</button>
-        </div>
-
-        <textarea id="domanda" placeholder="Ciao"></textarea>
-
-        <button class="submit-button">Invia</button>
-
-        <footer>
-            Grazie per la domanda! Ti risponderemo al più presto.
-        </footer>
+    <div class="button-group">
+      <button class="faq-button">Come prenoto una visita?</button>
+      <button class="faq-button">Quali sono gli orari?</button>
+      <button class="faq-button">Dove si trova il centro?</button>
+      <button class="faq-button">Che specialità avete?</button>
     </div>
 
-    <script src="script.js"></script>
+    <div class="chat-box" id="chat-box"></div>
+
+    <form id="chat-form">
+      <textarea id="user-input" placeholder="Scrivi qui la tua domanda..."></textarea>
+      <button type="submit" id="send-button">Invia</button>
+    </form>
+
+    <p class="footer-text">Grazie per la domanda! Ti risponderemo al più presto.</p>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
