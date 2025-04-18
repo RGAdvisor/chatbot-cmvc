@@ -1,45 +1,59 @@
+// script.js
 
-  // Aggiungi evento ai bottoni rapidi
-  buttons.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const domanda = btn.textContent.trim();
-      inviaDomanda(domanda);
+const chatContainer = document.getElementById("chat-container");
+const domandaInput = document.getElementById("domanda");
+const inviaBtn = document.getElementById("invia-btn");
+
+// Funzione per aggiungere messaggi alla chat con alternanza
+function aggiungiMessaggio(testo, classe) {
+  const messaggio = document.createElement("div");
+  messaggio.className = classe;
+  messaggio.innerText = testo;
+  chatContainer.appendChild(messaggio);
+  chatContainer.scrollTop = chatContainer.scrollHeight;
+}
+
+async function inviaDomanda(testoDomanda) {
+  aggiungiMessaggio(testoDomanda, "user-message");
+  try {
+    const risposta = await fetch("/.netlify/functions/chatgpt", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ domanda: testoDomanda }),
     });
-  });
 
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const domanda = domandaInput.value.trim();
-    if (!domanda) return;
-    inviaDomanda(domanda);
-    domandaInput.value = "";
-  });
-
-  async function inviaDomanda(domanda) {
-    aggiungiMessaggio(domanda, "user-message");
-
-    try {
-      const response = await fetch("/.netlify/functions/chatgpt", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ domanda }),
-      });
-
-      const data = await response.json();
-      const risposta = data.risposta || "Errore: risposta non disponibile.";
-      aggiungiMessaggio(risposta, "gpt-response");
-    } catch (error) {
-      aggiungiMessaggio("Mi scuso, ma non sono in grado di rispondere ora.", "gpt-response");
+    const dati = await risposta.json();
+    if (dati.risposta) {
+      aggiungiMessaggio(dati.risposta, "gpt-response");
+    } else {
+      aggiungiMessaggio("Errore nella risposta.", "gpt-response");
     }
+  } catch (errore) {
+    aggiungiMessaggio("Errore durante la richiesta.", "gpt-response");
   }
+}
 
-  function aggiungiMessaggio(testo, classe) {
-    const msg = document.createElement("div");
-    msg.className = classe;
-    msg.textContent = testo;
-    chatContainer.appendChild(msg);
-    chatContainer.scrollTop = chatContainer.scrollHeight;
+// Event listener per il bottone Invia
+inviaBtn.addEventListener("click", () => {
+  const testoDomanda = domandaInput.value.trim();
+  if (testoDomanda !== "") {
+    inviaDomanda(testoDomanda);
+    domandaInput.value = "";
   }
+});
+
+// Event listener per il tasto Invio
+
+domandaInput.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") {
+    inviaBtn.click();
+  }
+});
+
+// Bottoni rapidi
+const bottoniRapidi = document.querySelectorAll(".quick-question");
+bottoniRapidi.forEach((bottone) => {
+  bottone.addEventListener("click", () => {
+    inviaDomanda(bottone.innerText);
+  });
 });
