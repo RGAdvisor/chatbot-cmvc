@@ -4,17 +4,23 @@ const chatContainer = document.getElementById("chat-container");
 const domandaInput = document.getElementById("domanda");
 const inviaBtn = document.getElementById("invia-btn");
 
-// Funzione per aggiungere messaggi alla chat con alternanza
+// Funzione per creare e aggiungere messaggi con alternanza (utente / GPT)
 function aggiungiMessaggio(testo, classe) {
+  const messaggioWrapper = document.createElement("div");
+  messaggioWrapper.className = classe;
+
   const messaggio = document.createElement("div");
-  messaggio.className = classe;
+  messaggio.className = "messaggio-bolla";
   messaggio.innerText = testo;
-  chatContainer.appendChild(messaggio);
+
+  messaggioWrapper.appendChild(messaggio);
+  chatContainer.appendChild(messaggioWrapper);
   chatContainer.scrollTop = chatContainer.scrollHeight;
 }
 
 async function inviaDomanda(testoDomanda) {
   aggiungiMessaggio(testoDomanda, "user-message");
+
   try {
     const risposta = await fetch("/.netlify/functions/chatgpt", {
       method: "POST",
@@ -43,9 +49,9 @@ inviaBtn.addEventListener("click", () => {
 });
 
 // Event listener per il tasto Invio
-
 domandaInput.addEventListener("keypress", (e) => {
   if (e.key === "Enter") {
+    e.preventDefault();
     inviaBtn.click();
   }
 });
