@@ -2,31 +2,30 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Centro Sanitario Valcuvia</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
     <h1>Benvenuto al Centro Sanitario Valcuvia</h1>
-    <p>Come posso aiutarti?</p>
 
-    <!-- Bottoni domande rapide -->
+    <!-- Bottoni rapidi -->
     <div class="button-group">
       <button class="quick-question">Come prenoto una visita?</button>
-      <button class="quick-question">Quali sono gli orari?</button>
-      <button class="quick-question">Dove si trova il centro?</button>
-      <button class="quick-question">Che specialità avete?</button>
+      <button class="quick-question">Quali sono i vostri orari?</button>
+      <button class="quick-question">Dove si trova il Centro?</button>
+      <button class="quick-question">Quali servizi fornite?</button>
     </div>
 
-    <!-- Chat -->
-    <div id="chat-container"></div>
+    <!-- Contenitore della chat -->
+    <div class="chat-container" id="chat-container"></div>
 
-    <!-- Campo input + bottone -->
-    <textarea id="domanda" placeholder="Scrivi qui la tua domanda..."></textarea>
-    <button id="invia-btn">Invia</button>
-
-    <p class="nota-finale">Grazie per la domanda! Ti risponderemo al più presto.</p>
+    <!-- Input area -->
+    <div class="input-area">
+      <textarea id="domanda" placeholder="Scrivi qui la tua domanda..."></textarea>
+      <button id="invia-btn">Invia</button>
+    </div>
   </div>
 
   <script src="script.js"></script>
