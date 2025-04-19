@@ -1,26 +1,19 @@
-// script.js
-
 const chatContainer = document.getElementById("chat-container");
 const domandaInput = document.getElementById("domanda");
 const inviaBtn = document.getElementById("invia-btn");
 
-// Funzione per creare e aggiungere messaggi con alternanza (utente / GPT)
+// Funzione per aggiungere messaggi alla chat con alternanza
 function aggiungiMessaggio(testo, classe) {
-  const messaggioWrapper = document.createElement("div");
-  messaggioWrapper.className = classe;
-
   const messaggio = document.createElement("div");
-  messaggio.className = "messaggio-bolla";
+  messaggio.className = classe;
   messaggio.innerText = testo;
-
-  messaggioWrapper.appendChild(messaggio);
-  chatContainer.appendChild(messaggioWrapper);
+  chatContainer.appendChild(messaggio);
   chatContainer.scrollTop = chatContainer.scrollHeight;
 }
 
+// Invia la domanda all’API
 async function inviaDomanda(testoDomanda) {
   aggiungiMessaggio(testoDomanda, "user-message");
-
   try {
     const risposta = await fetch("/.netlify/functions/chatgpt", {
       method: "POST",
@@ -39,7 +32,7 @@ async function inviaDomanda(testoDomanda) {
   }
 }
 
-// Event listener per il bottone Invia
+// Invio tramite pulsante
 inviaBtn.addEventListener("click", () => {
   const testoDomanda = domandaInput.value.trim();
   if (testoDomanda !== "") {
@@ -48,9 +41,9 @@ inviaBtn.addEventListener("click", () => {
   }
 });
 
-// Event listener per il tasto Invio
+// Invio tramite tasto Invio
 domandaInput.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") {
+  if (e.key === "Enter" && !e.shiftKey) {
     e.preventDefault();
     inviaBtn.click();
   }
