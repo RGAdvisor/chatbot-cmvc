@@ -1,147 +1,6 @@
+/* Stile generale */
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f8f8f8;
-  margin: 0;
-  padding: 20px;
-}
-
-.container {
-  max-width: 600px;
-  margin: auto;
-  background: white;
-  border-radius: 16px;
-  padding: 30px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-h1 {
-  text-align: center;
-  color: #13795b;
-  margin-bottom: 10px;
-}
-
-p {
-  text-align: center;
-  color: #333;
-  font-weight: 500;
-}
-
-.button-group {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-bottom: 20px;
-}
-
-.button-group button {
-  background-color: #13795b;
-  color: white;
-  border: none;
-  padding: 12px;
-  font-size: 16px;
-  font-weight: bold;
-  border-radius: 999px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.button-group button:hover {
-  background-color: #0f664b;
-}
-
-#chat-container {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin: 20px 0;
-  max-height: 300px;
-  overflow-y: auto;
-}
-
-.user-message {
-  background-color: #4caf50;
-  color: white;
-  width: 50%;
-  border-radius: 10px;
-  padding: 10px;
-  margin-left: auto;
-  text-align: left;
-}
-
-.gpt-response {
-  background-color: white;
-  border: 1px solid #4caf50;
-  color: #333;
-  border-radius: 10px;
-  padding: 10px;
-  width: 50%;
-  margin-right: auto;
-  text-align: left;
-}
-
-textarea {
-  width: 100%;
-  padding: 10px;
-  font-size: 15px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  resize: none;
-  min-height: 70px;
-  margin-top: 15px;
-}
-
-.submit-button {
-  background-color: #13795b;
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  font-size: 16px;
-  border-radius: 999px;
-  margin-top: 10px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.submit-button:hover {
-  background-color: #0f664b;
-}
-#chat-container {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 20px;
-  padding: 10px;
-  background-color: #f9f9f9;
-  border-radius: 10px;
-  max-height: 300px;
-  overflow-y: auto;
-}
-
-/* Messaggi utente (a destra, verdi) */
-.user-message {
-  align-self: flex-end;
-  background-color: #4CAF50;
-  color: white;
-  border-radius: 15px;
-  padding: 10px;
-  max-width: 60%;
-  word-wrap: break-word;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-/* Messaggi GPT (a sinistra, bianchi con bordo) */
-.gpt-response {
-  align-self: flex-start;
-  background-color: #ffffff;
-  border: 2px solid #4CAF50;
-  border-radius: 15px;
-  padding: 10px;
-  max-width: 60%;
-  word-wrap: break-word;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-body {
-  font-family: Arial, sans-serif;
   background-color: #f1f1f1;
   margin: 0;
   padding: 0;
@@ -151,16 +10,19 @@ body {
   max-width: 600px;
   margin: 30px auto;
   background-color: white;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
+/* Titolo */
 h1 {
   color: #15724B;
   text-align: center;
+  margin-bottom: 10px;
 }
 
+/* Bottoni rapidi */
 .button-group {
   display: flex;
   flex-direction: column;
@@ -176,19 +38,27 @@ h1 {
   border-radius: 30px;
   font-weight: bold;
   cursor: pointer;
+  transition: background-color 0.3s;
 }
 
 .quick-question:hover {
   background-color: #185f47;
 }
 
+/* Contenitore della chat */
 #chat-container {
   display: flex;
   flex-direction: column;
   gap: 10px;
   margin-top: 20px;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  max-height: 350px;
+  overflow-y: auto;
 }
 
+/* Messaggi utente (verdi a destra) */
 .user-message {
   align-self: flex-end;
   background-color: #4CAF50;
@@ -197,8 +67,10 @@ h1 {
   padding: 10px;
   max-width: 60%;
   word-wrap: break-word;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+/* Messaggi GPT (bianchi a sinistra) */
 .gpt-response {
   align-self: flex-start;
   background-color: #ffffff;
@@ -207,36 +79,45 @@ h1 {
   padding: 10px;
   max-width: 60%;
   word-wrap: break-word;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-#domanda {
-  width: 100%;
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
+/* Area input */
+.input-area {
+  display: flex;
+  gap: 10px;
   margin-top: 20px;
 }
 
+#domanda {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 15px;
+  resize: none;
+  min-height: 60px;
+}
+
 #invia-btn {
-  margin-top: 10px;
   background-color: #21795b;
   color: white;
   border: none;
-  padding: 12px;
-  width: 100%;
-  font-weight: bold;
+  padding: 12px 20px;
   border-radius: 30px;
+  font-weight: bold;
   cursor: pointer;
+  transition: background-color 0.3s;
 }
 
 #invia-btn:hover {
   background-color: #185f47;
 }
 
+/* Nota finale */
 .nota-finale {
   font-size: 0.85rem;
   color: #666;
   text-align: center;
-  margin-top: 10px;
+  margin-top: 15px;
 }
-
