@@ -1,123 +1,105 @@
-/* Stile generale */
+/* Style per Assistente Centro Sanitario Valcuvia */
+
 body {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f1f1f1;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f9f9f9;
   margin: 0;
-  padding: 0;
+  padding: 2rem;
+  color: #333;
 }
 
 .container {
-  max-width: 600px;
-  margin: 30px auto;
-  background-color: white;
-  padding: 30px;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-width: 720px;
+  margin: auto;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.08);
 }
 
-/* Titolo */
+
 h1 {
-  color: #15724B;
-  text-align: center;
-  margin-bottom: 10px;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
 }
 
-/* Bottoni rapidi */
+h1::before {
+  content: "\1F4AC"; /* emoji fumetto */
+  font-size: 1.4rem;
+}
+
+.chat-box {
+  min-height: 250px;
+  background-color: #f0f8ff;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  overflow-y: auto;
+  font-size: 1rem;
+}
+
+textarea {
+  width: calc(100% - 100px);
+  padding: 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  resize: none;
+  font-size: 1rem;
+}
+
+button {
+  background-color: #00723a;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.2rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+  margin-left: 0.5rem;
+}
+
+button:hover {
+  background-color: #005f30;
+}
+
 .button-group {
   display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin: 20px 0;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
 }
 
-.quick-question {
-  background-color: #21795b;
-  color: white;
-  padding: 12px;
-  border: none;
-  border-radius: 30px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.quick-question:hover {
-  background-color: #185f47;
-}
-
-/* Contenitore della chat */
-#chat-container {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 20px;
-  padding: 10px;
-  background-color: #f9f9f9;
-  border-radius: 10px;
-  max-height: 350px;
-  overflow-y: auto;
-}
-
-/* Messaggi utente (verdi a destra) */
-.user-message {
-  align-self: flex-end;
-  background-color: #4CAF50;
-  color: white;
-  border-radius: 15px;
-  padding: 10px;
-  max-width: 60%;
-  word-wrap: break-word;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-/* Messaggi GPT (bianchi a sinistra) */
-.gpt-response {
-  align-self: flex-start;
-  background-color: #ffffff;
-  border: 2px solid #4CAF50;
-  border-radius: 15px;
-  padding: 10px;
-  max-width: 60%;
-  word-wrap: break-word;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-/* Area input */
-.input-area {
-  display: flex;
-  gap: 10px;
-  margin-top: 20px;
-}
-
-#domanda {
-  flex: 1;
-  padding: 10px;
-  border-radius: 8px;
+.button-group button {
+  background-color: #f0f0f0;
+  color: #333;
   border: 1px solid #ccc;
-  font-size: 15px;
-  resize: none;
-  min-height: 60px;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  border-radius: 6px;
 }
 
-#invia-btn {
-  background-color: #21795b;
-  color: white;
-  border: none;
-  padding: 12px 20px;
-  border-radius: 30px;
+.button-group button:hover {
+  background-color: #e6e6e6;
+}
+
+.user {
   font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s;
+  margin-top: 1rem;
 }
 
-#invia-btn:hover {
-  background-color: #185f47;
+.bot {
+  margin: 0.5rem 0 1rem 0;
 }
 
-/* Nota finale */
-.nota-finale {
-  font-size: 0.85rem;
-  color: #666;
-  text-align: center;
-  margin-top: 15px;
+.risposta-fissa {
+  background-color: #fef9e7;
+  border: 1px solid #f4e2c5;
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
 }
