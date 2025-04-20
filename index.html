@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Centro Sanitario Valcuvia</title>
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -18,24 +18,14 @@
       <button id="button4">Quali servizi fornite?</button>
     </div>
 
-    <!-- Risposta fissa -->
-    <div id="risposta-fissa" class="response-box"></div>
+    <!-- Box per risposta fissa -->
+    <div id="risposta-fissa" class="risposta-fissa"></div>
 
-    <!-- Riga input DOMANDA LIBERA -->
-    <div class="input-row">
-      <div class="assist-button">Come posso aiutarti?</div>
-    </div>
-    <div class="input-row">
-      <textarea id="domanda" class="green-textarea" placeholder="Scrivi qui la tua domanda..."></textarea>
-    </div>
-
-    <!-- Chat (domanda + risposta) -->
-    <div id="chat-container" class="chat-container"></div>
-
-    <footer>
-      Grazie per la averci contattato. Buona giornata!
-    </footer>
+    <!-- Chat -->
+    <div class="chat-box" id="chat-container"></div>
+    <textarea id="domanda" placeholder="Scrivi qui la tua domanda..."></textarea>
   </div>
+
   <script src="script.js"></script>
 </body>
 </html>
