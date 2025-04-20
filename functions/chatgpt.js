@@ -17,7 +17,7 @@ const prestazioniDisponibili = [
 const segnaliMalessere = [
   "mal di schiena", "mal di denti", "mal di pancia", "male al ginocchio", "mal di testa",
   "mal di gola", "mi fa male", "non sto bene", "sto male", "dolore", 
-  "bruciore", "nausea", "sento male", "male a", "malessere"
+  "bruciore", "nausea", "sento male", "male a", "malessere", "perdo sangue dal naso"
 ];
 
 const consigliPerMalessere = {
@@ -26,7 +26,8 @@ const consigliPerMalessere = {
   "mal di pancia": "restare a riposo, assumere piccoli sorsi d'acqua e seguire un'alimentazione leggera.",
   "male al ginocchio": "tenere la gamba sollevata, applicare un impacco freddo e non sforzare l'articolazione.",
   "mal di testa": "riposa in un ambiente silenzioso e buio, bevi acqua e cerca di rilassarti.",
-  "mal di gola": "bere bevande calde, evitare cibi irritanti e riposare la voce."
+  "mal di gola": "bere bevande calde, evitare cibi irritanti e riposare la voce.",
+  "perdo sangue dal naso": "rimanere seduti con la testa leggermente inclinata in avanti e premere delicatamente le narici per alcuni minuti."
 };
 
 function normalizzaTesto(testo) {
@@ -89,11 +90,7 @@ exports.handler = async function (event, context) {
     }
 
     if (!contienePrestazione(domanda)) {
-      const risposta = `
-Mi dispiace, ma al momento il servizio richiesto non è tra quelli offerti dal nostro centro.<br><br>
-📄 <a href="https://drive.google.com/file/d/1JOPK-rAAu5D330BwCY_7sOcHmkBwD6HD/view?usp=drive_link" target="_blank">SCARICA ELENCO PRESTAZIONI CSV</a><br><br>
-📞 Per ulteriori informazioni o per fissare un appuntamento: chiama lo <strong>0332 624820</strong> oppure scrivi a 📧 <strong>segreteria@csvcuvio.it</strong>.
-      `;
+      const risposta = `Mi dispiace che tu non ti senta bene. Ti consigliamo di contattare il nostro centro per un consulto personalizzato.\n\n📞 Chiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.`;
       return {
         statusCode: 200,
         body: JSON.stringify({ risposta }),
@@ -105,21 +102,19 @@ Mi dispiace, ma al momento il servizio richiesto non è tra quelli offerti dal n
       messages: [
         {
           role: "system",
-          content: `
-Sei un assistente virtuale del Centro Sanitario Valcuvia. Rispondi sempre in modo gentile, corretto grammaticalmente e informativo.
+          content: `Sei un assistente virtuale del Centro Sanitario Valcuvia. Rispondi sempre in modo gentile, corretto grammaticalmente e informativo.
 
-✅ Se l’utente segnala un malessere (es: "ho mal di pancia", "mi sento male", "mi fa male il ginocchio"), puoi aggiungere un consiglio utile di buon senso specifico per quel malessere.
+✅ Se l’utente segnala un malessere (es: \"ho mal di pancia\", \"mi sento male\", \"mi fa male il ginocchio\"), puoi aggiungere un consiglio utile di buon senso specifico per quel malessere.
 
 ❌ Non fornire mai consigli medici specifici o diagnosi.
-❌ Non dire mai "contatta il medico", "vai al pronto soccorso" o simili.
+❌ Non dire mai \"contatta il medico\", \"vai al pronto soccorso\" o simili.
 ❌ Se non è presente un sintomo, NON fornire alcun consiglio sanitario.
 
 ✅ I contatti devono essere sempre presenti:
 📞 0332 624820
 📧 segreteria@csvcuvio.it
 
-📍 L'indirizzo del centro è: Via Enrico Fermi, 6 – 21030 Cuvio (VA).
-          `,
+📍 L'indirizzo del centro è: Via Enrico Fermi, 6 – 21030 Cuvio (VA).`
         },
         { role: "user", content: domanda },
       ],
