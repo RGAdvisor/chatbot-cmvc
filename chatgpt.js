@@ -1,3 +1,5 @@
+// netlify/functions/chatbot.js
+
 const { Configuration, OpenAIApi } = require("openai");
 
 const configuration = new Configuration({
@@ -21,7 +23,7 @@ const segnaliMalessere = [
 
 // Utility
 function normalizzaTesto(testo) {
-  return testo.toLowerCase().replace(/[^a-zàèéìòù\s]/gi, "").replace(/\s+/g, " ").trim();
+  return testo.toLowerCase().replace(/[^a-zà-ú\s]/gi, "").replace(/\s+/g, " ").trim();
 }
 
 function èDomandaGenerica(testo) {
@@ -45,11 +47,10 @@ function contieneSintomi(testo) {
   return segnaliMalessere.some(segno => testoNorm.includes(segno));
 }
 
-// Main handler
 exports.handler = async function (event, context) {
   try {
     const body = JSON.parse(event.body);
-    const domanda = body.domanda;
+    const domanda = body.domanda || "";
 
     if (èDomandaGenerica(domanda)) {
       return {
@@ -59,12 +60,11 @@ exports.handler = async function (event, context) {
     }
 
     if (contieneSintomi(domanda)) {
-      const risposta = `Mi dispiace che tu non ti senta bene. Ti consigliamo di contattare il nostro centro per un consulto personalizzato.
-📞 Chiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.
-Nel frattempo, se il dolore è lieve, potresti provare con un impacco freddo e riposarti un po'.`;
+      const rispostaSintomo = `Mi dispiace che tu non ti senta bene. Ti consigliamo di contattare il nostro centro per un consulto personalizzato.
+📞 Chiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.`;
       return {
         statusCode: 200,
-        body: JSON.stringify({ risposta }),
+        body: JSON.stringify({ risposta: rispostaSintomo }),
       };
     }
 
@@ -97,37 +97,40 @@ Mi dispiace, ma al momento il servizio richiesto non è tra quelli offerti dal n
           content: `
 Sei un assistente virtuale del Centro Sanitario Valcuvia. Rispondi sempre in modo gentile, corretto grammaticalmente e informativo.
 
-✅ Se l’utente segnala un malessere (es: "ho mal di pancia", "mi sento male", "mal di denti"), dopo aver consigliato di contattare il centro, aggiungi solo un consiglio utile (riposo, impacchi, bere acqua, ecc.).
+✅ Se l’utente segnala un malessere (es: \"ho mal di pancia\", \"mi sento male\", \"mi fa male il ginocchio\"), puoi aggiungere un consiglio utile di buon senso, ad esempio:
+- riposare
+- bere acqua
+- fare impacchi (freddi o caldi, in base al contesto)
+- evitare sforzi
+- mangiare leggero
 
-❌ Non fornire mai consigli sanitari generici se non c'è un malessere esplicito.
+❌ Non fornire mai consigli medici specifici o diagnosi.
+❌ Non dire mai \"contatta il medico\", \"vai al pronto soccorso\" o simili.
+❌ Se non è presente un sintomo, NON fornire alcun consiglio sanitario.
 
-❌ Evita frasi come “contatta il tuo medico”, “dentista di fiducia” o “pronto soccorso”. Indirizza sempre al nostro centro.
-
-✅ I contatti devono sempre essere presenti:
+✅ I contatti devono essere sempre presenti:
 📞 0332 624820
 📧 segreteria@csvcuvio.it
 
-📍 L'indirizzo corretto è: Via Enrico Fermi, 6 – 21030 Cuvio (VA)
-
-❗Controlla sempre grammatica e sintassi prima di restituire la risposta.
-          `
+📍 L'indirizzo del centro è: Via Enrico Fermi, 6 – 21030 Cuvio (VA).
+          `,
         },
-        { role: "user", content: domanda }
+        { role: "user", content: domanda },
       ],
-      temperature: 0.4,
+      temperature: 0.5,
     });
 
     let risposta = response.data.choices[0]?.message?.content || "Nessuna risposta generata.";
 
+    // Pulizia linguistica automatica
     risposta = risposta
       .replace(/(medico|dentista)( di fiducia)?/gi, "il nostro centro sanitario")
       .replace(/pronto soccorso/gi, "il nostro centro sanitario")
       .replace(/Centro Sanitario Valcuvia/gi, "il nostro centro")
-      .replace(/contatta(ci)? (un|il) (professionista|specialista)/gi, "contattaci presso il nostro centro");
+      .replace(/(contatta(ci)?|rivolgi(ti)? a) (un|il) (professionista|specialista)/gi, "contatta il nostro centro");
 
     const contatti = `\n\n📞 Per informazioni o per fissare un appuntamento:\nChiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.`;
-
-    if (!risposta.includes("0332 624820") && !risposta.includes("segreteria@csvcuvio.it")) {
+    if (!risposta.includes("0332 624820") || !risposta.includes("segreteria@csvcuvio.it")) {
       risposta += contatti;
     }
 
@@ -135,9 +138,8 @@ Sei un assistente virtuale del Centro Sanitario Valcuvia. Rispondi sempre in mod
       statusCode: 200,
       body: JSON.stringify({ risposta }),
     };
-
   } catch (error) {
-    console.error("Errore:", error);
+    console.error("Errore nella funzione chatbot:", error);
     return {
       statusCode: 500,
       body: JSON.stringify({ error: "Errore durante la generazione della risposta." }),
