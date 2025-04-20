@@ -1,9 +1,11 @@
 {
-  "name": "netlify-functions",
+  "name": "chatbot-cmvc",
   "version": "1.0.0",
-  "main": "askgpt.js",
-  "type": "module",
+  "type": "commonjs",
+  "main": "chatgpt.js",
   "dependencies": {
-    "openai": "^4.0.0"
+    "openai": "^3.2.1",
+    "node-fetch": "^2.6.7",
+    "xlsx": "^0.18.5"
   }
 }
