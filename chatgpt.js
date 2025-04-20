@@ -15,11 +15,20 @@ const prestazioniDisponibili = [
 ];
 
 const segnaliMalessere = [
-  "mal di", "mi fa male", "non sto bene", "sto male", "dolore", 
+  "mal di schiena", "mal di denti", "mal di pancia", "male al ginocchio", "mal di testa",
+  "mal di gola", "mi fa male", "non sto bene", "sto male", "dolore", 
   "bruciore", "nausea", "sento male", "male a", "malessere"
 ];
 
-// Utility
+const consigliPerMalessere = {
+  "mal di schiena": "stare sdraiato su una superficie rigida, evitare movimenti bruschi e applicare un impacco caldo.",
+  "mal di denti": "evitare cibi troppo caldi o freddi, risciacquare con acqua tiepida e mantenere la zona a riposo.",
+  "mal di pancia": "restare a riposo, assumere piccoli sorsi d'acqua e seguire un'alimentazione leggera.",
+  "male al ginocchio": "tenere la gamba sollevata, applicare un impacco freddo e non sforzare l'articolazione.",
+  "mal di testa": "riposa in un ambiente silenzioso e buio, bevi acqua e cerca di rilassarti.",
+  "mal di gola": "bere bevande calde, evitare cibi irritanti e riposare la voce."
+};
+
 function normalizzaTesto(testo) {
   return testo.toLowerCase().replace(/[^a-zà-ú\s]/gi, "").replace(/\s+/g, " ").trim();
 }
@@ -40,9 +49,9 @@ function contienePrestazione(domanda) {
   });
 }
 
-function contieneSintomi(testo) {
+function riconosciMalessere(testo) {
   const testoNorm = normalizzaTesto(testo);
-  return segnaliMalessere.some(segno => testoNorm.includes(segno));
+  return Object.keys(consigliPerMalessere).find(chiave => testoNorm.includes(normalizzaTesto(chiave)));
 }
 
 exports.handler = async function (event, context) {
@@ -57,8 +66,13 @@ exports.handler = async function (event, context) {
       };
     }
 
-    if (contieneSintomi(domanda)) {
-      const rispostaSintomo = `Mi dispiace che tu non ti senta bene. Ti consigliamo di contattare il nostro centro per un consulto personalizzato.📞 Chiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.\n\nNel frattempo, se il disturbo è lieve, potresti:\n- riposare\n- bere acqua\n- evitare sforzi\n- applicare un impacco caldo o freddo, se appropriato`;
+    const malessereRiconosciuto = riconosciMalessere(domanda);
+    if (malessereRiconosciuto) {
+      let rispostaSintomo = `Mi dispiace che tu non ti senta bene. Ti consigliamo di contattare il nostro centro per un consulto personalizzato.\n\n📞 Chiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.`;
+      const consiglio = consigliPerMalessere[malessereRiconosciuto];
+      if (consiglio) {
+        rispostaSintomo += ` Nel frattempo, se il disturbo è lieve, potresti provare a: ${consiglio}`;
+      }
       return {
         statusCode: 200,
         body: JSON.stringify({ risposta: rispostaSintomo }),
@@ -94,17 +108,10 @@ Mi dispiace, ma al momento il servizio richiesto non è tra quelli offerti dal n
           content: `
 Sei un assistente virtuale del Centro Sanitario Valcuvia. Rispondi sempre in modo gentile, corretto grammaticalmente e informativo.
 
-✅ Se l’utente segnala un malessere (es: \"ho mal di pancia\", \"mi sento male\", \"mi fa male il ginocchio\"), puoi aggiungere un consiglio utile di buon senso, ad esempio:
-- riposare
-- bere acqua
-- fare impacchi (freddi o caldi, in base al contesto)
-- evitare sforzi
-- alimentazione leggera
-- mantenersi idratati
-- evitare di toccare o sforzare la zona dolorante
+✅ Se l’utente segnala un malessere (es: "ho mal di pancia", "mi sento male", "mi fa male il ginocchio"), puoi aggiungere un consiglio utile di buon senso specifico per quel malessere.
 
 ❌ Non fornire mai consigli medici specifici o diagnosi.
-❌ Non dire mai \"contatta il medico\", \"vai al pronto soccorso\" o simili.
+❌ Non dire mai "contatta il medico", "vai al pronto soccorso" o simili.
 ❌ Se non è presente un sintomo, NON fornire alcun consiglio sanitario.
 
 ✅ I contatti devono essere sempre presenti:
