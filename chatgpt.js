@@ -144,4 +144,3 @@ Sei un assistente virtuale del Centro Sanitario Valcuvia. Rispondi sempre in mod
     };
   }
 };
-
