@@ -1,105 +1,130 @@
-/* Style per Assistente Centro Sanitario Valcuvia */
-
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f9f9f9;
-  margin: 0;
-  padding: 2rem;
-  color: #333;
+    font-family: Arial, sans-serif;
+    background-color: #f1f1f1;
+    margin: 0;
+    padding: 0;
 }
 
 .container {
-  max-width: 720px;
-  margin: auto;
-  background: #ffffff;
-  border-radius: 12px;
-  padding: 2rem;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.08);
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
-
 
 h1 {
-  font-size: 1.5rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-}
-
-h1::before {
-  content: "\1F4AC"; /* emoji fumetto */
-  font-size: 1.4rem;
-}
-
-.chat-box {
-  min-height: 250px;
-  background-color: #f0f8ff;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  border-radius: 8px;
-  overflow-y: auto;
-  font-size: 1rem;
-}
-
-textarea {
-  width: calc(100% - 100px);
-  padding: 0.8rem;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  resize: none;
-  font-size: 1rem;
-}
-
-button {
-  background-color: #00723a;
-  color: white;
-  border: none;
-  padding: 0.75rem 1.2rem;
-  font-size: 1rem;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
-  margin-left: 0.5rem;
-}
-
-button:hover {
-  background-color: #005f30;
+    text-align: center;
+    color: #2a7f63;
 }
 
 .button-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
 }
 
 .button-group button {
-  background-color: #f0f0f0;
-  color: #333;
-  border: 1px solid #ccc;
-  padding: 0.5rem 1rem;
-  font-size: 0.9rem;
-  border-radius: 6px;
+    background-color: #2a7f63;
+    color: white;
+    font-size: 16px;
+    padding: 12px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 100%;
 }
 
 .button-group button:hover {
-  background-color: #e6e6e6;
+    background-color: #1e5e45;
 }
 
-.user {
-  font-weight: bold;
-  margin-top: 1rem;
+.response-box {
+    background-color: white;
+    border: 2px solid #2a7f63;
+    color: #2a7f63;
+    font-size: 16px;
+    padding: 12px;
+    border-radius: 25px;
+    margin-top: 15px;
+    width: 100%;
+    text-align: center;
+    min-height: 40px;
 }
 
-.bot {
-  margin: 0.5rem 0 1rem 0;
+.input-row {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    gap: 10px;
 }
 
-.risposta-fissa {
-  background-color: #fef9e7;
-  border: 1px solid #f4e2c5;
-  padding: 1rem;
-  border-radius: 8px;
-  font-size: 0.95rem;
-  margin-bottom: 1rem;
+/* Bottone bianco */
+.assist-button {
+    width: 100%;
+    background-color: white;
+    border: 2px solid #2a7f63;
+    color: #2a7f63;
+    font-size: 14px;
+    border-radius: 25px;
+    padding: 12px;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+/* Textarea */
+.green-textarea {
+    width: 100%;
+    background-color: #2a7f63;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-size: 14px;
+    padding: 12px;
+    resize: none;
+    box-sizing: border-box;
+    margin-top: 10px;
+}
+
+.green-textarea::placeholder {
+    color: #e0e0e0;
+}
+
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.user-message,
+.gpt-response {
+    padding: 10px;
+    border-radius: 10px;
+    max-width: 60%;
+    word-wrap: break-word;
+    font-size: 15px;
+}
+
+.user-message {
+    background-color: #2a7f63;
+    color: white;
+    align-self: flex-end;
+}
+
+.gpt-response {
+    background-color: #f1f1f1;
+    border: 1px solid #2a7f63;
+    color: #2a7f63;
+    align-self: flex-start;
+}
+
+footer {
+    text-align: center;
+    margin-top: 30px;
+    font-size: 13px;
+    color: #666;
 }
