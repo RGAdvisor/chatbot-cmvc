@@ -1,11 +1,9 @@
 {
-  "name": "csv-chatbot",
+  "name": "netlify-functions",
   "version": "1.0.0",
-  "type": "commonjs",
-  "main": "index.js",
+  "main": "askgpt.js",
+  "type": "module",
   "dependencies": {
-    "openai": "^3.2.1",
-    "node-fetch": "^2.6.7",
-    "xlsx": "^0.18.5"
+    "openai": "^4.0.0"
   }
 }
