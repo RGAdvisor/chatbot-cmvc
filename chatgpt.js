@@ -17,7 +17,9 @@ const prestazioniDisponibili = [
 const segnaliMalessere = [
   "mal di schiena", "mal di denti", "mal di pancia", "male al ginocchio", "mal di testa",
   "mal di gola", "mi fa male", "non sto bene", "sto male", "dolore", 
-  "bruciore", "nausea", "sento male", "male a", "malessere", "perdo sangue dal naso"
+  "bruciore", "nausea", "sento male", "male a", "malessere",
+  "gonfia", "gonfiore", "slogata", "caviglia gonfia", "guancia gonfia", "dente rotto",
+  "ponte sceso", "ribasatura", "faccetta staccata"
 ];
 
 const consigliPerMalessere = {
@@ -27,8 +29,13 @@ const consigliPerMalessere = {
   "male al ginocchio": "tenere la gamba sollevata, applicare un impacco freddo e non sforzare l'articolazione.",
   "mal di testa": "riposa in un ambiente silenzioso e buio, bevi acqua e cerca di rilassarti.",
   "mal di gola": "bere bevande calde, evitare cibi irritanti e riposare la voce.",
-  "perdo sangue dal naso": "rimanere seduti con la testa leggermente inclinata in avanti e premere delicatamente le narici per alcuni minuti."
+  "mi sono slogata una caviglia": "applica subito del ghiaccio, tieni la gamba sollevata e non camminare.",
+  "ho la faccia gonfia": "potrebbe trattarsi di un'infiammazione o infezione. Ti consigliamo di contattare subito il nostro centro."
 };
+
+const urgenzeDentarie = [
+  "guancia gonfia", "dente rotto davanti", "ponte dentale che si è sceso davanti", "ribasatura che fa male"
+];
 
 function normalizzaTesto(testo) {
   return testo.toLowerCase().replace(/[^a-zà-ú\s]/gi, "").replace(/\s+/g, " ").trim();
@@ -55,6 +62,11 @@ function riconosciMalessere(testo) {
   return Object.keys(consigliPerMalessere).find(chiave => testoNorm.includes(normalizzaTesto(chiave)));
 }
 
+function èUrgenzaDentale(testo) {
+  const testoNorm = normalizzaTesto(testo);
+  return urgenzeDentarie.some(frase => testoNorm.includes(normalizzaTesto(frase)));
+}
+
 exports.handler = async function (event, context) {
   try {
     const body = JSON.parse(event.body);
@@ -64,6 +76,15 @@ exports.handler = async function (event, context) {
       return {
         statusCode: 200,
         body: JSON.stringify({ risposta: "Ciao! Come posso aiutarti oggi?" }),
+      };
+    }
+
+    if (èUrgenzaDentale(domanda)) {
+      return {
+        statusCode: 200,
+        body: JSON.stringify({
+          risposta: `La situazione descritta richiede un intervento rapido. Ti consigliamo di contattare immediatamente il nostro centro: 📞 0332 624820 📧 segreteria@csvcuvio.it. Faremo il possibile per fissare un appuntamento in giornata.`
+        }),
       };
     }
 
@@ -90,7 +111,11 @@ exports.handler = async function (event, context) {
     }
 
     if (!contienePrestazione(domanda)) {
-      const risposta = `Mi dispiace che tu non ti senta bene. Ti consigliamo di contattare il nostro centro per un consulto personalizzato.\n\n📞 Chiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.`;
+      const risposta = `
+Mi dispiace, ma al momento il servizio richiesto non è tra quelli offerti dal nostro centro.<br><br>
+📄 <a href="https://drive.google.com/file/d/1JOPK-rAAu5D330BwCY_7sOcHmkBwD6HD/view?usp=drive_link" target="_blank">SCARICA ELENCO PRESTAZIONI CSV</a><br><br>
+📞 Per ulteriori informazioni o per fissare un appuntamento: chiama lo <strong>0332 624820</strong> oppure scrivi a 📧 <strong>segreteria@csvcuvio.it</strong>.
+      `;
       return {
         statusCode: 200,
         body: JSON.stringify({ risposta }),
@@ -102,19 +127,21 @@ exports.handler = async function (event, context) {
       messages: [
         {
           role: "system",
-          content: `Sei un assistente virtuale del Centro Sanitario Valcuvia. Rispondi sempre in modo gentile, corretto grammaticalmente e informativo.
+          content: `
+Sei un assistente virtuale del Centro Sanitario Valcuvia. Rispondi sempre in modo gentile, corretto grammaticalmente e informativo.
 
-✅ Se l’utente segnala un malessere (es: \"ho mal di pancia\", \"mi sento male\", \"mi fa male il ginocchio\"), puoi aggiungere un consiglio utile di buon senso specifico per quel malessere.
+✅ Se l’utente segnala un malessere (es: "ho mal di pancia", "mi sento male", "mi fa male il ginocchio"), puoi aggiungere un consiglio utile di buon senso specifico per quel malessere.
 
 ❌ Non fornire mai consigli medici specifici o diagnosi.
-❌ Non dire mai \"contatta il medico\", \"vai al pronto soccorso\" o simili.
+❌ Non dire mai "contatta il medico", "vai al pronto soccorso" o simili.
 ❌ Se non è presente un sintomo, NON fornire alcun consiglio sanitario.
 
 ✅ I contatti devono essere sempre presenti:
 📞 0332 624820
 📧 segreteria@csvcuvio.it
 
-📍 L'indirizzo del centro è: Via Enrico Fermi, 6 – 21030 Cuvio (VA).`
+📍 L'indirizzo del centro è: Via Enrico Fermi, 6 – 21030 Cuvio (VA).
+          `,
         },
         { role: "user", content: domanda },
       ],
