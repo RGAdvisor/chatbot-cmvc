@@ -14,22 +14,22 @@ const prestazioniDisponibili = [
   "Otoplastica", "Otturazioni", "Visita cardiologica", "Visita ginecologica"
 ];
 
-// Utility per normalizzazione
+const segnaliMalessere = [
+  "mal di", "mi fa male", "non sto bene", "sto male", "dolore", 
+  "bruciore", "nausea", "sento male", "male a", "malessere"
+];
+
+// Utility
 function normalizzaTesto(testo) {
-  return testo.toLowerCase()
-    .replace(/[^a-zà-ü\s]/gi, "")
-    .replace(/\s+/g, " ")
-    .trim();
+  return testo.toLowerCase().replace(/[^a-zàèéìòù\s]/gi, "").replace(/\s+/g, " ").trim();
 }
 
-// Domande generiche
-function eDomandaGenerica(testo) {
+function èDomandaGenerica(testo) {
   const frasi = ["ciao", "salve", "buongiorno", "buonasera", "grazie", "ok", "va bene"];
   const testoNorm = normalizzaTesto(testo);
   return frasi.includes(testoNorm);
 }
 
-// Verifica prestazione
 function contienePrestazione(domanda) {
   const testoDomanda = normalizzaTesto(domanda);
   return prestazioniDisponibili.some(prestazione => {
@@ -40,15 +40,31 @@ function contienePrestazione(domanda) {
   });
 }
 
+function contieneSintomi(testo) {
+  const testoNorm = normalizzaTesto(testo);
+  return segnaliMalessere.some(segno => testoNorm.includes(segno));
+}
+
+// Main handler
 exports.handler = async function (event, context) {
   try {
     const body = JSON.parse(event.body);
     const domanda = body.domanda;
 
-    if (eDomandaGenerica(domanda)) {
+    if (èDomandaGenerica(domanda)) {
       return {
         statusCode: 200,
         body: JSON.stringify({ risposta: "Ciao! Come posso aiutarti oggi?" }),
+      };
+    }
+
+    if (contieneSintomi(domanda)) {
+      const risposta = `Mi dispiace che tu non ti senta bene. Ti consigliamo di contattare il nostro centro per un consulto personalizzato.
+📞 Chiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.
+Nel frattempo, se il dolore è lieve, potresti provare con un impacco freddo e riposarti un po'.`;
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ risposta }),
       };
     }
 
@@ -63,9 +79,10 @@ exports.handler = async function (event, context) {
 
     if (!contienePrestazione(domanda)) {
       const risposta = `
-Mi dispiace, ma al momento il servizio richiesto non è tra quelli offerti dal nostro centro.
-📄 <a href="https://drive.google.com/file/d/1JOPK-rAAu5D330BwCY_7sOcHmkBwD6HD/view?usp=drive_link" target="_blank">SCARICA ELENCO PRESTAZIONI CSV</a>
-📞 Per ulteriori informazioni o per fissare un appuntamento: chiama lo <strong>0332 624820</strong> oppure scrivi a 📧 <strong>segreteria@csvcuvio.it</strong>.`;
+Mi dispiace, ma al momento il servizio richiesto non è tra quelli offerti dal nostro centro.<br><br>
+📄 <a href="https://drive.google.com/file/d/1JOPK-rAAu5D330BwCY_7sOcHmkBwD6HD/view?usp=drive_link" target="_blank">SCARICA ELENCO PRESTAZIONI CSV</a><br><br>
+📞 Per ulteriori informazioni o per fissare un appuntamento: chiama lo <strong>0332 624820</strong> oppure scrivi a 📧 <strong>segreteria@csvcuvio.it</strong>.
+      `;
       return {
         statusCode: 200,
         body: JSON.stringify({ risposta }),
@@ -77,20 +94,27 @@ Mi dispiace, ma al momento il servizio richiesto non è tra quelli offerti dal n
       messages: [
         {
           role: "system",
-          content: `Sei un assistente virtuale del Centro Sanitario Valcuvia. Rispondi sempre in modo gentile, corretto grammaticalmente e informativo.
+          content: `
+Sei un assistente virtuale del Centro Sanitario Valcuvia. Rispondi sempre in modo gentile, corretto grammaticalmente e informativo.
 
-✅ Se l’utente segnala un malessere (es: \"ho mal di pancia\", \"mi sento male\", \"mal di denti\"), dopo aver consigliato di contattare il centro, aggiungi solo un consiglio utile (riposo, impacchi, bere acqua, ecc.).
+✅ Se l’utente segnala un malessere (es: "ho mal di pancia", "mi sento male", "mal di denti"), dopo aver consigliato di contattare il centro, aggiungi solo un consiglio utile (riposo, impacchi, bere acqua, ecc.).
+
 ❌ Non fornire mai consigli sanitari generici se non c'è un malessere esplicito.
-❌ Evita frasi come \"contatta il tuo medico\", \"dentista di fiducia\" o \"pronto soccorso\". Devi sempre indirizzare al nostro centro.
-✅ I contatti devono essere sempre presenti:
+
+❌ Evita frasi come “contatta il tuo medico”, “dentista di fiducia” o “pronto soccorso”. Indirizza sempre al nostro centro.
+
+✅ I contatti devono sempre essere presenti:
 📞 0332 624820
 📧 segreteria@csvcuvio.it
-📍 Via Enrico Fermi, 6 – 21030 Cuvio (VA)
-❗Controlla sempre grammatica e sintassi prima di restituire la risposta.`
+
+📍 L'indirizzo corretto è: Via Enrico Fermi, 6 – 21030 Cuvio (VA)
+
+❗Controlla sempre grammatica e sintassi prima di restituire la risposta.
+          `
         },
         { role: "user", content: domanda }
       ],
-      temperature: 0.4
+      temperature: 0.4,
     });
 
     let risposta = response.data.choices[0]?.message?.content || "Nessuna risposta generata.";
