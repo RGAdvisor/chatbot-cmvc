@@ -1,5 +1,3 @@
-// netlify/functions/chatbot.js
-
 const { Configuration, OpenAIApi } = require("openai");
 
 const configuration = new Configuration({
@@ -60,8 +58,7 @@ exports.handler = async function (event, context) {
     }
 
     if (contieneSintomi(domanda)) {
-      const rispostaSintomo = `Mi dispiace che tu non ti senta bene. Ti consigliamo di contattare il nostro centro per un consulto personalizzato.
-📞 Chiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.`;
+      const rispostaSintomo = `Mi dispiace che tu non ti senta bene. Ti consigliamo di contattare il nostro centro per un consulto personalizzato.📞 Chiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.\n\nNel frattempo, se il disturbo è lieve, potresti:\n- riposare\n- bere acqua\n- evitare sforzi\n- applicare un impacco caldo o freddo, se appropriato`;
       return {
         statusCode: 200,
         body: JSON.stringify({ risposta: rispostaSintomo }),
@@ -102,7 +99,9 @@ Sei un assistente virtuale del Centro Sanitario Valcuvia. Rispondi sempre in mod
 - bere acqua
 - fare impacchi (freddi o caldi, in base al contesto)
 - evitare sforzi
-- mangiare leggero
+- alimentazione leggera
+- mantenersi idratati
+- evitare di toccare o sforzare la zona dolorante
 
 ❌ Non fornire mai consigli medici specifici o diagnosi.
 ❌ Non dire mai \"contatta il medico\", \"vai al pronto soccorso\" o simili.
@@ -122,7 +121,6 @@ Sei un assistente virtuale del Centro Sanitario Valcuvia. Rispondi sempre in mod
 
     let risposta = response.data.choices[0]?.message?.content || "Nessuna risposta generata.";
 
-    // Pulizia linguistica automatica
     risposta = risposta
       .replace(/(medico|dentista)( di fiducia)?/gi, "il nostro centro sanitario")
       .replace(/pronto soccorso/gi, "il nostro centro sanitario")
