@@ -19,7 +19,7 @@ const segnaliMalessere = [
   "mal di gola", "mi fa male", "non sto bene", "sto male", "dolore", 
   "bruciore", "nausea", "sento male", "male a", "malessere",
   "gonfia", "gonfiore", "slogata", "caviglia gonfia", "guancia gonfia", "dente rotto",
-  "ponte sceso", "ribasatura", "faccetta staccata", "mi è caduto un dente"
+  "ponte sceso", "ribasatura", "faccetta staccata"
 ];
 
 const consigliPerMalessere = {
@@ -33,10 +33,10 @@ const consigliPerMalessere = {
 };
 
 const urgenzeDentarie = [
-  "guancia gonfia", "dente rotto davanti", "ponte dentale che è sceso davanti", "ribasatura che fa male"
+  "guancia gonfia", "dente rotto davanti", "ponte dentale che è sceso davanti", "ribasatura che fa male", "mi è caduto un dente davanti"
 ];
 
-let attesaDomandaSuDente = false;
+let attesaSecondoInput = false;
 
 function normalizzaTesto(testo) {
   return testo.toLowerCase().replace(/[^a-zà-ú\s]/gi, "").replace(/\s+/g, " ").trim();
@@ -68,51 +68,42 @@ function èUrgenzaDentale(testo) {
   return urgenzeDentarie.some(frase => testoNorm.includes(normalizzaTesto(frase)));
 }
 
-function haPersoDente(testo) {
-  return /\bcaduto un dente\b/.test(normalizzaTesto(testo));
-}
-
-function èRispostaSuPosizioneDente(testo) {
-  const norm = normalizzaTesto(testo);
-  if (norm.includes("davanti")) return "davanti";
-  if (norm.includes("dietro")) return "dietro";
-  return null;
-}
-
 exports.handler = async function (event, context) {
   try {
     const body = JSON.parse(event.body);
     const domanda = body.domanda || "";
     const domandaNorm = normalizzaTesto(domanda);
 
-    const posizioneDente = èRispostaSuPosizioneDente(domanda);
-    if (attesaDomandaSuDente && posizioneDente) {
-      attesaDomandaSuDente = false;
-      if (posizioneDente === "davanti") {
-        return {
-          statusCode: 200,
-          body: JSON.stringify({ risposta: "La perdita di un dente anteriore è urgente. Chiama subito il nostro centro: 📞 0332 624820 📧 segreteria@csvcuvio.it. Ti daremo un appuntamento in giornata." })
-        };
-      } else {
-        return {
-          statusCode: 200,
-          body: JSON.stringify({ risposta: "Ti consigliamo di contattare il nostro centro per una valutazione. 📞 0332 624820 📧 segreteria@csvcuvio.it. Nel frattempo, evita di masticare sul lato interessato e mantieni pulita la zona." })
-        };
-      }
+    // GESTIONE DOPPIO PASSAGGIO
+    if (domandaNorm.includes("mi è caduto un dente")) {
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ risposta: "È caduto un dente davanti o dietro?" })
+      };
+    }
+
+    if (domandaNorm.includes("davanti")) {
+      return {
+        statusCode: 200,
+        body: JSON.stringify({
+          risposta: `La situazione descritta richiede un intervento rapido. Ti consigliamo di contattare immediatamente il nostro centro: 📞 0332 624820 📧 segreteria@csvcuvio.it. Faremo il possibile per fissare un appuntamento in giornata.`
+        }),
+      };
+    }
+
+    if (domandaNorm.includes("dietro")) {
+      return {
+        statusCode: 200,
+        body: JSON.stringify({
+          risposta: `Ti consigliamo di contattare il nostro centro per un consulto personalizzato. 📞 Chiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it. Nel frattempo, puoi evitare cibi duri o caldi, risciacquare con acqua tiepida e riposare la zona.`
+        }),
+      };
     }
 
     if (èDomandaGenerica(domanda)) {
       return {
         statusCode: 200,
         body: JSON.stringify({ risposta: "Ciao! Come posso aiutarti oggi?" }),
-      };
-    }
-
-    if (haPersoDente(domanda)) {
-      attesaDomandaSuDente = true;
-      return {
-        statusCode: 200,
-        body: JSON.stringify({ risposta: "È caduto il dente davanti o dietro?" }),
       };
     }
 
