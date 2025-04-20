@@ -30,11 +30,10 @@ const consigliPerMalessere = {
   "mal di testa": "riposa in un ambiente silenzioso e buio, bevi acqua e cerca di rilassarti.",
   "mal di gola": "bere bevande calde, evitare cibi irritanti e riposare la voce.",
   "mi sono slogata una caviglia": "applica subito del ghiaccio, tieni la gamba sollevata e non camminare.",
-  "ho la faccia gonfia": "potrebbe trattarsi di un'infiammazione o infezione. Ti consigliamo di contattare subito il nostro centro."
 };
 
 const urgenzeDentarie = [
-  "guancia gonfia", "dente rotto davanti", "ponte dentale che si è sceso davanti", "ribasatura che fa male"
+  "guancia gonfia", "dente rotto davanti", "ponte dentale che è sceso davanti", "ribasatura che fa male", "mi è caduto un dente davanti"
 ];
 
 function normalizzaTesto(testo) {
