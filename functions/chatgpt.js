@@ -36,8 +36,6 @@ const urgenzeDentarie = [
   "guancia gonfia", "dente rotto davanti", "ponte dentale che è sceso davanti", "ribasatura che fa male", "mi è caduto un dente davanti"
 ];
 
-let attesaSecondoInput = false;
-
 function normalizzaTesto(testo) {
   return testo.toLowerCase().replace(/[^a-zà-ú\s]/gi, "").replace(/\s+/g, " ").trim();
 }
@@ -138,7 +136,8 @@ exports.handler = async function (event, context) {
       };
     }
 
-     const risposta = `
+    if (!contienePrestazione(domanda)) {
+      const risposta = `
 Mi dispiace, ma al momento il servizio richiesto non è tra quelli offerti dal nostro centro.<br><br>
 📄 <a href="https://drive.google.com/uc?export=download&id=1JOPK-rAAu5D330BwCY_7sOcHmkBwD6HD" target="_blank" rel="noopener noreferrer">SCARICA ELENCO PRESTAZIONI CSV</a><br><br>
 📞 Per ulteriori informazioni o per fissare un appuntamento:<br>
