@@ -135,18 +135,18 @@ exports.handler = async function (event, context) {
       };
     }
 
-    if (!contienePrestazione(domanda)) {
-      const risposta = `
+   if (!contienePrestazione(domanda)) {
+  const risposta = `
 Mi dispiace, ma al momento il servizio richiesto non è tra quelli offerti dal nostro centro.<br><br>
-📄 <a href="https://drive.google.com/file/d/1JOPK-rAAu5D330BwCY_7sOcHmkBwD6HD/view?usp=sharing" target="_blank" rel="noopener noreferrer" style="text-decoration:underline;">SCARICA ELENCO PRESTAZIONI CSV</a><br><br>
+📄 <a href="https://drive.google.com/uc?export=download&id=1JOPK-rAAu5D330BwCY_7sOcHmkBwD6HD" target="_blank" rel="noopener noreferrer" style="text-decoration:underline;">SCARICA ELENCO PRESTAZIONI CSV</a><br><br>
 📞 Per ulteriori informazioni o per fissare un appuntamento:<br>
-Chiama lo <strong>0332 624820</strong> oppure scrivi a 📧 <strong>segreteria@csvcuvio.it</strong>.
-      `;
-      return {
-        statusCode: 200,
-        body: JSON.stringify({ risposta }),
-      };
-    }
+Chiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.
+  `;
+  return {
+    statusCode: 200,
+    body: JSON.stringify({ risposta }),
+  };
+}
 
     const response = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
