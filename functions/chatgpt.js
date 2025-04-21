@@ -1,3 +1,4 @@
+// chatgpt.js
 const { Configuration, OpenAIApi } = require("openai");
 
 const configuration = new Configuration({
@@ -20,7 +21,7 @@ const costiPrestazioni = {
 
 const segnaliMalessere = [
   "mal di schiena", "mal di denti", "mal di pancia", "male al ginocchio", "mal di testa",
-  "mal di gola", "mi fa male", "non sto bene", "sto male", "dolore", 
+  "mal di gola", "mi fa male", "non sto bene", "sto male", "dolore",
   "bruciore", "nausea", "sento male", "male a", "malessere",
   "gonfia", "gonfiore", "slogata", "caviglia gonfia", "guancia gonfia", "dente rotto",
   "ponte sceso", "ribasatura", "faccetta staccata"
@@ -72,12 +73,11 @@ function èUrgenzaDentale(testo) {
 
 function correggiGrammaticaTesto(testo) {
   return testo
-    .replace(/\btuo il nostro centro sanitario\b/g, "il nostro centro sanitario")
-    .replace(/\bil il nostro centro sanitario\b/g, "il nostro centro sanitario")
-    .replace(/\bil il nostro centro\b/g, "il nostro centro")
-    .replace(/\btuo il nostro centro\b/g, "il nostro centro")
-    .replace(/\b il il /g, " il ")
-    .replace(/\s{2,}/g, " ").trim();
+    .replace(/\b(il|lo|la|i|gli|le) \1\b/gi, "$1")
+    .replace(/\btuo il\b/gi, "il")
+    .replace(/\bil il\b/gi, "il")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 exports.handler = async function (event, context) {
@@ -155,14 +155,6 @@ exports.handler = async function (event, context) {
       };
     }
 
-    if (/dove.*(siete|vi trovo|trovate)/i.test(domanda)) {
-      const risposta = "📍 Ci troviamo a Cuvio (VA), in Via Enrico Fermi, 6 – 21030. 📞 Per qualsiasi informazione o per fissare un appuntamento: chiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.";
-      return {
-        statusCode: 200,
-        body: JSON.stringify({ risposta })
-      };
-    }
-
     const response = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
       messages: [
@@ -192,12 +184,12 @@ exports.handler = async function (event, context) {
       .replace(/Centro Sanitario Valcuvia/gi, "il nostro centro")
       .replace(/(contatta(ci)?|rivolgi(ti)? a) (un|il) (professionista|specialista)/gi, "contatta il nostro centro");
 
+    risposta = correggiGrammaticaTesto(risposta);
+
     const contatti = `\n\n📞 Per informazioni o per fissare un appuntamento:\nChiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.`;
     if (!risposta.includes("0332 624820") || !risposta.includes("segreteria@csvcuvio.it")) {
       risposta += contatti;
     }
-
-    risposta = correggiGrammaticaTesto(risposta);
 
     return {
       statusCode: 200,
