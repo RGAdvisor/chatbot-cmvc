@@ -119,7 +119,7 @@ exports.handler = async function (event, context) {
 
     const malessereRiconosciuto = riconosciMalessere(domanda);
     if (malessereRiconosciuto) {
-      let rispostaSintomo = `Mi dispiace che tu non ti senta bene. Ti consigliamo di contattare il nostro centro per un consulto personalizzato.\n\n\ud83d\udcde Chiama lo 0332 624820 oppure scrivi a \ud83d\udce7 segreteria@csvcuvio.it.`;
+      let rispostaSintomo = `Mi dispiace che tu non ti senta bene. Ti consigliamo di contattare il nostro centro per un consulto personalizzato.\n\n📞 Chiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.`;
       const consiglio = consigliPerMalessere[malessereRiconosciuto];
       if (consiglio) {
         rispostaSintomo += ` Nel frattempo, se il disturbo è lieve, potresti provare a: ${consiglio}`;
@@ -144,7 +144,7 @@ exports.handler = async function (event, context) {
     }
 
     if (/dove.*(siete|vi trovo|trovate)/i.test(domanda)) {
-      const risposta = "\ud83d\udccd Ci troviamo a Cuvio (VA), in Via Enrico Fermi, 6 – 21030. \ud83d\udcde Per qualsiasi informazione o per fissare un appuntamento: chiama lo 0332 624820 oppure scrivi a \ud83d\udce7 segreteria@csvcuvio.it.";
+      const risposta = "📍 Ci troviamo a Cuvio (VA), in Via Enrico Fermi, 6 – 21030. 📞 Per qualsiasi informazione o per fissare un appuntamento: chiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.";
       return {
         statusCode: 200,
         body: JSON.stringify({ risposta })
@@ -178,9 +178,11 @@ exports.handler = async function (event, context) {
       .replace(/(medico|dentista)( di fiducia)?/gi, "il nostro centro sanitario")
       .replace(/pronto soccorso/gi, "il nostro centro sanitario")
       .replace(/Centro Sanitario Valcuvia/gi, "il nostro centro")
-      .replace(/(contatta(ci)?|rivolgi(ti)? a) (un|il) (professionista|specialista)/gi, "contatta il nostro centro");
+      .replace(/(contatta(ci)?|rivolgi(ti)? a) (un|il) (professionista|specialista)/gi, "contatta il nostro centro")
+      .replace(/il tuo centro/gi, "il nostro centro")
+      .replace(/il tuo medico/gi, "il nostro centro sanitario");
 
-    const contatti = `\n\n\ud83d\udcde Per informazioni o per fissare un appuntamento:\nChiama lo 0332 624820 oppure scrivi a \ud83d\udce7 segreteria@csvcuvio.it.`;
+    const contatti = `\n\n📞 Per informazioni o per fissare un appuntamento:\nChiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.`;
     if (!risposta.includes("0332 624820") || !risposta.includes("segreteria@csvcuvio.it")) {
       risposta += contatti;
     }
@@ -197,4 +199,3 @@ exports.handler = async function (event, context) {
     };
   }
 };
-
