@@ -135,7 +135,7 @@ exports.handler = async function (event, context) {
       };
     }
 
- if (!contienePrestazione(domanda)) {
+   if (!contienePrestazione(domanda)) {
   const risposta = `
 Mi dispiace, ma al momento il servizio richiesto non è tra quelli offerti dal nostro centro.
 
@@ -143,7 +143,7 @@ Mi dispiace, ma al momento il servizio richiesto non è tra quelli offerti dal n
 
 📞 Per ulteriori informazioni o per fissare un appuntamento:
 Chiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.
-  `;
+`;
   return {
     statusCode: 200,
     body: JSON.stringify({ risposta }),
