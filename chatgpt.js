@@ -1,3 +1,4 @@
+// chatgpt.js
 const { Configuration, OpenAIApi } = require("openai");
 
 const configuration = new Configuration({
@@ -46,8 +47,7 @@ function normalizzaTesto(testo) {
 
 function èDomandaGenerica(testo) {
   const frasi = ["ciao", "salve", "buongiorno", "buonasera", "grazie", "ok", "va bene"];
-  const testoNorm = normalizzaTesto(testo);
-  return frasi.includes(testoNorm);
+  return frasi.includes(normalizzaTesto(testo));
 }
 
 function contienePrestazione(domanda) {
@@ -143,14 +143,6 @@ exports.handler = async function (event, context) {
       };
     }
 
-    if (/dove.*(siete|vi trovo|trovate)/i.test(domanda)) {
-      const risposta = "📍 Ci troviamo a Cuvio (VA), in Via Enrico Fermi, 6 – 21030. 📞 Per qualsiasi informazione o per fissare un appuntamento: chiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.";
-      return {
-        statusCode: 200,
-        body: JSON.stringify({ risposta })
-      };
-    }
-
     const response = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
       messages: [
@@ -179,8 +171,7 @@ exports.handler = async function (event, context) {
       .replace(/pronto soccorso/gi, "il nostro centro sanitario")
       .replace(/Centro Sanitario Valcuvia/gi, "il nostro centro")
       .replace(/(contatta(ci)?|rivolgi(ti)? a) (un|il) (professionista|specialista)/gi, "contatta il nostro centro")
-      .replace(/il tuo centro/gi, "il nostro centro")
-      .replace(/il tuo medico/gi, "il nostro centro sanitario");
+      .replace(/(il nostro centro|il nostro centro sanitario)(\s+o\s+(il\s+)?(nostro\s+)?centro sanitario)?/gi, "il nostro centro");
 
     const contatti = `\n\n📞 Per informazioni o per fissare un appuntamento:\nChiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.`;
     if (!risposta.includes("0332 624820") || !risposta.includes("segreteria@csvcuvio.it")) {
