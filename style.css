@@ -13,11 +13,18 @@ body {
   padding: 20px;
   border-radius: 12px;
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.logo {
+  max-width: 150px;
+  margin: 0 auto 20px;
 }
 
 h1 {
   text-align: center;
   color: #1e7b5a;
+  margin-bottom: 20px;
 }
 
 .button-group {
@@ -88,26 +95,29 @@ textarea {
   font-size: 14px;
 }
 
-.download-wrapper {
+.download-button-container {
   display: flex;
   justify-content: center;
-  margin-top: 10px;
+  margin-top: 15px;
 }
 
 .download-button {
-  background-color: #f1f1f1;
+  background-color: #1e7b5a;
   color: white;
   font-weight: bold;
-  border: none;
-  padding: 12px 20px;
-  border-radius: 30px;
-  cursor: pointer;
-  display: flex;
+  padding: 10px 20px;
+  border-radius: 25px;
+  text-decoration: none;
+  display: inline-flex;
   align-items: center;
-  gap: 10px;
-  font-size: 14px;
+  gap: 8px;
+  transition: background-color 0.3s;
 }
 
 .download-button:hover {
-  background-color: #216e56;
+  background-color: #145d44;
+}
+
+.download-button svg {
+  fill: white;
 }
