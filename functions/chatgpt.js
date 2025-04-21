@@ -1,4 +1,3 @@
-// File aggiornato di chatgpt.js con rimozione del pulsante download in risposta
 const { Configuration, OpenAIApi } = require("openai");
 
 const configuration = new Configuration({
@@ -13,6 +12,11 @@ const prestazioniDisponibili = [
   "Lipoemulsione sottocutanea", "Liposcultura", "Liposuzione", "Mammografia",
   "Otoplastica", "Otturazioni", "Visita cardiologica", "Visita ginecologica"
 ];
+
+const costiPrestazioni = {
+  "mammografia": "120,00€",
+  "visita ginecologica": "150,00€"
+};
 
 const segnaliMalessere = [
   "mal di schiena", "mal di denti", "mal di pancia", "male al ginocchio", "mal di testa",
@@ -115,7 +119,7 @@ exports.handler = async function (event, context) {
 
     const malessereRiconosciuto = riconosciMalessere(domanda);
     if (malessereRiconosciuto) {
-      let rispostaSintomo = `Mi dispiace che tu non ti senta bene. Ti consigliamo di contattare il nostro centro per un consulto personalizzato.\n\n📞 Chiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.`;
+      let rispostaSintomo = `Mi dispiace che tu non ti senta bene. Ti consigliamo di contattare il nostro centro per un consulto personalizzato.\n\n\ud83d\udcde Chiama lo 0332 624820 oppure scrivi a \ud83d\udce7 segreteria@csvcuvio.it.`;
       const consiglio = consigliPerMalessere[malessereRiconosciuto];
       if (consiglio) {
         rispostaSintomo += ` Nel frattempo, se il disturbo è lieve, potresti provare a: ${consiglio}`;
@@ -126,16 +130,21 @@ exports.handler = async function (event, context) {
       };
     }
 
-    if (/dove.*(siete|vi trovo|trovate)/i.test(domanda)) {
-      const risposta = "📍 Ci troviamo a Cuvio (VA), in Via Enrico Fermi, 6 – 21030. 📞 Per qualsiasi informazione o per fissare un appuntamento: chiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.";
+    const prestazioneCosto = Object.keys(costiPrestazioni).find(key =>
+      domandaNorm.includes(normalizzaTesto(key))
+    );
+
+    if (prestazioneCosto) {
+      const costo = costiPrestazioni[prestazioneCosto];
+      const rispostaCosto = `Il costo per la ${prestazioneCosto} presso il nostro centro è di ${costo}. Per ulteriori informazioni o per prenotare un appuntamento, puoi contattarci al numero 📞 0332 624820 o via email 📧 segreteria@csvcuvio.it.`;
       return {
         statusCode: 200,
-        body: JSON.stringify({ risposta })
+        body: JSON.stringify({ risposta: rispostaCosto })
       };
     }
 
-    if (!contienePrestazione(domanda)) {
-      const risposta = `Mi dispiace, ma al momento il servizio richiesto non è tra quelli offerti dal nostro centro.\n\n📞 Per ulteriori informazioni o per fissare un appuntamento:\nChiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.`;
+    if (/dove.*(siete|vi trovo|trovate)/i.test(domanda)) {
+      const risposta = "\ud83d\udccd Ci troviamo a Cuvio (VA), in Via Enrico Fermi, 6 – 21030. \ud83d\udcde Per qualsiasi informazione o per fissare un appuntamento: chiama lo 0332 624820 oppure scrivi a \ud83d\udce7 segreteria@csvcuvio.it.";
       return {
         statusCode: 200,
         body: JSON.stringify({ risposta })
@@ -171,7 +180,7 @@ exports.handler = async function (event, context) {
       .replace(/Centro Sanitario Valcuvia/gi, "il nostro centro")
       .replace(/(contatta(ci)?|rivolgi(ti)? a) (un|il) (professionista|specialista)/gi, "contatta il nostro centro");
 
-    const contatti = `\n\n📞 Per informazioni o per fissare un appuntamento:\nChiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.`;
+    const contatti = `\n\n\ud83d\udcde Per informazioni o per fissare un appuntamento:\nChiama lo 0332 624820 oppure scrivi a \ud83d\udce7 segreteria@csvcuvio.it.`;
     if (!risposta.includes("0332 624820") || !risposta.includes("segreteria@csvcuvio.it")) {
       risposta += contatti;
     }
