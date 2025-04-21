@@ -142,7 +142,7 @@ Mi dispiace, ma al momento il servizio richiesto non è tra quelli offerti dal n
 📄 <a href="https://drive.google.com/uc?export=download&id=1JOPK-rAAu5D330BwCY_7sOcHmkBwD6HD" target="_blank" rel="noopener noreferrer">SCARICA ELENCO PRESTAZIONI CSV</a><br><br>
 📞 Per ulteriori informazioni o per fissare un appuntamento:<br>
 Chiama lo <strong>0332 624820</strong> oppure scrivi a 📧 <strong>segreteria@csvcuvio.it</strong>.
-      `;
+`;
       return {
         statusCode: 200,
         body: JSON.stringify({ risposta }),
