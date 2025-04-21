@@ -16,9 +16,6 @@ const prestazioniDisponibili = [
 const costiPrestazioni = {
   "mammografia": "120,00€",
   "visita ginecologica": "150,00€"
-  "ECG": "50,00€"
-  "Igiene dentale": "80,00€"
-  "Visita ginecologica": "150,00€"
 };
 
 const segnaliMalessere = [
