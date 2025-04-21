@@ -88,24 +88,26 @@ textarea {
   font-size: 14px;
 }
 
-/* 👇 Bottone download */
-.download-container {
-  text-align: center;
-  margin-top: 20px;
+.download-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
 }
 
 .download-button {
   background-color: #2d8f6f;
   color: white;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 25px;
-  font-size: 14px;
   font-weight: bold;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 30px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
 }
 
 .download-button:hover {
-  background-color: #1e7b5a;
+  background-color: #216e56;
 }
