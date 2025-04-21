@@ -5,7 +5,6 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
-// Prestazioni disponibili
 const prestazioniDisponibili = [
   "Addominoplastica", "Agopuntura", "Bleforaplastica", "Carico immediato",
   "Chirurgia estetica del seno", "ECG", "ECG sotto sforzo", "Ecocardiocolordoppler",
@@ -83,7 +82,7 @@ exports.handler = async function (event, context) {
       return {
         statusCode: 200,
         body: JSON.stringify({
-          risposta: `La situazione descritta richiede un intervento rapido. Ti consigliamo di contattare immediatamente il nostro centro: 📞 0332 624820 📧 segreteria@csvcuvio.it. Faremo il possibile per fissare un appuntamento in giornata.`
+          risposta: "La situazione descritta richiede un intervento rapido. Ti consigliamo di contattare immediatamente il nostro centro: 📞 0332 624820 📧 segreteria@csvcuvio.it. Faremo il possibile per fissare un appuntamento in giornata."
         })
       };
     }
@@ -92,7 +91,7 @@ exports.handler = async function (event, context) {
       return {
         statusCode: 200,
         body: JSON.stringify({
-          risposta: `Ti consigliamo di contattare il nostro centro per un consulto personalizzato. 📞 Chiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it. Nel frattempo, puoi evitare cibi duri o caldi, risciacquare con acqua tiepida e riposare la zona.`
+          risposta: "Ti consigliamo di contattare il nostro centro per un consulto personalizzato. 📞 Chiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it. Nel frattempo, puoi evitare cibi duri o caldi, risciacquare con acqua tiepida e riposare la zona."
         })
       };
     }
@@ -108,14 +107,16 @@ exports.handler = async function (event, context) {
       return {
         statusCode: 200,
         body: JSON.stringify({
-          risposta: `La situazione descritta richiede un intervento rapido. Ti consigliamo di contattare immediatamente il nostro centro: 📞 0332 624820 📧 segreteria@csvcuvio.it. Faremo il possibile per fissare un appuntamento in giornata.`
+          risposta: "La situazione descritta richiede un intervento rapido. Ti consigliamo di contattare immediatamente il nostro centro: 📞 0332 624820 📧 segreteria@csvcuvio.it. Faremo il possibile per fissare un appuntamento in giornata."
         })
       };
     }
 
     const malessereRiconosciuto = riconosciMalessere(domanda);
     if (malessereRiconosciuto) {
-      let rispostaSintomo = `Mi dispiace che tu non ti senta bene. Ti consigliamo di contattare il nostro centro per un consulto personalizzato.\n\n📞 Chiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.`;
+      let rispostaSintomo = `Mi dispiace che tu non ti senta bene. Ti consigliamo di contattare il nostro centro per un consulto personalizzato.
+
+📞 Chiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.`;
       const consiglio = consigliPerMalessere[malessereRiconosciuto];
       if (consiglio) {
         rispostaSintomo += ` Nel frattempo, se il disturbo è lieve, potresti provare a: ${consiglio}`;
@@ -127,26 +128,25 @@ exports.handler = async function (event, context) {
     }
 
     if (/dove.*(siete|vi trovo|trovate)/i.test(domanda)) {
-      const risposta = "📍 Ci troviamo a Cuvio (VA), in Via Enrico Fermi, 6 – 21030. " +
-        "📞 Per qualsiasi informazione o per fissare un appuntamento: chiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.";
+      const risposta = "📍 Ci troviamo a Cuvio (VA), in Via Enrico Fermi, 6 – 21030. 📞 Per qualsiasi informazione o per fissare un appuntamento: chiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.";
       return {
         statusCode: 200,
         body: JSON.stringify({ risposta })
       };
     }
 
-  if (!contienePrestazione(domanda)) {
-  const risposta = `
+    if (!contienePrestazione(domanda)) {
+      const risposta = `
 Mi dispiace, ma al momento il servizio richiesto non è tra quelli offerti dal nostro centro.<br><br>
 📄 <a href="https://drive.google.com/file/d/1JOPK-rAAu5D330BwCY_7sOcHmkBwD6HD/view?usp=sharing" target="_blank" rel="noopener noreferrer" style="text-decoration:underline;">SCARICA ELENCO PRESTAZIONI CSV</a><br><br>
 📞 Per ulteriori informazioni o per fissare un appuntamento:<br>
 Chiama lo <strong>0332 624820</strong> oppure scrivi a 📧 <strong>segreteria@csvcuvio.it</strong>.
-  `;
-  return {
-    statusCode: 200,
-    body: JSON.stringify({ risposta }),
-  };
-}
+      `;
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ risposta }),
+      };
+    }
 
     const response = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
@@ -157,15 +157,12 @@ Chiama lo <strong>0332 624820</strong> oppure scrivi a 📧 <strong>segreteria@c
 Sei un assistente virtuale del Centro Sanitario Valcuvia. Rispondi sempre in modo gentile, corretto grammaticalmente e informativo.
 
 ✅ Se l’utente segnala un malessere (es: "ho mal di pancia", "mi sento male", "mi fa male il ginocchio"), puoi aggiungere un consiglio utile di buon senso specifico per quel malessere.
-
 ❌ Non fornire mai consigli medici specifici o diagnosi.
 ❌ Non dire mai "contatta il medico", "vai al pronto soccorso" o simili.
 ❌ Se non è presente un sintomo, NON fornire alcun consiglio sanitario.
-
 ✅ I contatti devono essere sempre presenti:
 📞 0332 624820
 📧 segreteria@csvcuvio.it
-
 📍 L'indirizzo del centro è: Via Enrico Fermi, 6 – 21030 Cuvio (VA).
           `
         },
