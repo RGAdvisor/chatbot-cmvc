@@ -72,7 +72,6 @@ exports.handler = async function (event, context) {
     const domanda = body.domanda || "";
     const domandaNorm = normalizzaTesto(domanda);
 
-    // GESTIONE DOPPIO PASSAGGIO
     if (domandaNorm.includes("mi è caduto un dente")) {
       return {
         statusCode: 200,
@@ -85,7 +84,7 @@ exports.handler = async function (event, context) {
         statusCode: 200,
         body: JSON.stringify({
           risposta: `La situazione descritta richiede un intervento rapido. Ti consigliamo di contattare immediatamente il nostro centro: 📞 0332 624820 📧 segreteria@csvcuvio.it. Faremo il possibile per fissare un appuntamento in giornata.`
-        }),
+        })
       };
     }
 
@@ -94,14 +93,14 @@ exports.handler = async function (event, context) {
         statusCode: 200,
         body: JSON.stringify({
           risposta: `Ti consigliamo di contattare il nostro centro per un consulto personalizzato. 📞 Chiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it. Nel frattempo, puoi evitare cibi duri o caldi, risciacquare con acqua tiepida e riposare la zona.`
-        }),
+        })
       };
     }
 
     if (èDomandaGenerica(domanda)) {
       return {
         statusCode: 200,
-        body: JSON.stringify({ risposta: "Ciao! Come posso aiutarti oggi?" }),
+        body: JSON.stringify({ risposta: "Ciao! Come posso aiutarti oggi?" })
       };
     }
 
@@ -110,7 +109,7 @@ exports.handler = async function (event, context) {
         statusCode: 200,
         body: JSON.stringify({
           risposta: `La situazione descritta richiede un intervento rapido. Ti consigliamo di contattare immediatamente il nostro centro: 📞 0332 624820 📧 segreteria@csvcuvio.it. Faremo il possibile per fissare un appuntamento in giornata.`
-        }),
+        })
       };
     }
 
@@ -123,7 +122,7 @@ exports.handler = async function (event, context) {
       }
       return {
         statusCode: 200,
-        body: JSON.stringify({ risposta: rispostaSintomo }),
+        body: JSON.stringify({ risposta: rispostaSintomo })
       };
     }
 
@@ -132,20 +131,20 @@ exports.handler = async function (event, context) {
         "📞 Per qualsiasi informazione o per fissare un appuntamento: chiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.";
       return {
         statusCode: 200,
-        body: JSON.stringify({ risposta }),
+        body: JSON.stringify({ risposta })
       };
     }
 
     if (!contienePrestazione(domanda)) {
       const risposta = `
 Mi dispiace, ma al momento il servizio richiesto non è tra quelli offerti dal nostro centro.<br><br>
-📄 <a href="https://drive.google.com/uc?export=download&id=1JOPK-rAAu5D330BwCY_7sOcHmkBwD6HD" target="_blank" rel="noopener noreferrer">SCARICA ELENCO PRESTAZIONI CSV</a><br><br>
+📄 <a href="https://drive.google.com/file/d/1JOPK-rAAu5D330BwCY_7sOcHmkBwD6HD/view?usp=sharing" target="_blank" rel="noopener noreferrer">SCARICA ELENCO PRESTAZIONI CSV</a><br><br>
 📞 Per ulteriori informazioni o per fissare un appuntamento:<br>
 Chiama lo <strong>0332 624820</strong> oppure scrivi a 📧 <strong>segreteria@csvcuvio.it</strong>.
-`;
+      `;
       return {
         statusCode: 200,
-        body: JSON.stringify({ risposta }),
+        body: JSON.stringify({ risposta })
       };
     }
 
@@ -168,11 +167,11 @@ Sei un assistente virtuale del Centro Sanitario Valcuvia. Rispondi sempre in mod
 📧 segreteria@csvcuvio.it
 
 📍 L'indirizzo del centro è: Via Enrico Fermi, 6 – 21030 Cuvio (VA).
-          `,
+          `
         },
-        { role: "user", content: domanda },
+        { role: "user", content: domanda }
       ],
-      temperature: 0.5,
+      temperature: 0.5
     });
 
     let risposta = response.data.choices[0]?.message?.content || "Nessuna risposta generata.";
@@ -190,13 +189,13 @@ Sei un assistente virtuale del Centro Sanitario Valcuvia. Rispondi sempre in mod
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ risposta }),
+      body: JSON.stringify({ risposta })
     };
   } catch (error) {
     console.error("Errore nella funzione chatbot:", error);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: "Errore durante la generazione della risposta." }),
+      body: JSON.stringify({ error: "Errore durante la generazione della risposta." })
     };
   }
 };
