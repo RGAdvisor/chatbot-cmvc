@@ -1,4 +1,4 @@
-// chatgpt.js
+
 const { Configuration, OpenAIApi } = require("openai");
 
 const configuration = new Configuration({
@@ -21,7 +21,7 @@ const costiPrestazioni = {
 
 const segnaliMalessere = [
   "mal di schiena", "mal di denti", "mal di pancia", "male al ginocchio", "mal di testa",
-  "mal di gola", "mi fa male", "non sto bene", "sto male", "dolore",
+  "mal di gola", "mi fa male", "non sto bene", "sto male", "dolore", 
   "bruciore", "nausea", "sento male", "male a", "malessere",
   "gonfia", "gonfiore", "slogata", "caviglia gonfia", "guancia gonfia", "dente rotto",
   "ponte sceso", "ribasatura", "faccetta staccata"
@@ -69,15 +69,6 @@ function riconosciMalessere(testo) {
 function èUrgenzaDentale(testo) {
   const testoNorm = normalizzaTesto(testo);
   return urgenzeDentarie.some(frase => testoNorm.includes(normalizzaTesto(frase)));
-}
-
-function correggiGrammaticaTesto(testo) {
-  return testo
-    .replace(/\b(il|lo|la|i|gli|le) \1\b/gi, "$1")
-    .replace(/\btuo il\b/gi, "il")
-    .replace(/\bil il\b/gi, "il")
-    .replace(/\s+/g, " ")
-    .trim();
 }
 
 exports.handler = async function (event, context) {
@@ -129,12 +120,13 @@ exports.handler = async function (event, context) {
 
     const malessereRiconosciuto = riconosciMalessere(domanda);
     if (malessereRiconosciuto) {
-      let rispostaSintomo = `Mi dispiace che tu non ti senta bene. Ti consigliamo di contattare il nostro centro per un consulto personalizzato.\n\n📞 Chiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.`;
+      let rispostaSintomo = `Mi dispiace che tu non ti senta bene. Ti consigliamo di contattare il nostro centro per un consulto personalizzato.
+
+📞 Chiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.`;
       const consiglio = consigliPerMalessere[malessereRiconosciuto];
       if (consiglio) {
         rispostaSintomo += ` Nel frattempo, se il disturbo è lieve, potresti provare a: ${consiglio}`;
       }
-      rispostaSintomo = correggiGrammaticaTesto(rispostaSintomo);
       return {
         statusCode: 200,
         body: JSON.stringify({ risposta: rispostaSintomo })
@@ -147,8 +139,7 @@ exports.handler = async function (event, context) {
 
     if (prestazioneCosto) {
       const costo = costiPrestazioni[prestazioneCosto];
-      let rispostaCosto = `Il costo per la ${prestazioneCosto} presso il nostro centro è di ${costo}. Per ulteriori informazioni o per prenotare un appuntamento, puoi contattarci al numero 📞 0332 624820 o via email 📧 segreteria@csvcuvio.it.`;
-      rispostaCosto = correggiGrammaticaTesto(rispostaCosto);
+      const rispostaCosto = `Il costo per la ${prestazioneCosto} presso il nostro centro è di ${costo}. Per ulteriori informazioni o per prenotare un appuntamento, puoi contattarci al numero 📞 0332 624820 o via email 📧 segreteria@csvcuvio.it.`;
       return {
         statusCode: 200,
         body: JSON.stringify({ risposta: rispostaCosto })
@@ -161,10 +152,9 @@ exports.handler = async function (event, context) {
         {
           role: "system",
           content: `Sei un assistente virtuale del Centro Sanitario Valcuvia. Rispondi sempre in modo gentile, corretto grammaticalmente e informativo.
-
-✅ Se l’utente segnala un malessere (es: \"ho mal di pancia\", \"mi sento male\", \"mi fa male il ginocchio\"), puoi aggiungere un consiglio utile di buon senso specifico per quel malessere.
+✅ Se l’utente segnala un malessere (es: "ho mal di pancia", "mi sento male", "mi fa male il ginocchio"), puoi aggiungere un consiglio utile di buon senso specifico per quel malessere.
 ❌ Non fornire mai consigli medici specifici o diagnosi.
-❌ Non dire mai \"contatta il medico\", \"vai al pronto soccorso\" o simili.
+❌ Non dire mai "contatta il medico", "vai al pronto soccorso" o simili.
 ❌ Se non è presente un sintomo, NON fornire alcun consiglio sanitario.
 ✅ I contatti devono essere sempre presenti:
 📞 0332 624820
@@ -184,11 +174,13 @@ exports.handler = async function (event, context) {
       .replace(/Centro Sanitario Valcuvia/gi, "il nostro centro")
       .replace(/(contatta(ci)?|rivolgi(ti)? a) (un|il) (professionista|specialista)/gi, "contatta il nostro centro");
 
-    risposta = correggiGrammaticaTesto(risposta);
+    const contatti = "📞 0332 624820 📧 segreteria@csvcuvio.it";
+    const contieneTelefono = risposta.includes("0332 624820");
+    const contieneEmail = risposta.includes("segreteria@csvcuvio.it");
+    if (!contieneTelefono || !contieneEmail) {
+      risposta += `
 
-    const contatti = `\n\n📞 Per informazioni o per fissare un appuntamento:\nChiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.`;
-    if (!risposta.includes("0332 624820") || !risposta.includes("segreteria@csvcuvio.it")) {
-      risposta += contatti;
+Per contattarci: ${contatti}`;
     }
 
     return {
@@ -203,3 +195,4 @@ exports.handler = async function (event, context) {
     };
   }
 };
+
