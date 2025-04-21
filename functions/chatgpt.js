@@ -139,10 +139,11 @@ exports.handler = async function (event, context) {
   const risposta = `
 Mi dispiace, ma al momento il servizio richiesto non è tra quelli offerti dal nostro centro.
 
-📄 SCARICA ELENCO PRESTAZIONI CSV: https://drive.google.com/uc?export=download&id=1JOPK-rAAu5D330BwCY_7sOcHmkBwD6HD
-
 📞 Per ulteriori informazioni o per fissare un appuntamento:
 Chiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.
+
+📄 SCARICA ELENCO PRESTAZIONI CSV:
+https://drive.google.com/uc?export=download&id=1JOPK-rAAu5D330BwCY_7sOcHmkBwD6HD
 `;
   return {
     statusCode: 200,
