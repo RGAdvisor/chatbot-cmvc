@@ -87,3 +87,25 @@ textarea {
   resize: none;
   font-size: 14px;
 }
+
+/* 👇 Bottone download */
+.download-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.download-button {
+  background-color: #2d8f6f;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 25px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.download-button:hover {
+  background-color: #1e7b5a;
+}
