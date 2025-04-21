@@ -16,9 +16,6 @@ const prestazioniDisponibili = [
 const costiPrestazioni = {
   "mammografia": "120,00€",
   "visita ginecologica": "150,00€"
-  "ECG": "50,00€"
-  "Igiene dentale": "80,00€"
-  "Visita ginecologica": "150,00€"
 };
 
 const segnaliMalessere = [
@@ -71,6 +68,16 @@ function riconosciMalessere(testo) {
 function èUrgenzaDentale(testo) {
   const testoNorm = normalizzaTesto(testo);
   return urgenzeDentarie.some(frase => testoNorm.includes(normalizzaTesto(frase)));
+}
+
+function correggiGrammaticaTesto(testo) {
+  return testo
+    .replace(/\btuo il nostro centro sanitario\b/g, "il nostro centro sanitario")
+    .replace(/\bil il nostro centro sanitario\b/g, "il nostro centro sanitario")
+    .replace(/\bil il nostro centro\b/g, "il nostro centro")
+    .replace(/\btuo il nostro centro\b/g, "il nostro centro")
+    .replace(/\b il il /g, " il ")
+    .replace(/\s{2,}/g, " ").trim();
 }
 
 exports.handler = async function (event, context) {
@@ -127,6 +134,7 @@ exports.handler = async function (event, context) {
       if (consiglio) {
         rispostaSintomo += ` Nel frattempo, se il disturbo è lieve, potresti provare a: ${consiglio}`;
       }
+      rispostaSintomo = correggiGrammaticaTesto(rispostaSintomo);
       return {
         statusCode: 200,
         body: JSON.stringify({ risposta: rispostaSintomo })
@@ -139,7 +147,8 @@ exports.handler = async function (event, context) {
 
     if (prestazioneCosto) {
       const costo = costiPrestazioni[prestazioneCosto];
-      const rispostaCosto = `Il costo per la ${prestazioneCosto} presso il nostro centro è di ${costo}. Per ulteriori informazioni o per prenotare un appuntamento, puoi contattarci al numero 📞 0332 624820 o via email 📧 segreteria@csvcuvio.it.`;
+      let rispostaCosto = `Il costo per la ${prestazioneCosto} presso il nostro centro è di ${costo}. Per ulteriori informazioni o per prenotare un appuntamento, puoi contattarci al numero 📞 0332 624820 o via email 📧 segreteria@csvcuvio.it.`;
+      rispostaCosto = correggiGrammaticaTesto(rispostaCosto);
       return {
         statusCode: 200,
         body: JSON.stringify({ risposta: rispostaCosto })
@@ -175,7 +184,20 @@ exports.handler = async function (event, context) {
       temperature: 0.5
     });
 
-    const risposta = response.data.choices[0]?.message?.content || "Nessuna risposta generata.";
+    let risposta = response.data.choices[0]?.message?.content || "Nessuna risposta generata.";
+
+    risposta = risposta
+      .replace(/(medico|dentista)( di fiducia)?/gi, "il nostro centro sanitario")
+      .replace(/pronto soccorso/gi, "il nostro centro sanitario")
+      .replace(/Centro Sanitario Valcuvia/gi, "il nostro centro")
+      .replace(/(contatta(ci)?|rivolgi(ti)? a) (un|il) (professionista|specialista)/gi, "contatta il nostro centro");
+
+    const contatti = `\n\n📞 Per informazioni o per fissare un appuntamento:\nChiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.`;
+    if (!risposta.includes("0332 624820") || !risposta.includes("segreteria@csvcuvio.it")) {
+      risposta += contatti;
+    }
+
+    risposta = correggiGrammaticaTesto(risposta);
 
     return {
       statusCode: 200,
