@@ -1,16 +1,5 @@
 const chatContainer = document.getElementById("chat-container");
 const textarea = document.getElementById("domanda");
-const csvButton = document.createElement("button");
-csvButton.className = "download-button";
-csvButton.innerHTML = "📄 SCARICA ELENCO PRESTAZIONI CSV";
-csvButton.onclick = () => {
-  window.open(
-    "https://drive.google.com/uc?export=download&id=1JOPK-rAAu5D330BwCY_7sOcHmkBwD6HD",
-    "_blank"
-  );
-};
-
-let csvButtonShown = false;
 
 const domandeFisse = {
   button1: "Come posso prenotare una visita?",
@@ -61,10 +50,4 @@ async function inviaDomanda(domanda, èFissa) {
 
   const data = await response.json();
   aggiungiMessaggioTesto(data.risposta, "gpt-response");
-
-  // Mostra bottone CSV una sola volta
-  if (!csvButtonShown) {
-    chatContainer.appendChild(csvButton);
-    csvButtonShown = true;
-  }
 }
