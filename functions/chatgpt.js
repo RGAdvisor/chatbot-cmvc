@@ -18,6 +18,47 @@ const costiPrestazioni = {
   "visita ginecologica": "150,00€"
 };
 
+et ultimaPrestazioneRichiesta = null; // Memorizza l'ultima prestazione
+
+function normalizzaTesto(testo) {
+  return testo.toLowerCase().replace(/[^a-zà-ú\s]/gi, "").replace(/\s+/g, " ").trim();
+}
+
+exports.handler = async function (event) {
+  try {
+    const body = JSON.parse(event.body);
+    const domanda = body.domanda || "";
+    const domandaNorm = normalizzaTesto(domanda);
+
+    // Riconosci prestazione
+    const prestazioneRiconosciuta = prestazioniDisponibili.find(prestazione =>
+      domandaNorm.includes(normalizzaTesto(prestazione))
+    );
+
+    // Se trova una prestazione, la memorizza
+    if (prestazioneRiconosciuta) {
+      ultimaPrestazioneRichiesta = prestazioneRiconosciuta;
+      return {
+        statusCode: 200,
+        body: JSON.stringify({
+          risposta: `Sì, presso il nostro centro è possibile prenotare la ${prestazioneRiconosciuta}. Puoi contattarci per fissare un appuntamento: 📞 0332 624820 📧 segreteria@csvcuvio.it.`
+        })
+      };
+    }
+
+    // Se chiedono il prezzo/costo e c'è una prestazione memorizzata
+    if (/(costo|prezzo|quanto)/.test(domandaNorm) && ultimaPrestazioneRichiesta) {
+      const costo = costiPrestazioni[normalizzaTesto(ultimaPrestazioneRichiesta)];
+      if (costo) {
+        return {
+          statusCode: 200,
+          body: JSON.stringify({
+            risposta: `Il costo per la ${ultimaPrestazioneRichiesta} è di ${costo}. Per maggiori informazioni: 📞 0332 624820 📧 segreteria@csvcuvio.it.`
+          })
+        };
+      }
+    }
+
 const segnaliMalessere = [
   "mal di schiena", "mal di denti", "mal di pancia", "male al ginocchio", "mal di testa",
   "mal di gola", "mi fa male", "non sto bene", "sto male", "dolore", 
