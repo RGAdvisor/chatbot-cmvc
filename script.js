@@ -1,14 +1,9 @@
 const chatContainer = document.getElementById("chat-container");
 const textarea = document.getElementById("domanda");
 const rispostaFissa = document.getElementById("risposta-fissa");
-const csvButton = document.createElement("button");
-csvButton.className = "download-button";
-csvButton.innerHTML = "📄 SCARICA ELENCO PRESTAZIONI CSV";
-csvButton.onclick = () => {
-  window.open("https://drive.google.com/uc?export=download&id=1JOPK-rAAu5D330BwCY_7sOcHmkBwD6HD", "_blank");
-};
 
-let csvButtonShown = false;
+// Bottone CSV sempre visibile sotto la chat
+const csvButton = document.getElementById("download-csv"); 
 
 // DOMANDE FISSE
 const domandeFisse = {
@@ -20,8 +15,8 @@ const domandeFisse = {
 
 Object.keys(domandeFisse).forEach(id => {
   document.getElementById(id).addEventListener("click", () => {
-    rispostaFissa.textContent = "";
-    inviaDomanda(domandeFisse[id], true); // passa true per non mostrare il messaggio utente
+    rispostaFissa.textContent = ""; // svuota il box risposta fissa
+    inviaDomanda(domandeFisse[id], true); // true per evitare messaggio utente
   });
 });
 
@@ -30,7 +25,7 @@ textarea.addEventListener("keypress", function (e) {
     e.preventDefault();
     const domanda = textarea.value.trim();
     if (domanda) {
-      inviaDomanda(domanda, false); // utente ha scritto, quindi mostra il messaggio
+      inviaDomanda(domanda, false); // false → mostra il messaggio utente
       textarea.value = "";
     }
   }
@@ -46,7 +41,7 @@ function aggiungiMessaggioTesto(testo, classe) {
 
 async function inviaDomanda(domanda, daBottoneFisso = false) {
   if (!daBottoneFisso) {
-    aggiungiMessaggioTesto(domanda, "user-message"); // Mostra il messaggio utente solo se NON da bottone fisso
+    aggiungiMessaggioTesto(domanda, "user-message");
   }
 
   const response = await fetch("/.netlify/functions/chatgpt", {
@@ -57,10 +52,4 @@ async function inviaDomanda(domanda, daBottoneFisso = false) {
 
   const data = await response.json();
   aggiungiMessaggioTesto(data.risposta, "gpt-response");
-
-  // Mostra il bottone CSV solo una volta
-  if (!csvButtonShown && !domanda.toLowerCase().includes("ciao")) {
-    chatContainer.appendChild(csvButton);
-    csvButtonShown = true;
-  }
 }
