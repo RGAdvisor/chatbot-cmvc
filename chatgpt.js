@@ -1,4 +1,3 @@
-
 const { Configuration, OpenAIApi } = require("openai");
 
 const configuration = new Configuration({
@@ -53,7 +52,12 @@ function èDomandaGenerica(testo) {
 
 function contienePrestazione(domanda) {
   const testoDomanda = normalizzaTesto(domanda);
-  return prestazioniDisponibili.find(prestazione => testoDomanda.includes(normalizzaTesto(prestazione)));
+  return prestazioniDisponibili.some(prestazione => {
+    const base = normalizzaTesto(prestazione);
+    const pluraleE = base.replace(/a$/, "e");
+    const pluraleI = base.replace(/o$/, "i");
+    return testoDomanda.includes(base) || testoDomanda.includes(pluraleE) || testoDomanda.includes(pluraleI);
+  });
 }
 
 function riconosciMalessere(testo) {
@@ -78,16 +82,22 @@ exports.handler = async function (event, context) {
         body: JSON.stringify({ risposta: "È caduto un dente davanti o dietro?" })
       };
     }
+
     if (domandaNorm.includes("davanti")) {
       return {
         statusCode: 200,
-        body: JSON.stringify({ risposta: "La situazione descritta richiede un intervento rapido. Ti consigliamo di contattare immediatamente il nostro centro: 📞 0332 624820 📧 segreteria@csvcuvio.it. Faremo il possibile per fissare un appuntamento in giornata." })
+        body: JSON.stringify({
+          risposta: "La situazione descritta richiede un intervento rapido. Ti consigliamo di contattare immediatamente il nostro centro: 📞 0332 624820 📧 segreteria@csvcuvio.it."
+        })
       };
     }
+
     if (domandaNorm.includes("dietro")) {
       return {
         statusCode: 200,
-        body: JSON.stringify({ risposta: "Ti consigliamo di contattare il nostro centro per un consulto personalizzato. 📞 Chiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it. Nel frattempo, puoi evitare cibi duri o caldi, risciacquare con acqua tiepida e riposare la zona." })
+        body: JSON.stringify({
+          risposta: "Ti consigliamo di contattare il nostro centro per un consulto personalizzato. 📞 Chiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it."
+        })
       };
     }
 
@@ -101,15 +111,15 @@ exports.handler = async function (event, context) {
     if (èUrgenzaDentale(domanda)) {
       return {
         statusCode: 200,
-        body: JSON.stringify({ risposta: "La situazione descritta richiede un intervento rapido. Ti consigliamo di contattare immediatamente il nostro centro: 📞 0332 624820 📧 segreteria@csvcuvio.it. Faremo il possibile per fissare un appuntamento in giornata." })
+        body: JSON.stringify({
+          risposta: "La situazione descritta richiede un intervento rapido. Ti consigliamo di contattare immediatamente il nostro centro: 📞 0332 624820 📧 segreteria@csvcuvio.it."
+        })
       };
     }
 
     const malessereRiconosciuto = riconosciMalessere(domanda);
     if (malessereRiconosciuto) {
-      let rispostaSintomo = `Mi dispiace che tu non ti senta bene. Ti consigliamo di contattare il nostro centro per un consulto personalizzato.
-
-📞 Chiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.`;
+      let rispostaSintomo = `Mi dispiace che tu non ti senta bene. Ti consigliamo di contattare il nostro centro per un consulto personalizzato.\n\n📞 Chiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.`;
       const consiglio = consigliPerMalessere[malessereRiconosciuto];
       if (consiglio) {
         rispostaSintomo += ` Nel frattempo, se il disturbo è lieve, potresti provare a: ${consiglio}`;
@@ -120,41 +130,64 @@ exports.handler = async function (event, context) {
       };
     }
 
-    const prestazioneRichiesta = contienePrestazione(domanda);
-    const chiediCosto = domandaNorm.includes("quanto costa") || domandaNorm.includes("prezzo");
-    if (prestazioneRichiesta && chiediCosto) {
-      const costo = costiPrestazioni[normalizzaTesto(prestazioneRichiesta)];
-      const rispostaCosto = `Il costo per la ${prestazioneRichiesta.toLowerCase()} presso il nostro centro è di ${costo}. Per ulteriori informazioni o per prenotare un appuntamento, puoi contattarci al numero 📞 0332 624820 o via email 📧 segreteria@csvcuvio.it.`;
+    if (contienePrestazione(domanda)) {
+      const rispostaDisponibile = `Certamente, presso il nostro centro effettuiamo questa prestazione. Per prenotare un appuntamento o avere maggiori informazioni, puoi contattarci al numero 📞 0332 624820 o via email 📧 segreteria@csvcuvio.it.`;
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ risposta: rispostaDisponibile })
+      };
+    }
+
+    const prestazioneCosto = Object.keys(costiPrestazioni).find(key =>
+      domandaNorm.includes(normalizzaTesto(key)) && domandaNorm.includes("costa")
+    );
+
+    if (prestazioneCosto) {
+      const costo = costiPrestazioni[prestazioneCosto];
+      const rispostaCosto = `Il costo per la ${prestazioneCosto} presso il nostro centro è di ${costo}. Per ulteriori informazioni o per prenotare un appuntamento, puoi contattarci al numero 📞 0332 624820 o via email 📧 segreteria@csvcuvio.it.`;
       return {
         statusCode: 200,
         body: JSON.stringify({ risposta: rispostaCosto })
       };
     }
 
-    if (prestazioneRichiesta) {
-      const rispostaPrestazione = `Certamente, presso il nostro centro effettuiamo la ${prestazioneRichiesta.toLowerCase()}. Puoi prenotare un appuntamento o avere maggiori informazioni contattandoci al 📞 0332 624820 oppure via email 📧 segreteria@csvcuvio.it.`;
-      return {
-        statusCode: 200,
-        body: JSON.stringify({ risposta: rispostaPrestazione })
-      };
-    }
-
     const response = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
       messages: [
-        { role: "system", content: "Sei un assistente virtuale del Centro Sanitario Valcuvia. Rispondi sempre in modo gentile, corretto grammaticalmente e informativo. I contatti devono essere sempre presenti: 📞 0332 624820 📧 segreteria@csvcuvio.it 📍 Via Enrico Fermi, 6 – 21030 Cuvio (VA)." },
+        {
+          role: "system",
+          content: `Sei un assistente virtuale del Centro Sanitario Valcuvia. Rispondi sempre in modo gentile, corretto grammaticalmente e informativo.
+✅ Se l’utente segnala un malessere, puoi aggiungere un consiglio utile di buon senso.
+❌ Non fornire mai consigli medici specifici o diagnosi.
+✅ I contatti devono essere sempre presenti:
+📞 0332 624820
+📧 segreteria@csvcuvio.it
+📍 Via Enrico Fermi, 6 – 21030 Cuvio (VA).`
+        },
         { role: "user", content: domanda }
       ],
       temperature: 0.5
     });
 
     let risposta = response.data.choices[0]?.message?.content || "Nessuna risposta generata.";
-    const contatti = "📞 0332 624820 📧 segreteria@csvcuvio.it";
-    if (!risposta.includes("0332 624820") || !risposta.includes("segreteria@csvcuvio.it")) {
-      risposta += `
 
-Per contattarci: ${contatti}`;
+    risposta = risposta
+      .replace(/(medico|dentista)( di fiducia)?/gi, "il nostro centro sanitario")
+      .replace(/pronto soccorso/gi, "il nostro centro sanitario")
+      .replace(/Centro Sanitario Valcuvia/gi, "il nostro centro");
+
+    const contatti = "📞 0332 624820 📧 segreteria@csvcuvio.it";
+    const contieneTelefono = risposta.includes("0332 624820");
+    const contieneEmail = risposta.includes("segreteria@csvcuvio.it");
+    if (!contieneTelefono || !contieneEmail) {
+      risposta += `\n\nPer contattarci: ${contatti}`;
     }
+
+    risposta += `<div style="text-align:center;margin-top:20px;">
+      <button onclick="window.open('https://drive.google.com/uc?export=download&id=1JOPK-rAAu5D330BwCY_7sOcHmkBwD6HD')" style="background-color:#2d8f6f;color:white;border:none;padding:10px 15px;border-radius:5px;cursor:pointer;">
+        📄 SCARICA ELENCO PRESTAZIONI CSV
+      </button>
+    </div>`;
 
     return {
       statusCode: 200,
