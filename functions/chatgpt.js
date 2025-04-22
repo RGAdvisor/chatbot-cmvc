@@ -185,7 +185,7 @@ exports.handler = async function (event, context) {
 
     risposta += `<div style="text-align:center;margin-top:20px;">
       <button onclick="window.open('https://drive.google.com/uc?export=download&id=1JOPK-rAAu5D330BwCY_7sOcHmkBwD6HD')" style="background-color:#2d8f6f;color:white;border:none;padding:10px 15px;border-radius:5px;cursor:pointer;">
-        📄 SCARICA ELENCO PRESTAZIONI CSV
+        📄 SCARICA ELENCO PRESTAZIONI
       </button>
     </div>`;
 
