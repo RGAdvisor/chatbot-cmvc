@@ -42,6 +42,14 @@ async function inviaDomanda(domanda, èFissa) {
     aggiungiMessaggioTesto(domanda, "user-message");
   }
 
+  // Risposta fissa per "Quali servizi fornite?"
+  if (domanda.toLowerCase().includes("quali servizi fornite")) {
+    const rispostaFissa = "Il nostro centro è organizzato in due divisioni: <strong>dentale</strong> e <strong>polispecialistica</strong>. <br>Puoi consultare l’elenco completo dei servizi scaricando le brochure disponibili in fondo alla chat.";
+    aggiungiMessaggioTesto(rispostaFissa, "gpt-response");
+    return;
+  }
+
+  // Altrimenti, invia a GPT
   const response = await fetch("/.netlify/functions/chatgpt", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
