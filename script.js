@@ -1,4 +1,3 @@
-// script.js
 const chatContainer = document.getElementById("chat-container");
 const textarea = document.getElementById("domanda");
 const rispostaFissa = document.getElementById("risposta-fissa");
@@ -22,7 +21,7 @@ const domandeFisse = {
 Object.keys(domandeFisse).forEach(id => {
   document.getElementById(id).addEventListener("click", () => {
     rispostaFissa.textContent = "";
-    inviaDomanda(domandeFisse[id]);
+    inviaDomanda(domandeFisse[id], true); // passa true per non mostrare il messaggio utente
   });
 });
 
@@ -31,7 +30,7 @@ textarea.addEventListener("keypress", function (e) {
     e.preventDefault();
     const domanda = textarea.value.trim();
     if (domanda) {
-      inviaDomanda(domanda);
+      inviaDomanda(domanda, false); // utente ha scritto, quindi mostra il messaggio
       textarea.value = "";
     }
   }
@@ -42,23 +41,4 @@ function aggiungiMessaggioTesto(testo, classe) {
   div.className = classe;
   div.innerHTML = testo;
   chatContainer.appendChild(div);
-  chatContainer.scrollTop = chatContainer.scrollHeight;
-}
-
-async function inviaDomanda(domanda) {
-  aggiungiMessaggioTesto(domanda, "user-message");
-
-  const response = await fetch("/.netlify/functions/chatgpt", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ domanda })
-  });
-
-  const data = await response.json();
-  aggiungiMessaggioTesto(data.risposta, "gpt-response");
-
-  if (!csvButtonShown && !domanda.toLowerCase().includes("ciao")) {
-    chatContainer.appendChild(csvButton);
-    csvButtonShown = true;
-  }
-}
+  chatContainer.scrollTop
