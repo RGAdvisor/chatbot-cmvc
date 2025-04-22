@@ -1,9 +1,6 @@
+// script.js
 const chatContainer = document.getElementById("chat-container");
 const textarea = document.getElementById("domanda");
-const rispostaFissa = document.getElementById("risposta-fissa");
-
-// Bottone CSV sempre visibile sotto la chat
-const csvButton = document.getElementById("download-csv"); 
 
 // DOMANDE FISSE
 const domandeFisse = {
@@ -15,8 +12,7 @@ const domandeFisse = {
 
 Object.keys(domandeFisse).forEach(id => {
   document.getElementById(id).addEventListener("click", () => {
-    rispostaFissa.textContent = ""; // svuota il box risposta fissa
-    inviaDomanda(domandeFisse[id], true); // true per evitare messaggio utente
+    inviaDomanda(domandeFisse[id]);
   });
 });
 
@@ -25,7 +21,7 @@ textarea.addEventListener("keypress", function (e) {
     e.preventDefault();
     const domanda = textarea.value.trim();
     if (domanda) {
-      inviaDomanda(domanda, false); // false → mostra il messaggio utente
+      inviaDomanda(domanda);
       textarea.value = "";
     }
   }
@@ -39,10 +35,8 @@ function aggiungiMessaggioTesto(testo, classe) {
   chatContainer.scrollTop = chatContainer.scrollHeight;
 }
 
-async function inviaDomanda(domanda, daBottoneFisso = false) {
-  if (!daBottoneFisso) {
-    aggiungiMessaggioTesto(domanda, "user-message");
-  }
+async function inviaDomanda(domanda) {
+  aggiungiMessaggioTesto(domanda, "user-message");
 
   const response = await fetch("/.netlify/functions/chatgpt", {
     method: "POST",
