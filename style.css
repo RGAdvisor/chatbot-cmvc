@@ -101,7 +101,7 @@ textarea {
 /* Stile per il placeholder */
 textarea::placeholder {
   font-family: Arial, sans-serif;
-  font-size: 14px; /* Puoi modificarlo come preferisci */
+  font-size: 18px; /* Puoi modificarlo come preferisci */
   color: #999; /* Colore grigio chiaro per il placeholder */
 }
 
