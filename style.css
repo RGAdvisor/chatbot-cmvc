@@ -23,7 +23,7 @@ body {
 
 h1 {
   text-align: center;
-  color: #1b9087;
+  color: #1e7b5a;
   margin-bottom: 20px;
 }
 
@@ -42,7 +42,7 @@ button {
   font-weight: bold;
   border-radius: 20px;
   cursor: pointer;
-  font-size: 18px;
+  font-size: 18px; /* Font più grande per i bottoni */
 }
 
 button:hover {
@@ -92,10 +92,17 @@ textarea {
   margin: 10px auto;
   display: block;
   padding: 10px;
-  font-family: monospace;
+  font-family: Arial, sans-serif; /* Font uniformato */
   border-radius: 8px;
   border: 1px solid #ccc;
   resize: none;
+}
+
+/* Stile per il placeholder */
+textarea::placeholder {
+  font-family: Arial, sans-serif;
+  font-size: 14px; /* Puoi modificarlo come preferisci */
+  color: #999; /* Colore grigio chiaro per il placeholder */
 }
 
 .download-button-container {
