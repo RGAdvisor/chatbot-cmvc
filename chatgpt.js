@@ -87,7 +87,7 @@ exports.handler = async function (event, context) {
       return {
         statusCode: 200,
         body: JSON.stringify({
-          risposta: "La situazione descritta richiede un intervento rapido. Ti consigliamo di contattare immediatamente il nostro centro: 📞 0332 624820 📧 segreteria@csvcuvio.it."
+          risposta: "La situazione descritta richiede un intervento rapido. Ti consigliamo di contattare immediatamente il nostro centro: \ud83d\udcde 0332 624820 \ud83d\udce7 segreteria@csvcuvio.it. Faremo il possibile per fissare un appuntamento in giornata."
         })
       };
     }
@@ -96,7 +96,7 @@ exports.handler = async function (event, context) {
       return {
         statusCode: 200,
         body: JSON.stringify({
-          risposta: "Ti consigliamo di contattare il nostro centro per un consulto personalizzato. 📞 Chiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it."
+          risposta: "Ti consigliamo di contattare il nostro centro per un consulto personalizzato. \ud83d\udcde Chiama lo 0332 624820 oppure scrivi a \ud83d\udce7 segreteria@csvcuvio.it. Nel frattempo, puoi evitare cibi duri o caldi, risciacquare con acqua tiepida e riposare la zona."
         })
       };
     }
@@ -112,14 +112,14 @@ exports.handler = async function (event, context) {
       return {
         statusCode: 200,
         body: JSON.stringify({
-          risposta: "La situazione descritta richiede un intervento rapido. Ti consigliamo di contattare immediatamente il nostro centro: 📞 0332 624820 📧 segreteria@csvcuvio.it."
+          risposta: "La situazione descritta richiede un intervento rapido. Ti consigliamo di contattare immediatamente il nostro centro: \ud83d\udcde 0332 624820 \ud83d\udce7 segreteria@csvcuvio.it. Faremo il possibile per fissare un appuntamento in giornata."
         })
       };
     }
 
     const malessereRiconosciuto = riconosciMalessere(domanda);
     if (malessereRiconosciuto) {
-      let rispostaSintomo = `Mi dispiace che tu non ti senta bene. Ti consigliamo di contattare il nostro centro per un consulto personalizzato.\n\n📞 Chiama lo 0332 624820 oppure scrivi a 📧 segreteria@csvcuvio.it.`;
+      let rispostaSintomo = `Mi dispiace che tu non ti senta bene. Ti consigliamo di contattare il nostro centro per un consulto personalizzato.\n\n\ud83d\udcde Chiama lo 0332 624820 oppure scrivi a \ud83d\udce7 segreteria@csvcuvio.it.`;
       const consiglio = consigliPerMalessere[malessereRiconosciuto];
       if (consiglio) {
         rispostaSintomo += ` Nel frattempo, se il disturbo è lieve, potresti provare a: ${consiglio}`;
@@ -131,20 +131,16 @@ exports.handler = async function (event, context) {
     }
 
     if (contienePrestazione(domanda)) {
-      const rispostaDisponibile = `Certamente, presso il nostro centro effettuiamo questa prestazione. Per prenotare un appuntamento o avere maggiori informazioni, puoi contattarci al numero 📞 0332 624820 o via email 📧 segreteria@csvcuvio.it.`;
       return {
         statusCode: 200,
-        body: JSON.stringify({ risposta: rispostaDisponibile })
+        body: JSON.stringify({ risposta: `Sì, presso il nostro centro è possibile prenotare questa prestazione. Puoi contattarci per maggiori informazioni o per fissare un appuntamento: \ud83d\udcde 0332 624820 \ud83d\udce7 segreteria@csvcuvio.it.` })
       };
     }
 
-    const prestazioneCosto = Object.keys(costiPrestazioni).find(key =>
-      domandaNorm.includes(normalizzaTesto(key)) && domandaNorm.includes("costa")
-    );
-
+    const prestazioneCosto = Object.keys(costiPrestazioni).find(key => domandaNorm.includes(normalizzaTesto(key)) && domandaNorm.includes("costo"));
     if (prestazioneCosto) {
       const costo = costiPrestazioni[prestazioneCosto];
-      const rispostaCosto = `Il costo per la ${prestazioneCosto} presso il nostro centro è di ${costo}. Per ulteriori informazioni o per prenotare un appuntamento, puoi contattarci al numero 📞 0332 624820 o via email 📧 segreteria@csvcuvio.it.`;
+      const rispostaCosto = `Il costo per la ${prestazioneCosto} presso il nostro centro è di ${costo}. Per ulteriori informazioni o per prenotare un appuntamento, puoi contattarci al numero \ud83d\udcde 0332 624820 o via email \ud83d\udce7 segreteria@csvcuvio.it.`;
       return {
         statusCode: 200,
         body: JSON.stringify({ risposta: rispostaCosto })
@@ -156,13 +152,7 @@ exports.handler = async function (event, context) {
       messages: [
         {
           role: "system",
-          content: `Sei un assistente virtuale del Centro Sanitario Valcuvia. Rispondi sempre in modo gentile, corretto grammaticalmente e informativo.
-✅ Se l’utente segnala un malessere, puoi aggiungere un consiglio utile di buon senso.
-❌ Non fornire mai consigli medici specifici o diagnosi.
-✅ I contatti devono essere sempre presenti:
-📞 0332 624820
-📧 segreteria@csvcuvio.it
-📍 Via Enrico Fermi, 6 – 21030 Cuvio (VA).`
+          content: `Sei un assistente virtuale del Centro Sanitario Valcuvia. Rispondi sempre in modo gentile, corretto grammaticalmente e informativo.\n\n✅ Se l'utente segnala un malessere, aggiungi un consiglio di buon senso.\n❌ Non fornire diagnosi o consigli medici specifici.\n❌ Non dire mai 'vai al pronto soccorso' o 'contatta il medico'.\n✅ Includi sempre i contatti: 📞 0332 624820 📧 segreteria@csvcuvio.it 📍 Via Enrico Fermi, 6 – 21030 Cuvio (VA).`
         },
         { role: "user", content: domanda }
       ],
@@ -174,20 +164,13 @@ exports.handler = async function (event, context) {
     risposta = risposta
       .replace(/(medico|dentista)( di fiducia)?/gi, "il nostro centro sanitario")
       .replace(/pronto soccorso/gi, "il nostro centro sanitario")
-      .replace(/Centro Sanitario Valcuvia/gi, "il nostro centro");
+      .replace(/Centro Sanitario Valcuvia/gi, "il nostro centro")
+      .replace(/(contatta(ci)?|rivolgi(ti)? a) (un|il) (professionista|specialista)/gi, "contatta il nostro centro");
 
-    const contatti = "📞 0332 624820 📧 segreteria@csvcuvio.it";
-    const contieneTelefono = risposta.includes("0332 624820");
-    const contieneEmail = risposta.includes("segreteria@csvcuvio.it");
-    if (!contieneTelefono || !contieneEmail) {
+    const contatti = "\ud83d\udcde 0332 624820 \ud83d\udce7 segreteria@csvcuvio.it";
+    if (!risposta.includes("0332 624820") || !risposta.includes("segreteria@csvcuvio.it")) {
       risposta += `\n\nPer contattarci: ${contatti}`;
     }
-
-    risposta += `<div style="text-align:center;margin-top:20px;">
-      <button onclick="window.open('https://drive.google.com/uc?export=download&id=1JOPK-rAAu5D330BwCY_7sOcHmkBwD6HD')" style="background-color:#2d8f6f;color:white;border:none;padding:10px 15px;border-radius:5px;cursor:pointer;">
-        📄 SCARICA ELENCO PRESTAZIONI CSV
-      </button>
-    </div>`;
 
     return {
       statusCode: 200,
