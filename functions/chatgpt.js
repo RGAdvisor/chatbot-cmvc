@@ -6,8 +6,8 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 const prestazioniDisponibili = [
-  "Addominoplastica", "Agopuntura", "Bleforaplastica", "Carico immediato", "Protesi mobile", "Chirurgia carico immediato" , "Endodonzia", "Devitalizzazione bicanalare", "Devitalizzazione canalare", "Otturazione" , "Ricostruzione del dente con perni edocanalari"
-  "Chirurgia estetica del seno", "ECG", "ECG sotto sforzo", "Ecocardiocolordoppler", "Conservativa", "Ortodonzia", "Contenzione fissa o mobile", "Controllo ortodontico", " Disinclusione chirurgica", "MAC", "Splintaggio", "STudio del caso", "Bite", "Terapia intervettiva",
+  "Addominoplastica", "Agopuntura", "Bleforaplastica", "Carico immediato", "Protesi mobile", "Chirurgia carico immediato" , "Endodonzia", "Devitalizzazione bicanalare", "Devitalizzazione canalare", "Otturazione" , "Ricostruzione del dente con perni edocanalari",
+  "Chirurgia estetica del seno", "ECG", "ECG sotto sforzo", "Ecocardiocolordoppler", "Conservativa", "Ortodonzia", "Contenzione fissa o mobile", "Controllo ortodontico", " Disinclusione chirurgica", "MAC", "Splintaggio", "Studio del caso", "Bite", "Terapia intervettiva",
   "Ecografie", "Holter cardiaco", "Holter pressorio", "Igiene dentale", "Trattamento linguale con e senza attacchi" , "Trattamento ortodontico fisso", "Trattamento prechirurgico", 
   "Lipoemulsione sottocutanea", "Liposcultura", "Liposuzione", "Mammografia",
   "Otoplastica", "Otturazioni", "Visita cardiologica", "Visita ginecologica"
