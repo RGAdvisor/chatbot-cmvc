@@ -42,10 +42,18 @@ async function inviaDomanda(domanda, èFissa) {
     aggiungiMessaggioTesto(domanda, "user-message");
   }
 
-  // Risposta fissa per "Quali servizi fornite?"
-  if (domanda.toLowerCase().includes("quali servizi fornite")) {
-    const rispostaFissa = "Il nostro centro è organizzato in due divisioni: <strong>dentale</strong> e <strong>polispecialistica</strong>. <br>Puoi consultare l’elenco completo dei servizi scaricando le brochure disponibili in fondo alla chat.";
-    aggiungiMessaggioTesto(rispostaFissa, "gpt-response");
+  const domandaLower = domanda.toLowerCase();
+
+  // Risposte fisse
+  if (domandaLower.includes("quali servizi fornite")) {
+    const rispostaServizi = "Il nostro centro è organizzato in due divisioni: <strong>dentale</strong> e <strong>polispecialistica</strong>. <br>Puoi consultare l’elenco completo dei servizi scaricando le brochure disponibili in fondo alla chat.";
+    aggiungiMessaggioTesto(rispostaServizi, "gpt-response");
+    return;
+  }
+
+  if (domandaLower.includes("come posso prenotare una visita")) {
+    const rispostaPrenotazione = "Per prenotare una visita presso il nostro centro, puoi contattare la nostra segreteria al numero 📞 0332 624820 o inviare una email a 📧 segreteria@csvcuvio.it. In alternativa, puoi recarti di persona presso la nostra sede in Via Enrico Fermi, 6 a Cuvio (VA). Siamo a tua disposizione per qualsiasi ulteriore informazione!";
+    aggiungiMessaggioTesto(rispostaPrenotazione, "gpt-response");
     return;
   }
 
