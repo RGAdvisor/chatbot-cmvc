@@ -37,7 +37,7 @@ h1 {
 button {
   padding: 12px;
   border: none;
-  background-color: #1e7b5a;
+  background-color: #1b9087;
   color: white;
   font-weight: bold;
   border-radius: 20px;
@@ -50,7 +50,7 @@ button:hover {
 
 .risposta-fissa {
   min-height: 50px;
-  border: 1px solid #1e7b5a;
+  border: 2px solid #1b9087;
   border-radius: 10px;
   padding: 10px;
   margin-bottom: 20px;
@@ -74,7 +74,7 @@ button:hover {
 }
 
 .user-message {
-  background-color: #1e7b5a;
+  background-color: #1b9087;
   color: white;
   align-self: flex-end;
   float: right;
@@ -90,9 +90,9 @@ textarea {
   height: 60px;
   padding: 10px;
   border-radius: 10px;
-  border: 1px solid #ccc;
+  border: 2px solid #ccc;
   resize: none;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .download-button-container {
