@@ -41,4 +41,26 @@ function aggiungiMessaggioTesto(testo, classe) {
   div.className = classe;
   div.innerHTML = testo;
   chatContainer.appendChild(div);
-  chatContainer.scrollTop
+  chatContainer.scrollTop = chatContainer.scrollHeight;
+}
+
+async function inviaDomanda(domanda, daBottoneFisso = false) {
+  if (!daBottoneFisso) {
+    aggiungiMessaggioTesto(domanda, "user-message"); // Mostra il messaggio utente solo se NON da bottone fisso
+  }
+
+  const response = await fetch("/.netlify/functions/chatgpt", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ domanda })
+  });
+
+  const data = await response.json();
+  aggiungiMessaggioTesto(data.risposta, "gpt-response");
+
+  // Mostra il bottone CSV solo una volta
+  if (!csvButtonShown && !domanda.toLowerCase().includes("ciao")) {
+    chatContainer.appendChild(csvButton);
+    csvButtonShown = true;
+  }
+}
