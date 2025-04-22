@@ -58,8 +58,14 @@ async function inviaDomanda(domanda, èFissa) {
   }
 
   if (domandaLower.includes("quali sono i vostri orari")) {
-    const rispostaOrari = "I nostri orari di apertura sono: <br>- Lunedì: 9:00-13:00 / 14:00-19:00<br>- Martedì: 14:00-19:00<br>- Mercoledì: 9:00-13:00 / 14:00-19:00<br>- Giovedì: 9:00-13:00<br>- Venerdì: 9:00-13:00 / 14:00-19:00<br>- Sabato: 10:00-14:00<br>";
+    const rispostaOrari = "I nostri orari di apertura sono: <br>- Lunedì: 9:00-13:00 / 14:00-19:00<br>- Martedì: 14:00-19:00<br>- Mercoledì: 9:00-13:00 / 14:00-19:00<br>- Giovedì: 9:00-13:00<br>- Venerdì: 9:00-13:00 / 14:00-19:00<br>- Sabato: 10:00-14:00<br>- Domenica: chiuso";
     aggiungiMessaggioTesto(rispostaOrari, "gpt-response");
+    return;
+  }
+
+  if (domandaLower.includes("dove si trova il centro")) {
+    const rispostaIndirizzo = "Il nostro centro si trova in Via Enrico Fermi, 6 a Cuvio, in provincia di Varese.";
+    aggiungiMessaggioTesto(rispostaIndirizzo, "gpt-response");
     return;
   }
 
