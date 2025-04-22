@@ -7,10 +7,10 @@ const openai = new OpenAIApi(configuration);
 
 const prestazioniDisponibili = [
   "Addominoplastica", "Agopuntura", "Bleforaplastica", "Carico immediato", "Protesi mobile", "Chirurgia carico immediato" , "Endodonzia", "Devitalizzazione bicanalare", "Devitalizzazione canalare", "Otturazione" , "Ricostruzione del dente con perni edocanalari",
-  "Chirurgia estetica del seno", "ECG", "ECG sotto sforzo", "Ecocardiocolordoppler", "Conservativa", "Ortodonzia", "Contenzione fissa o mobile", "Controllo ortodontico", " Disinclusione chirurgica", "MAC", "Splintaggio", "STudio del caso", "Bite", "Terapia intervettiva",
-  "Ecografie", "Holter cardiaco", "Holter pressorio", "Igiene dentale", "Trattamento linguale con e senza attacchi" , "Trattamento ortodontico fisso", "Trattamento prechirurgico", "Ablazione completa bambino", "Ablazione tartaro", "Igiene dentale bambino", "Courettage", "Scheda paradontale"
-  "Lipoemulsione sottocutanea", "Liposcultura", "Liposuzione", "Mammografia", "Scheda paradontale", "Sigillatura", "Trattamento sbiancante", "Sbiancamento", "Chirurgia paradontale", "Visita paradontale", "Riparazione protesi", "Ribasatura", "Visita pedodontica", "Sedazione cosciente"
-  "Otoplastica", "Otturazioni", "Visita cardiologica", "Visita ginecologica", "Mascherina protossido", "Byte", "Protesi", "Provvisorio", "Corona", "Moncone", "Apicectomia", "asportazione chirurgica cisti", "Gbr+Viti", "Estrazione", "Gengivectomia", "Grande rialzo mascellare", "Narcosi", "Rigenerativa ossea"
+  "Chirurgia estetica del seno", "ECG", "ECG sotto sforzo", "Ecocardiocolordoppler", "Conservativa", "Ortodonzia", "Contenzione fissa o mobile", "Controllo ortodontico", " Disinclusione chirurgica", "MAC", "Splintaggio", "Studio del caso", "Bite", "Terapia intervettiva",
+  "Ecografie", "Holter cardiaco", "Holter pressorio", "Igiene dentale", "Trattamento linguale con e senza attacchi" , "Trattamento ortodontico fisso", "Trattamento prechirurgico", 
+  "Lipoemulsione sottocutanea", "Liposcultura", "Liposuzione", "Mammografia",
+  "Otoplastica", "Otturazioni", "Visita cardiologica", "Visita ginecologica"
 ];
 
 const costiPrestazioni = {
