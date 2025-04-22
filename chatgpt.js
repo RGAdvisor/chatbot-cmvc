@@ -6,7 +6,7 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 const prestazioniDisponibili = [
-  "Addominoplastica", "Agopuntura", "Bleforaplastica", "Carico immediato",
+  "Addominoplastica", "Agopuntura", "Bleforaplastica", "Carico immediato", "Protesi mobile", 
   "Chirurgia estetica del seno", "ECG", "ECG sotto sforzo", "Ecocardiocolordoppler",
   "Ecografie", "Holter cardiaco", "Holter pressorio", "Igiene dentale",
   "Lipoemulsione sottocutanea", "Liposcultura", "Liposuzione", "Mammografia",
