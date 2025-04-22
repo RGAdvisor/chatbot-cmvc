@@ -29,22 +29,15 @@
     <!-- Textarea utente -->
     <textarea id="domanda" placeholder="Scrivi qui la tua domanda..."></textarea>
 
-    <!-- Bottone download prestazioni CSV -->
-    <div class="download-container">
-      <button onclick="window.open('https://drive.google.com/uc?export=download&id=1JOPK-rAAu5D330BwCY_7sOcHmkBwD6HD')" class="download-btn">
-        📄 SCARICA ELENCO PRESTAZIONI CSV
-      </button>
+    <!-- Nuovi bottoni download -->
+    <div class="download-button-container">
+      <a href="elenco_prestazioni_dentali.csv" class="download-button" target="_blank">
+        📄 Elenco prestazioni dentali
+      </a>
+      <a href="elenco_prestazioni_poliambulatorio.csv" class="download-button" target="_blank">
+        📄 Elenco prestazioni poliambulatorio
+      </a>
     </div>
-  </div>
-
-  <!-- Bottoni fissi in fondo -->
-  <div class="fixed-download-buttons">
-    <a href="elenco_prestazioni_dentali.csv" class="download-button" target="_blank">
-      📄 Elenco prestazioni dentali
-    </a>
-    <a href="elenco_prestazioni_poliambulatorio.csv" class="download-button" target="_blank">
-      📄 Elenco prestazioni poliambulatorio
-    </a>
   </div>
 
   <script src="script.js"></script>
