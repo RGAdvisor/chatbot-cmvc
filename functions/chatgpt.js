@@ -130,22 +130,50 @@ exports.handler = async function (event, context) {
       };
     }
 
-    if (contienePrestazione(domanda)) {
-      return {
-        statusCode: 200,
-        body: JSON.stringify({ risposta: `Sì, presso il nostro centro è possibile prenotare questa prestazione. Puoi contattarci per maggiori informazioni o per fissare un appuntamento: \ud83d\udcde 0332 624820 \ud83d\udce7 segreteria@csvcuvio.it.` })
-      };
-    }
+    // Cerca una prestazione richiesta
+const prestazioneRiconosciuta = prestazioniDisponibili.find(prestazione =>
+  domandaNorm.includes(normalizzaTesto(prestazione))
+);
 
-    const prestazioneCosto = Object.keys(costiPrestazioni).find(key => domandaNorm.includes(normalizzaTesto(key)) && domandaNorm.includes("costo"));
-    if (prestazioneCosto) {
-      const costo = costiPrestazioni[prestazioneCosto];
-      const rispostaCosto = `Il costo per la ${prestazioneCosto} presso il nostro centro è di ${costo}. Per ulteriori informazioni o per prenotare un appuntamento, puoi contattarci al numero \ud83d\udcde 0332 624820 o via email \ud83d\udce7 segreteria@csvcuvio.it.`;
+if (prestazioneRiconosciuta) {
+  // Se la domanda chiede il costo (con parole chiave)
+  if (/(costo|prezzo|quanto)/.test(domandaNorm)) {
+    const costo = costiPrestazioni[normalizzaTesto(prestazioneRiconosciuta)];
+    if (costo) {
       return {
         statusCode: 200,
-        body: JSON.stringify({ risposta: rispostaCosto })
+        body: JSON.stringify({
+          risposta: `Il costo per la ${prestazioneRiconosciuta} presso il nostro centro è di ${costo}. Per ulteriori informazioni o per prenotare un appuntamento: 📞 0332 624820 📧 segreteria@csvcuvio.it.`
+        })
+      };
+    } else {
+      return {
+        statusCode: 200,
+        body: JSON.stringify({
+          risposta: `Sì, presso il nostro centro è possibile prenotare la ${prestazioneRiconosciuta}. Puoi contattarci per maggiori informazioni o per fissare un appuntamento: 📞 0332 624820 📧 segreteria@csvcuvio.it.`
+        })
       };
     }
+  } else {
+    // Se NON chiedono il costo
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        risposta: `Sì, presso il nostro centro è possibile prenotare la ${prestazioneRiconosciuta}. Puoi contattarci per maggiori informazioni o per fissare un appuntamento: 📞 0332 624820 📧 segreteria@csvcuvio.it.`
+      })
+    };
+    
+  }
+} else if (/mammografia|visita ginecologica|ecg|ecografie|holter|liposuzione|agopuntura|otturazioni|bleforaplastica|chirurgia estetica del seno/.test(domandaNorm)) {
+  // Se la prestazione NON è riconosciuta
+  return {
+    statusCode: 200,
+    body: JSON.stringify({
+      risposta: `Mi dispiace, ma questa prestazione non è attualmente disponibile presso il nostro centro. Se desideri maggiori informazioni, puoi contattarci: 📞 0332 624820 📧 segreteria@csvcuvio.it.`
+    })
+  };
+}
+
 
     const response = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
