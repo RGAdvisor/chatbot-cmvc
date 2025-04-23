@@ -130,11 +130,12 @@ exports.handler = async function (event, context) {
       };
     }
 
-    // Cerca una prestazione richiesta
+  // Cerca una prestazione richiesta
 const prestazioneRiconosciuta = prestazioniDisponibili.find(prestazione =>
   domandaNorm.includes(normalizzaTesto(prestazione))
 );
 
+// Se la prestazione è riconosciuta
 if (prestazioneRiconosciuta) {
   // Se la domanda chiede il costo (con parole chiave)
   if (/(costo|prezzo|quanto)/.test(domandaNorm)) {
@@ -150,7 +151,7 @@ if (prestazioneRiconosciuta) {
       return {
         statusCode: 200,
         body: JSON.stringify({
-          risposta: `Sì, presso il nostro centro è possibile prenotare la ${prestazioneRiconosciuta}. Puoi contattarci per maggiori informazioni o per fissare un appuntamento: 📞 0332 624820 📧 segreteria@csvcuvio.it.`
+          risposta: `Sì. Per prenotare una ${prestazioneRiconosciuta.toLowerCase()} presso il nostro centro, puoi contattarci al 📞 0332 624820 o via email 📧 segreteria@csvcuvio.it.`
         })
       };
     }
@@ -162,8 +163,11 @@ if (prestazioneRiconosciuta) {
         risposta: `Sì. Per prenotare una ${prestazioneRiconosciuta.toLowerCase()} presso il nostro centro, puoi contattarci al 📞 0332 624820 o via email 📧 segreteria@csvcuvio.it. È utile sottoporsi regolarmente a controlli di prevenzione.`
       })
     };
+  }
 }
-else if (/\b(ecografie|mammografia|risonanza|rmn|ecg|holter|liposuzione|agopuntura|otturazioni|bleforaplastica|chirurgia|protesi|ortodonzia|visita|cardiologica|ginecologica|estetica|senologica|prevenzione|fisioterapia)\b/.test(domandaNorm) && !contienePrestazione(domanda)) {
+
+// Se la prestazione NON è riconosciuta ma è una richiesta di esame/prestazione generica
+if (/(ecografie|mammografia|risonanza|rmn|ecg|holter|liposuzione|agopuntura|otturazioni|bleforaplastica|chirurgia|protesi|ortodonzia|visita|cardiologica|ginecologica|estetica|senologica|prevenzione|fisioterapia)/.test(domandaNorm)) {
   return {
     statusCode: 200,
     body: JSON.stringify({
@@ -171,7 +175,9 @@ else if (/\b(ecografie|mammografia|risonanza|rmn|ecg|holter|liposuzione|agopuntu
     })
   };
 }
-    const response = await openai.createChatCompletion({
+
+// GPT fallback
+const response = await openai.createChatCompletion({
   model: "gpt-3.5-turbo",
   messages: [
     {
@@ -192,28 +198,22 @@ else if (/\b(ecografie|mammografia|risonanza|rmn|ecg|holter|liposuzione|agopuntu
   temperature: 0.5
 });
 
-    let risposta = response.data.choices[0]?.message?.content || "Nessuna risposta generata.";
+let risposta = response.data.choices[0]?.message?.content || "Nessuna risposta generata.";
 
-    risposta = risposta
-      .replace(/(medico|dentista)( di fiducia)?/gi, "il nostro centro sanitario")
-      .replace(/pronto soccorso/gi, "il nostro centro sanitario")
-      .replace(/Centro Sanitario Valcuvia/gi, "il nostro centro")
-      .replace(/(contatta(ci)?|rivolgi(ti)? a) (un|il) (professionista|specialista)/gi, "contatta il nostro centro");
+// Post-processamento delle risposte GPT
+risposta = risposta
+  .replace(/(medico|dentista)( di fiducia)?/gi, "il nostro centro sanitario")
+  .replace(/pronto soccorso/gi, "il nostro centro sanitario")
+  .replace(/Centro Sanitario Valcuvia/gi, "il nostro centro")
+  .replace(/(contatta(ci)?|rivolgi(ti)? a) (un|il) (professionista|specialista)/gi, "contatta il nostro centro");
 
-    const contatti = "\ud83d\udcde 0332 624820 \ud83d\udce7 segreteria@csvcuvio.it";
-    if (!risposta.includes("0332 624820") || !risposta.includes("segreteria@csvcuvio.it")) {
-      risposta += `\n\nPer contattarci: ${contatti}`;
-    }
+// Assicurati che ci siano sempre i contatti
+const contatti = "📞 0332 624820 📧 segreteria@csvcuvio.it";
+if (!risposta.includes("0332 624820") || !risposta.includes("segreteria@csvcuvio.it")) {
+  risposta += `\n\nPer contattarci: ${contatti}`;
+}
 
-    return {
-      statusCode: 200,
-      body: JSON.stringify({ risposta })
-    };
-  } catch (error) {
-    console.error("Errore nella funzione chatbot:", error);
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: "Errore durante la generazione della risposta." })
-    };
-  }
+return {
+  statusCode: 200,
+  body: JSON.stringify({ risposta })
 };
