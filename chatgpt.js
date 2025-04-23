@@ -172,8 +172,7 @@ else if (/\b(ecografie|mammografia|risonanza|rmn|ecg|holter|liposuzione|agopuntu
     })
   };
 }
-
-
+}
     const response = await openai.createChatCompletion({
   model: "gpt-3.5-turbo",
   messages: [
