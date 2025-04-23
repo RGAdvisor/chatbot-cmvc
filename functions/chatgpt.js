@@ -161,9 +161,8 @@ if (prestazioneRiconosciuta) {
       body: JSON.stringify({
        risposta: `Sì. Per prenotare una ${prestazioneRiconosciuta.toLowerCase()} presso il nostro centro, puoi contattarci al 📞 0332 624820 o via email 📧 segreteria@csvcuvio.it. È utile sottoporsi regolarmente a controlli di prevenzione.`
       })
-    };
-    
-  }
+    };  
+}
 else if (/\b(ecografie|mammografia|risonanza|rmn|ecg|holter|liposuzione|agopuntura|otturazioni|bleforaplastica|chirurgia|protesi|ortodonzia|visita|cardiologica|ginecologica|estetica|senologica|prevenzione|fisioterapia)\b/.test(domandaNorm) && !contienePrestazione(domanda)) {
   return {
     statusCode: 200,
