@@ -176,16 +176,25 @@ if (prestazioneRiconosciuta) {
 
 
     const response = await openai.createChatCompletion({
-      model: "gpt-3.5-turbo",
-      messages: [
-        {
-          role: "system",
-          content: `Sei un assistente virtuale del Centro Sanitario Valcuvia. Rispondi sempre in modo gentile, corretto grammaticalmente e informativo.\n\n✅ Se l'utente segnala un malessere, aggiungi un consiglio di buon senso.\n❌ Non fornire diagnosi o consigli medici specifici.\n❌ Non dire mai 'vai al pronto soccorso' o 'contatta il medico'.\n✅ Includi sempre i contatti: 📞 0332 624820 📧 segreteria@csvcuvio.it 📍 Via Enrico Fermi, 6 – 21030 Cuvio (VA).`
-        },
-        { role: "user", content: domanda }
-      ],
-      temperature: 0.5
-    });
+  model: "gpt-3.5-turbo",
+  messages: [
+    {
+      role: "system",
+      content: `Sei un assistente virtuale del Centro Sanitario Valcuvia. Rispondi in modo breve, pratico e senza ripetizioni.
+
+✅ Le risposte devono essere dirette e concise.
+✅ Evita frasi come "ti consiglio di", "è importante", "parlare con il medico".
+✅ Per le prestazioni di prevenzione (come mammografie), puoi dire solo: "È utile sottoporsi regolarmente a controlli di prevenzione".
+✅ Non inserire mai l'indirizzo fisico (c'è un bottone dedicato in chat).
+✅ Includi sempre solo questi contatti: 📞 0332 624820 📧 segreteria@csvcuvio.it.
+
+❌ Non dare diagnosi o consigli medici.
+❌ Non nominare il pronto soccorso o il medico di fiducia.`
+    },
+    { role: "user", content: domanda }
+  ],
+  temperature: 0.5
+});
 
     let risposta = response.data.choices[0]?.message?.content || "Nessuna risposta generata.";
 
