@@ -164,7 +164,7 @@ if (prestazioneRiconosciuta) {
       })
     };
   }
-}
+} // <-- chiusura necessaria del blocco prestazioneRiconosciuta
 
 // Se la prestazione NON è riconosciuta ma è una richiesta di esame/prestazione generica
 if (/(ecografie|mammografia|risonanza|rmn|ecg|holter|liposuzione|agopuntura|otturazioni|bleforaplastica|chirurgia|protesi|ortodonzia|visita|cardiologica|ginecologica|estetica|senologica|prevenzione|fisioterapia)/.test(domandaNorm)) {
