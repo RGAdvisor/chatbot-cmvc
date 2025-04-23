@@ -159,7 +159,7 @@ if (prestazioneRiconosciuta) {
     return {
       statusCode: 200,
       body: JSON.stringify({
-        risposta: `Sì, presso il nostro centro è possibile prenotare la ${prestazioneRiconosciuta}. Puoi contattarci per maggiori informazioni o per fissare un appuntamento: 📞 0332 624820 📧 segreteria@csvcuvio.it.`
+       risposta: `Sì. Per prenotare una ${prestazioneRiconosciuta.toLowerCase()} presso il nostro centro, puoi contattarci al 📞 0332 624820 o via email 📧 segreteria@csvcuvio.it. È utile sottoporsi regolarmente a controlli di prevenzione.`
       })
     };
     
