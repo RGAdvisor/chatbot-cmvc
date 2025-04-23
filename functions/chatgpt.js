@@ -164,12 +164,11 @@ if (prestazioneRiconosciuta) {
     };
     
   }
-} else if (/mammografia|visita ginecologica|ecg|ecografie|holter|liposuzione|agopuntura|otturazioni|bleforaplastica|chirurgia estetica del seno/.test(domandaNorm)) {
-  // Se la prestazione NON è riconosciuta
+else if (/\b(ecografie|mammografia|risonanza|rmn|ecg|holter|liposuzione|agopuntura|otturazioni|bleforaplastica|chirurgia|protesi|ortodonzia|visita|cardiologica|ginecologica|estetica|senologica|prevenzione|fisioterapia)\b/.test(domandaNorm) && !contienePrestazione(domanda)) {
   return {
     statusCode: 200,
     body: JSON.stringify({
-      risposta: `Mi dispiace, ma questa prestazione non è attualmente disponibile presso il nostro centro. Se desideri maggiori informazioni, puoi contattarci: 📞 0332 624820 📧 segreteria@csvcuvio.it.`
+      risposta: `Mi dispiace, ma questa prestazione non è attualmente disponibile presso il nostro centro. Per ulteriori informazioni, puoi contattarci: 📞 0332 624820 📧 segreteria@csvcuvio.it.`
     })
   };
 }
