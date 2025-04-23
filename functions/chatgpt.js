@@ -130,7 +130,7 @@ exports.handler = async function (event, context) {
       };
     }
 
-// Cerca una prestazione richiesta
+  // Cerca una prestazione richiesta
 const prestazioneRiconosciuta = prestazioniDisponibili.find(prestazione =>
   domandaNorm.includes(normalizzaTesto(prestazione))
 );
