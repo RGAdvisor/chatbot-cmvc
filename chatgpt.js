@@ -206,20 +206,20 @@ if (prestazioneRiconosciuta) {
 
   let risposta = response.data.choices[0]?.message?.content || "Nessuna risposta generata.";
 
-  // Post-processamento delle risposte GPT
-  risposta = risposta
-    .replace(/(medico|dentista)( di fiducia)?/gi, "il nostro centro sanitario")
-    .replace(/pronto soccorso/gi, "il nostro centro sanitario")
-    .replace(/Centro Sanitario Valcuvia/gi, "il nostro centro")
-    .replace(/(contatta(ci)?|rivolgi(ti)? a) (un|il) (professionista|specialista)/gi, "contatta il nostro centro");
+// Post-processamento delle risposte GPT
+risposta = risposta
+  .replace(/(medico|dentista)( di fiducia)?/gi, "il nostro centro sanitario")
+  .replace(/pronto soccorso/gi, "il nostro centro sanitario")
+  .replace(/Centro Sanitario Valcuvia/gi, "il nostro centro")
+  .replace(/(contatta(ci)?|rivolgi(ti)? a) (un|il) (professionista|specialista)/gi, "contatta il nostro centro");
 
-  // Assicurati che ci siano sempre i contatti
-  const contatti = "📞 0332 624820 📧 segreteria@csvcuvio.it";
-  if (!risposta.includes("0332 624820") || !risposta.includes("segreteria@csvcuvio.it")) {
-    risposta += `\n\nPer contattarci: ${contatti}`;
-  }
+// Assicurati che ci siano sempre i contatti
+const contatti = "📞 0332 624820 📧 segreteria@csvcuvio.it";
+if (!risposta.includes("0332 624820") || !risposta.includes("segreteria@csvcuvio.it")) {
+  risposta += `\n\nPer contattarci: ${contatti}`;
+}
 
- return {
+return {
   statusCode: 200,
   body: JSON.stringify({ risposta })
 };
@@ -230,6 +230,6 @@ if (prestazioneRiconosciuta) {
     statusCode: 500,
     body: JSON.stringify({ error: "Errore durante la generazione della risposta." })
   };
-} // chiude il try-catch
+} // <-- chiusura try-catch
 
-}; // chiude exports.handler
+}; // <-- chiusura exports.handler
