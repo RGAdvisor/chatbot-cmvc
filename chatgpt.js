@@ -61,7 +61,7 @@ function contienePrestazione(domanda) {
 }
 
 function contieneParoleChiaveSanitarie(testo) {
-  const paroleChiave = ["esame", "visita", "prevenzione", "ecografia", "ecg", "holter", "risonanza", "rmn", "chirurgia", "fisioterapia", "liposuzione", "mammografia", "otturazione", "protesi", "ortodonzia", "agopuntura", "estetica", "cardiologica", "ginecologica"];
+  const paroleChiave = ["risonanza", "rmn", "radiografia ginocchio", "TAC testa"];
   const testoNorm = normalizzaTesto(testo);
   return paroleChiave.some(parola => testoNorm.includes(parola));
 }
