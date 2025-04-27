@@ -219,10 +219,10 @@ if (prestazioneRiconosciuta) {
     risposta += `\n\nPer contattarci: ${contatti}`;
   }
 
-  return {
-    statusCode: 200,
-    body: JSON.stringify({ risposta })
-  };
+ return {
+  statusCode: 200,
+  body: JSON.stringify({ risposta })
+};
 
 } catch (error) {
   console.error("Errore nella funzione chatbot:", error);
@@ -230,5 +230,6 @@ if (prestazioneRiconosciuta) {
     statusCode: 500,
     body: JSON.stringify({ error: "Errore durante la generazione della risposta." })
   };
-} // <-- questa chiude il try-catch
-}; // <-- questa chiude exports.handler
+} // chiude il try-catch
+
+}; // chiude exports.handler
