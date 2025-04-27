@@ -222,3 +222,12 @@ return {
   statusCode: 200,
   body: JSON.stringify({ risposta })
 };
+
+  } catch (error) {
+    console.error("Errore nella funzione chatbot:", error);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: "Errore durante la generazione della risposta." })
+    };
+  } // <-- chiusura del try-catch
+}; // <-- chiusura di exports.handler
