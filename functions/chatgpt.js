@@ -60,6 +60,12 @@ function contienePrestazione(domanda) {
   });
 }
 
+function contieneParoleChiaveSanitarie(testo) {
+  const paroleChiave = ["esame", "visita", "prevenzione", "ecografia", "ecg", "holter", "risonanza", "rmn", "chirurgia", "fisioterapia", "liposuzione", "mammografia", "otturazione", "protesi", "ortodonzia", "agopuntura", "estetica", "cardiologica", "ginecologica"];
+  const testoNorm = normalizzaTesto(testo);
+  return paroleChiave.some(parola => testoNorm.includes(parola));
+}
+
 function riconosciMalessere(testo) {
   const testoNorm = normalizzaTesto(testo);
   return Object.keys(consigliPerMalessere).find(chiave => testoNorm.includes(normalizzaTesto(chiave)));
@@ -167,7 +173,7 @@ if (prestazioneRiconosciuta) {
 } // <-- chiusura necessaria del blocco prestazioneRiconosciuta
 
 // Se la prestazione NON è riconosciuta ma è una richiesta di esame/prestazione generica
-if (/(ecografie|mammografia|risonanza|rmn|ecg|holter|liposuzione|agopuntura|otturazioni|bleforaplastica|chirurgia|protesi|ortodonzia|visita|cardiologica|ginecologica|estetica|senologica|prevenzione|fisioterapia)/.test(domandaNorm)) {
+if (!prestazioneRiconosciuta && contieneParoleChiaveSanitarie(domanda)) {
   return {
     statusCode: 200,
     body: JSON.stringify({
