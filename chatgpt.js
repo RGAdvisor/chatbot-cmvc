@@ -173,8 +173,6 @@ if (prestazioneRiconosciuta) {
   }
 }
 
-}
-
 // GPT fallback - DA METTERE ALLA FINE DEL TRY
 const response = await openai.createChatCompletion({
   model: "gpt-3.5-turbo",
