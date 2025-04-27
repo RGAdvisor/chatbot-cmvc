@@ -162,14 +162,7 @@ if (prestazioneRiconosciuta) {
           risposta: `Il costo per la ${prestazioneRiconosciuta} presso il nostro centro è di ${costo}. Per ulteriori informazioni o per prenotare un appuntamento: 📞 0332 624820 📧 segreteria@csvcuvio.it.`
         })
       };
-    } else {
-      return {
-        statusCode: 200,
-        body: JSON.stringify({
-          risposta: `Sì. Per prenotare una ${prestazioneRiconosciuta.toLowerCase()} presso il nostro centro, puoi contattarci al 📞 0332 624820 o via email 📧 segreteria@csvcuvio.it.`
-        })
-      };
-    }
+
   } else {
     return {
       statusCode: 200,
@@ -182,7 +175,7 @@ if (prestazioneRiconosciuta) {
 
 }
 
-// GPT fallback
+// GPT fallback - DA METTERE ALLA FINE DEL TRY
 const response = await openai.createChatCompletion({
   model: "gpt-3.5-turbo",
   messages: [
@@ -219,16 +212,8 @@ if (!risposta.includes("0332 624820") || !risposta.includes("segreteria@csvcuvio
   risposta += `\n\nPer contattarci: ${contatti}`;
 }
 
+// Chiudi con il return finale
 return {
   statusCode: 200,
   body: JSON.stringify({ risposta })
 };
-
-} catch (error) {
-  console.error("Errore nella funzione chatbot:", error);
-  return {
-    statusCode: 500,
-    body: JSON.stringify({ error: "Errore durante la generazione della risposta." })
-  };
-} // <-- questa chiude il try-catch
-}; // <-- questa chiude exports.handler
