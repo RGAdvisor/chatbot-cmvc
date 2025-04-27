@@ -180,13 +180,15 @@ if (prestazioneRiconosciuta) {
   }
 }
 
-// GPT fallback - DA METTERE ALLA FINE DEL TRY
-const response = await openai.createChatCompletion({
-  model: "gpt-3.5-turbo",
-  messages: [
-    {
-      role: "system",
-      content: `Sei un assistente virtuale del Centro Sanitario Valcuvia. Rispondi in modo breve, pratico e senza ripetizioni.
+  } // <-- questa chiude l'if prestazioneRiconosciuta
+
+  // GPT fallback
+  const response = await openai.createChatCompletion({
+    model: "gpt-3.5-turbo",
+    messages: [
+      {
+        role: "system",
+        content: `Sei un assistente virtuale del Centro Sanitario Valcuvia. Rispondi in modo breve, pratico e senza ripetizioni.
 
 ✅ Le risposte devono essere dirette e concise.
 ✅ Evita frasi come "ti consiglio di", "è importante", "parlare con il medico".
@@ -196,29 +198,37 @@ const response = await openai.createChatCompletion({
 
 ❌ Non dare diagnosi o consigli medici.
 ❌ Non nominare il pronto soccorso o il medico di fiducia.`
-    },
-    { role: "user", content: domanda }
-  ],
-  temperature: 0.5
-});
+      },
+      { role: "user", content: domanda }
+    ],
+    temperature: 0.5
+  });
 
-let risposta = response.data.choices[0]?.message?.content || "Nessuna risposta generata.";
+  let risposta = response.data.choices[0]?.message?.content || "Nessuna risposta generata.";
 
-// Post-processamento delle risposte GPT
-risposta = risposta
-  .replace(/(medico|dentista)( di fiducia)?/gi, "il nostro centro sanitario")
-  .replace(/pronto soccorso/gi, "il nostro centro sanitario")
-  .replace(/Centro Sanitario Valcuvia/gi, "il nostro centro")
-  .replace(/(contatta(ci)?|rivolgi(ti)? a) (un|il) (professionista|specialista)/gi, "contatta il nostro centro");
+  // Post-processamento delle risposte GPT
+  risposta = risposta
+    .replace(/(medico|dentista)( di fiducia)?/gi, "il nostro centro sanitario")
+    .replace(/pronto soccorso/gi, "il nostro centro sanitario")
+    .replace(/Centro Sanitario Valcuvia/gi, "il nostro centro")
+    .replace(/(contatta(ci)?|rivolgi(ti)? a) (un|il) (professionista|specialista)/gi, "contatta il nostro centro");
 
-// Assicurati che ci siano sempre i contatti
-const contatti = "📞 0332 624820 📧 segreteria@csvcuvio.it";
-if (!risposta.includes("0332 624820") || !risposta.includes("segreteria@csvcuvio.it")) {
-  risposta += `\n\nPer contattarci: ${contatti}`;
-}
+  // Assicurati che ci siano sempre i contatti
+  const contatti = "📞 0332 624820 📧 segreteria@csvcuvio.it";
+  if (!risposta.includes("0332 624820") || !risposta.includes("segreteria@csvcuvio.it")) {
+    risposta += `\n\nPer contattarci: ${contatti}`;
+  }
 
-// Chiudi con il return finale
-return {
-  statusCode: 200,
-  body: JSON.stringify({ risposta })
-};
+  return {
+    statusCode: 200,
+    body: JSON.stringify({ risposta })
+  };
+
+} catch (error) {
+  console.error("Errore nella funzione chatbot:", error);
+  return {
+    statusCode: 500,
+    body: JSON.stringify({ error: "Errore durante la generazione della risposta." })
+  };
+} // <-- questa chiude il try-catch
+}; // <-- questa chiude exports.handler
