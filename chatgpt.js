@@ -162,7 +162,14 @@ if (prestazioneRiconosciuta) {
           risposta: `Il costo per la ${prestazioneRiconosciuta} presso il nostro centro è di ${costo}. Per ulteriori informazioni o per prenotare un appuntamento: 📞 0332 624820 📧 segreteria@csvcuvio.it.`
         })
       };
-
+    } else {
+      return {
+        statusCode: 200,
+        body: JSON.stringify({
+          risposta: `Sì. Per prenotare una ${prestazioneRiconosciuta.toLowerCase()} presso il nostro centro, puoi contattarci al 📞 0332 624820 o via email 📧 segreteria@csvcuvio.it.`
+        })
+      };
+    }
   } else {
     return {
       statusCode: 200,
