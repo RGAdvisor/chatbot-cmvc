@@ -143,7 +143,6 @@ const prestazioneRiconosciuta = prestazioniDisponibili.find(prestazione =>
 
 // Se la prestazione è riconosciuta
 if (prestazioneRiconosciuta) {
-  // Se la domanda chiede il costo (con parole chiave)
   if (/(costo|prezzo|quanto)/.test(domandaNorm)) {
     const costo = costiPrestazioni[normalizzaTesto(prestazioneRiconosciuta)];
     if (costo) {
@@ -162,7 +161,6 @@ if (prestazioneRiconosciuta) {
       };
     }
   } else {
-    // Se NON chiedono il costo
     return {
       statusCode: 200,
       body: JSON.stringify({
@@ -170,9 +168,9 @@ if (prestazioneRiconosciuta) {
       })
     };
   }
-} // <-- chiusura necessaria del blocco prestazioneRiconosciuta
+}
 
-// Se la prestazione NON è riconosciuta ma è una richiesta di esame/prestazione generica
+// SE NON è riconosciuta, ma parla di salute ➡️ NON DISPONIBILE
 if (!prestazioneRiconosciuta && contieneParoleChiaveSanitarie(domanda)) {
   return {
     statusCode: 200,
