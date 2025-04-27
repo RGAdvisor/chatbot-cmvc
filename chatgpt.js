@@ -136,12 +136,22 @@ exports.handler = async function (event, context) {
       };
     }
 
-  // Cerca una prestazione richiesta
+// Cerca la prestazione richiesta
 const prestazioneRiconosciuta = prestazioniDisponibili.find(prestazione =>
   domandaNorm.includes(normalizzaTesto(prestazione))
 );
 
-// Se la prestazione è riconosciuta
+// Se NON è riconosciuta, ma parla di salute ➡️ NON DISPONIBILE
+if (!prestazioneRiconosciuta && contieneParoleChiaveSanitarie(domanda)) {
+  return {
+    statusCode: 200,
+    body: JSON.stringify({
+      risposta: `Mi dispiace, ma questa prestazione non è attualmente disponibile presso il nostro centro. Per ulteriori informazioni, puoi contattarci: 📞 0332 624820 📧 segreteria@csvcuvio.it.`
+    })
+  };
+}
+
+// Se è riconosciuta, gestisci la risposta
 if (prestazioneRiconosciuta) {
   if (/(costo|prezzo|quanto)/.test(domandaNorm)) {
     const costo = costiPrestazioni[normalizzaTesto(prestazioneRiconosciuta)];
