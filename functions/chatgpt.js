@@ -140,15 +140,14 @@ exports.handler = async function(event) {
       domandaNorm.includes(normalizzaTesto(prestazione))
     );
 
-    // 🧱 BLOCCO ESSENZIALE: blocca subito se NON è prestazione offerta e contiene parola sanitaria
-    if (!prestazioneRiconosciuta && contieneParoleChiaveSanitarie(domanda)) {
-      return {
-        statusCode: 200,
-        body: JSON.stringify({
-          risposta: `Mi dispiace, ma questa prestazione non è attualmente disponibile presso il nostro centro. Contattaci per maggiori informazioni: 📞 0332 624820 📧 segreteria@csvcuvio.it.`
-        })
-      };
-    }
+if (!prestazioneRiconosciuta && contieneParoleChiaveSanitarie(domandaNorm)) {
+  return {
+    statusCode: 200,
+    body: JSON.stringify({
+      risposta: `Mi dispiace, ma questa prestazione non è attualmente disponibile presso il nostro centro. Contattaci per maggiori informazioni: 📞 0332 624820 📧 segreteria@csvcuvio.it.`
+    })
+  };
+}
 
     if (prestazioneRiconosciuta) {
       if (/(costo|prezzo|quanto)/.test(domandaNorm)) {
