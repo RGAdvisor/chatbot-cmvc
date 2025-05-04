@@ -69,13 +69,23 @@ async function inviaDomanda(domanda, èFissa) {
     return;
   }
 
-  // Altrimenti, invia a GPT
-  const response = await fetch("/.netlify/functions/chatgpt", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ domanda })
-  });
+  // Chiamata API
+  try {
+    const response = await fetch("/api/chatgpt", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ domanda })
+    });
 
-  const data = await response.json();
-  aggiungiMessaggioTesto(data.risposta, "gpt-response");
+    if (!response.ok) {
+      throw new Error("Errore nella richiesta al server.");
+    }
+
+    const data = await response.json();
+    aggiungiMessaggioTesto(data.risposta, "gpt-response");
+
+  } catch (err) {
+    aggiungiMessaggioTesto("Si è verificato un errore. Riprova più tardi.", "gpt-response");
+    console.error("Errore nella chiamata GPT:", err);
+  }
 }
