@@ -48,14 +48,15 @@ function èDomandaGenerica(testo) {
 }
 
 function contieneParoleChiaveSanitarie(testo) {
+  const testoNorm = normalizzaTesto(testo);
   const paroleChiave = [
-    "risonanza", "rmn", "tac", "radiografia", "ecografia addome completo", "ecografia muscolo tendinea", 
-    "ecografia collo", "ecografia pelvica", "moc", "doppler tronchi sovraortici", 
-    "rx", "rx torace", "scintigrafia", "tomografia", "angiografia", "esame specialistico", 
-    "neuro", "neurologia", "otorino", "otorinolaringoiatria", "nefrologia", "urologia", 
-    "pneumologia", "reumatologia", "gastroenterologia", "epatologia"
+    "risonanza", "rmn", "tac", "radiografia", 
+    "moc", "doppler", 
+    "rx", "rx torace", "scintigrafia", "tomografia", "angiografia", 
+    "neurologia", "otorino", "nefrologia", "pneumologia", 
+    "reumatologia", "epatologia"
   ];
-  return paroleChiave.some(parola => testo.includes(parola));
+  return paroleChiave.some(parola => testoNorm.includes(normalizzaTesto(parola)));
 }
 
 function contienePrestazioneNonOfferta(testoNorm) {
