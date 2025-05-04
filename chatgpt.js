@@ -141,7 +141,7 @@ exports.handler = async function(event) {
     );
 
     // 🧱 BLOCCO ESSENZIALE: blocca subito se NON è prestazione offerta e contiene parola sanitaria
-    if (!prestazioneRiconosciuta && contieneParoleChiaveSanitarie(domanda)) {
+  if (!prestazioneRiconosciuta && contieneParoleChiaveSanitarie(domandaNorm)) {
       return {
         statusCode: 200,
         body: JSON.stringify({
