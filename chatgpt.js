@@ -57,13 +57,6 @@ function contieneParoleChiaveSanitarie(testo) {
   return paroleChiave.some(parola => testoNorm.includes(normalizzaTesto(parola)));
 }
 
-function contienePrestazioneNonOfferta(testoNorm) {
-  const èPresente = prestazioniDisponibili.some(prestazione =>
-    testoNorm.includes(normalizzaTesto(prestazione))
-  );
-  return !èPresente && contieneParoleChiaveSanitarie(testoNorm);
-}
-
 function riconosciMalessere(testo) {
   const testoNorm = normalizzaTesto(testo);
   return Object.keys(consigliPerMalessere).find(chiave => testoNorm.includes(normalizzaTesto(chiave)));
@@ -140,13 +133,18 @@ exports.handler = async function(event) {
       domandaNorm.includes(normalizzaTesto(prestazione))
     );
 
-    if (!prestazioneRiconosciuta && contieneParoleChiaveSanitarie(domandaNorm)) {
-      return {
-        statusCode: 200,
-        body: JSON.stringify({
-          risposta: `Mi dispiace, ma questa prestazione non è attualmente disponibile presso il nostro centro. Contattaci per maggiori informazioni: 📞 0332 624820 📧 segreteria@csvcuvio.it.`
-        })
-      };
+    if (contieneParoleChiaveSanitarie(domandaNorm)) {
+      const èPrestazioneValida = prestazioniDisponibili.some(prestazione =>
+        domandaNorm.includes(normalizzaTesto(prestazione))
+      );
+      if (!èPrestazioneValida) {
+        return {
+          statusCode: 200,
+          body: JSON.stringify({
+            risposta: `Mi dispiace, ma questa prestazione non è attualmente disponibile presso il nostro centro. Contattaci per maggiori informazioni: 📞 0332 624820 📧 segreteria@csvcuvio.it.`
+          })
+        };
+      }
     }
 
     if (prestazioneRiconosciuta) {
