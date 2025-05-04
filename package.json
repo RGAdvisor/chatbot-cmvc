@@ -2,7 +2,6 @@
   "name": "chatbot-cmvc",
   "version": "1.0.0",
   "type": "commonjs",
-  "main": "chatgpt.js",
   "dependencies": {
     "openai": "^3.2.1",
     "node-fetch": "^2.6.7",
