@@ -52,8 +52,7 @@ function contieneParoleChiaveSanitarie(testo) {
   const paroleChiave = [
     "risonanza", "rmn", "tac", "radiografia", "moc", "doppler",
     "rx", "rx torace", "scintigrafia", "tomografia", "angiografia",
-    "neurologia", "nefrologia",
-    "reumatologia", "epatologia"
+    "neurologia", "nefrologia", "reumatologia", "epatologia"
   ];
   return paroleChiave.some(parola => testoNorm.includes(normalizzaTesto(parola)));
 }
@@ -80,6 +79,18 @@ exports.handler = async function(event) {
     const body = JSON.parse(event.body);
     const domanda = body.domanda || "";
     const domandaNorm = normalizzaTesto(domanda);
+
+    // BLOCCO ANTICIPATO per impedire risposte GPT su prestazioni non disponibili
+    if (contieneParoleChiaveSanitarie(domandaNorm) && !prestazioniDisponibili.some(prestazione =>
+      domandaNorm.includes(normalizzaTesto(prestazione))
+    )) {
+      return {
+        statusCode: 200,
+        body: JSON.stringify({
+          risposta: `Mi dispiace, ma questa prestazione non è attualmente disponibile presso il nostro centro. Contattaci per maggiori informazioni: 📞 0332 624820 📧 segreteria@csvcuvio.it.`
+        })
+      };
+    }
 
     if (domandaNorm.includes("mi è caduto un dente")) {
       return {
@@ -140,18 +151,6 @@ exports.handler = async function(event) {
     const prestazioneRiconosciuta = prestazioniDisponibili.find(prestazione =>
       domandaNorm.includes(normalizzaTesto(prestazione))
     );
-
-    // BLOCCO ANTICIPO per intercettare esami non offerti come risonanza, tac, ecc.
-if (contieneParoleChiaveSanitarie(domandaNorm) && !prestazioniDisponibili.some(prestazione =>
-  domandaNorm.includes(normalizzaTesto(prestazione))
-)) {
-  return {
-    statusCode: 200,
-    body: JSON.stringify({
-      risposta: `Mi dispiace, ma questa prestazione non è attualmente disponibile presso il nostro centro. Contattaci per maggiori informazioni: 📞 0332 624820 📧 segreteria@csvcuvio.it.`
-    })
-  };
-}
 
     if (prestazioneRiconosciuta) {
       if (/(costo|prezzo|quanto)/.test(domandaNorm)) {
