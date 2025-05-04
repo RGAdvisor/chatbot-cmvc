@@ -175,16 +175,6 @@ exports.handler = async function(event) {
       };
     }
 
-    // Se contiene parole sanitarie escluse ma non è una prestazione riconosciuta, blocca qui prima di GPT
-if (contieneParoleChiaveSanitarie(domandaNorm)) {
-  return {
-    statusCode: 200,
-    body: JSON.stringify({
-      risposta: `Mi dispiace, ma questa prestazione non è attualmente disponibile presso il nostro centro. Contattaci per maggiori informazioni: 📞 0332 624820 📧 segreteria@csvcuvio.it.`
-    })
-  };
-}
-
     const response = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
       messages: [
