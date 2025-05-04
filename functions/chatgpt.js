@@ -44,13 +44,6 @@ function contieneParoleChiaveSanitarie(testo) {
   return paroleChiave.some(parola => testoNorm.includes(parola));
 }
 
-const { Configuration, OpenAIApi } = require("openai");
-
-const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-const openai = new OpenAIApi(configuration);
-
 const prestazioniDisponibili = [
   "Addominoplastica", "Agopuntura", "Bleforaplastica", "Carico immediato", "Protesi mobile", "Chirurgia carico immediato", "Endodonzia", "Devitalizzazione bicanalare", "Devitalizzazione canalare", "Otturazione", "Ricostruzione del dente con perni edocanalari",
   "Chirurgia estetica del seno", "ECG", "ECG sotto sforzo", "Ecocardiocolordoppler", "Conservativa", "Ortodonzia", "Contenzione fissa o mobile", "Controllo ortodontico", "Disinclusione chirurgica", "MAC", "Splintaggio", "Studio del caso", "Bite", "Terapia intervettiva",
