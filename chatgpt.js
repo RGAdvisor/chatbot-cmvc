@@ -48,9 +48,21 @@ function èDomandaGenerica(testo) {
 }
 
 function contieneParoleChiaveSanitarie(testo) {
-  const paroleChiave = ["risonanza", "rmn", "radiografia ginocchio", "TAC testa"];
-  const testoNorm = normalizzaTesto(testo);
-  return paroleChiave.some(parola => testoNorm.includes(parola));
+  const paroleChiave = [
+    "risonanza", "rmn", "tac", "radiografia", "ecografia addome completo", "ecografia muscolo tendinea", 
+    "ecografia collo", "ecografia pelvica", "moc", "doppler tronchi sovraortici", 
+    "rx", "rx torace", "scintigrafia", "tomografia", "angiografia", "esame specialistico", 
+    "neuro", "neurologia", "otorino", "otorinolaringoiatria", "nefrologia", "urologia", 
+    "pneumologia", "reumatologia", "gastroenterologia", "epatologia"
+  ];
+  return paroleChiave.some(parola => testo.includes(parola));
+}
+
+function contienePrestazioneNonOfferta(testoNorm) {
+  const èPresente = prestazioniDisponibili.some(prestazione =>
+    testoNorm.includes(normalizzaTesto(prestazione))
+  );
+  return !èPresente && contieneParoleChiaveSanitarie(testoNorm);
 }
 
 function riconosciMalessere(testo) {
@@ -123,8 +135,11 @@ exports.handler = async function(event) {
       };
     }
 
-    const prestazioneRiconosciuta = prestazioniDisponibili.find(prestazione => domandaNorm.includes(normalizzaTesto(prestazione)));
-    if (!prestazioneRiconosciuta && contieneParoleChiaveSanitarie(domanda)) {
+    const prestazioneRiconosciuta = prestazioniDisponibili.find(prestazione =>
+      domandaNorm.includes(normalizzaTesto(prestazione))
+    );
+
+    if (contienePrestazioneNonOfferta(domandaNorm)) {
       return {
         statusCode: 200,
         body: JSON.stringify({
