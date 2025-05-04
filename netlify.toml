@@ -1,11 +1,10 @@
 [functions]
-  directory = "netlify/functions"
-  node_bundler = "esbuild"
+directory = "functions"  # <- questa era la tua configurazione precedente corretta
 
 [[plugins]]
-  package = "@netlify/plugin-functions-install-core"
+package = "@netlify/plugin-functions-install-core"
 
 [[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/:splat"
-  status = 200
+from = "/api/*"
+to = "/.netlify/functions/:splat"
+status = 200
