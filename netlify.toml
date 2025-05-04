@@ -1,5 +1,5 @@
 [functions]
-directory = "functions"  # <- questa era la tua configurazione precedente corretta
+directory = "functions"  # cartella giusta, visto che chatgpt.js è qui
 
 [[plugins]]
 package = "@netlify/plugin-functions-install-core"
