@@ -49,10 +49,11 @@ function èDomandaGenerica(testo) {
 
 function contieneParoleChiaveSanitarie(testo) {
   const paroleChiave = [
-    "risonanza", "rmn", "tac", "radiografia", 
-    "moc", "doppler tronchi sovraortici", "rx torace", "scintigrafia", "tomografia", "angiografia",
-    "neuro", "neurologia", "nefrologia", "urologia", 
-    "pneumologia", "reumatologia", "epatologia"
+    "risonanza", "rmn", "tac", "radiografia", "ecografia addome completo", "ecografia muscolo tendinea", 
+    "ecografia collo", "ecografia pelvica", "moc", "doppler tronchi sovraortici", 
+    "rx", "rx torace", "scintigrafia", "tomografia", "angiografia", "esame specialistico", 
+    "neuro", "neurologia", "otorino", "otorinolaringoiatria", "nefrologia", "urologia", 
+    "pneumologia", "reumatologia", "gastroenterologia", "epatologia"
   ];
   return paroleChiave.some(parola => testo.includes(parola));
 }
@@ -134,44 +135,46 @@ exports.handler = async function(event) {
       };
     }
 
-    const prestazioneRiconosciuta = prestazioniDisponibili.find(prestazione =>
-      domandaNorm.includes(normalizzaTesto(prestazione))
-    );
+const prestazioneRiconosciuta = prestazioniDisponibili.find(prestazione =>
+  domandaNorm.includes(normalizzaTesto(prestazione))
+);
 
-    if (contienePrestazioneNonOfferta(domandaNorm)) {
+// ❌ Blocca domande su prestazioni escluse (es. risonanze, tac, ecc.)
+if (!prestazioneRiconosciuta && contieneParoleChiaveSanitarie(domandaNorm)) {
+  return {
+    statusCode: 200,
+    body: JSON.stringify({
+      risposta: `Mi dispiace, ma questa prestazione non è attualmente disponibile presso il nostro centro. Contattaci per maggiori informazioni: 📞 0332 624820 📧 segreteria@csvcuvio.it.`
+    })
+  };
+}
+
+// ✅ Se la prestazione è riconosciuta
+if (prestazioneRiconosciuta) {
+  if (/(costo|prezzo|quanto)/.test(domandaNorm)) {
+    const costo = costiPrestazioni[normalizzaTesto(prestazioneRiconosciuta)];
+    if (costo) {
       return {
         statusCode: 200,
         body: JSON.stringify({
-          risposta: `Mi dispiace, ma questa prestazione non è attualmente disponibile presso il nostro centro. Contattaci per maggiori informazioni: 📞 0332 624820 📧 segreteria@csvcuvio.it.`
+          risposta: `Il costo per la ${prestazioneRiconosciuta} presso il nostro centro è di ${costo}. Contattaci per prenotare: 📞 0332 624820 📧 segreteria@csvcuvio.it.`
         })
       };
     }
-
-    if (prestazioneRiconosciuta) {
-      if (/(costo|prezzo|quanto)/.test(domandaNorm)) {
-        const costo = costiPrestazioni[normalizzaTesto(prestazioneRiconosciuta)];
-        if (costo) {
-          return {
-            statusCode: 200,
-            body: JSON.stringify({
-              risposta: `Il costo per la ${prestazioneRiconosciuta} presso il nostro centro è di ${costo}. Contattaci per prenotare: 📞 0332 624820 📧 segreteria@csvcuvio.it.`
-            })
-          };
-        }
-        return {
-          statusCode: 200,
-          body: JSON.stringify({
-            risposta: `Sì. Per prenotare una ${prestazioneRiconosciuta.toLowerCase()} presso il nostro centro, contattaci: 📞 0332 624820 📧 segreteria@csvcuvio.it.`
-          })
-        };
-      }
-      return {
-        statusCode: 200,
-        body: JSON.stringify({
-          risposta: `Sì. Per prenotare una ${prestazioneRiconosciuta.toLowerCase()} presso il nostro centro, contattaci: 📞 0332 624820 📧 segreteria@csvcuvio.it. È utile sottoporsi regolarmente a controlli di prevenzione.`
-        })
-      };
-    }
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        risposta: `Sì. Per prenotare una ${prestazioneRiconosciuta.toLowerCase()} presso il nostro centro, contattaci: 📞 0332 624820 📧 segreteria@csvcuvio.it.`
+      })
+    };
+  }
+  return {
+    statusCode: 200,
+    body: JSON.stringify({
+      risposta: `Sì. Per prenotare una ${prestazioneRiconosciuta.toLowerCase()} presso il nostro centro, contattaci: 📞 0332 624820 📧 segreteria@csvcuvio.it. È utile sottoporsi regolarmente a controlli di prevenzione.`
+    })
+  };
+}
 
     const response = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
@@ -203,4 +206,3 @@ exports.handler = async function(event) {
     };
   }
 };
-
