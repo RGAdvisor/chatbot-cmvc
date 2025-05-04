@@ -141,14 +141,17 @@ exports.handler = async function(event) {
       domandaNorm.includes(normalizzaTesto(prestazione))
     );
 
-    if (!prestazioneRiconosciuta && contieneParoleChiaveSanitarie(domandaNorm)) {
-      return {
-        statusCode: 200,
-        body: JSON.stringify({
-          risposta: `Mi dispiace, ma questa prestazione non è attualmente disponibile presso il nostro centro. Contattaci per maggiori informazioni: 📞 0332 624820 📧 segreteria@csvcuvio.it.`
-        })
-      };
-    }
+    // BLOCCO ANTICIPO per intercettare esami non offerti come risonanza, tac, ecc.
+if (contieneParoleChiaveSanitarie(domandaNorm) && !prestazioniDisponibili.some(prestazione =>
+  domandaNorm.includes(normalizzaTesto(prestazione))
+)) {
+  return {
+    statusCode: 200,
+    body: JSON.stringify({
+      risposta: `Mi dispiace, ma questa prestazione non è attualmente disponibile presso il nostro centro. Contattaci per maggiori informazioni: 📞 0332 624820 📧 segreteria@csvcuvio.it.`
+    })
+  };
+}
 
     if (prestazioneRiconosciuta) {
       if (/(costo|prezzo|quanto)/.test(domandaNorm)) {
