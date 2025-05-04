@@ -125,7 +125,9 @@ exports.handler = async function(event) {
 
     const malessereRiconosciuto = riconosciMalessere(domanda);
     if (malessereRiconosciuto) {
-      let rispostaSintomo = `Mi dispiace che tu non ti senta bene. Contatta il nostro centro per un consulto personalizzato.\n\n📞 0332 624820 📧 segreteria@csvcuvio.it.`;
+      let rispostaSintomo = `Mi dispiace che tu non ti senta bene. Contatta il nostro centro per un consulto personalizzato.
+
+📞 0332 624820 📧 segreteria@csvcuvio.it.`;
       const consiglio = consigliPerMalessere[malessereRiconosciuto];
       if (consiglio) {
         rispostaSintomo += ` Nel frattempo, se il disturbo è lieve, potresti provare a: ${consiglio}`;
@@ -140,8 +142,7 @@ exports.handler = async function(event) {
       domandaNorm.includes(normalizzaTesto(prestazione))
     );
 
-    // 🧱 BLOCCO ESSENZIALE: blocca subito se NON è prestazione offerta e contiene parola sanitaria
-  if (!prestazioneRiconosciuta && contieneParoleChiaveSanitarie(domandaNorm)) {
+    if (!prestazioneRiconosciuta && contieneParoleChiaveSanitarie(domandaNorm)) {
       return {
         statusCode: 200,
         body: JSON.stringify({
@@ -176,7 +177,6 @@ exports.handler = async function(event) {
       };
     }
 
-    // 🔚 Chiamata finale a GPT (solo se non è malessere, urgenza o prestazione)
     const response = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
       messages: [
@@ -191,7 +191,9 @@ exports.handler = async function(event) {
 
     let risposta = response.data.choices[0]?.message?.content || "Nessuna risposta generata.";
     if (!risposta.includes("0332 624820") || !risposta.includes("segreteria@csvcuvio.it")) {
-      risposta += `\n\nPer contattarci: 📞 0332 624820 📧 segreteria@csvcuvio.it`;
+      risposta += `
+
+Per contattarci: 📞 0332 624820 📧 segreteria@csvcuvio.it`;
     }
 
     return {
