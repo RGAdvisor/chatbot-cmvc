@@ -49,11 +49,10 @@ function èDomandaGenerica(testo) {
 
 function contieneParoleChiaveSanitarie(testo) {
   const paroleChiave = [
-    "risonanza", "rmn", "tac", "radiografia", "ecografia addome completo", "ecografia muscolo tendinea", 
-    "ecografia collo", "ecografia pelvica", "moc", "doppler tronchi sovraortici", 
-    "rx", "rx torace", "scintigrafia", "tomografia", "angiografia", "esame specialistico", 
-    "neuro", "neurologia", "otorino", "otorinolaringoiatria", "nefrologia", "urologia", 
-    "pneumologia", "reumatologia", "gastroenterologia", "epatologia"
+    "risonanza", "rmn", "tac", "radiografia", 
+    "moc", "doppler tronchi sovraortici", "rx torace", "scintigrafia", "tomografia", "angiografia",
+    "neuro", "neurologia", "nefrologia", "urologia", 
+    "pneumologia", "reumatologia", "epatologia"
   ];
   return paroleChiave.some(parola => testo.includes(parola));
 }
