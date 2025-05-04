@@ -167,6 +167,15 @@ exports.handler = async function(event) {
       };
     }
 
+        if (/\banalisi\b|\besami del sangue\b|\bprelievi\b/.test(domandaNorm)) {
+      return {
+        statusCode: 200,
+        body: JSON.stringify({
+          risposta: "Presso la nostra struttura è presente il punto prelievi della società di analisi Beccaria, che opera in modo indipendente. Per informazioni o prenotazioni potete contattarli direttamente allo 0332 234395."
+        })
+      };
+    }
+
     const response = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
       messages: [
@@ -199,4 +208,5 @@ Per contattarci: 📞 0332 624820 📧 segreteria@csvcuvio.it`;
     };
   }
 };
+
 
