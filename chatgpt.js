@@ -73,6 +73,20 @@ exports.handler = async function(event) {
     const domanda = body.domanda || "";
     const domandaNorm = normalizzaTesto(domanda);
 
+    if (contieneParoleChiaveSanitarie(domandaNorm)) {
+      const èPrestazioneValida = prestazioniDisponibili.some(prestazione =>
+        domandaNorm.includes(normalizzaTesto(prestazione))
+      );
+      if (!èPrestazioneValida) {
+        return {
+          statusCode: 200,
+          body: JSON.stringify({
+            risposta: `Mi dispiace, ma questa prestazione non è attualmente disponibile presso il nostro centro. Contattaci per maggiori informazioni: 📞 0332 624820 📧 segreteria@csvcuvio.it.`
+          })
+        };
+      }
+    }
+
     if (domandaNorm.includes("mi è caduto un dente")) {
       return {
         statusCode: 200,
@@ -127,20 +141,6 @@ exports.handler = async function(event) {
         statusCode: 200,
         body: JSON.stringify({ risposta: rispostaSintomo })
       };
-    }
-
-    if (contieneParoleChiaveSanitarie(domandaNorm)) {
-      const èPrestazioneValida = prestazioniDisponibili.some(prestazione =>
-        domandaNorm.includes(normalizzaTesto(prestazione))
-      );
-      if (!èPrestazioneValida) {
-        return {
-          statusCode: 200,
-          body: JSON.stringify({
-            risposta: `Mi dispiace, ma questa prestazione non è attualmente disponibile presso il nostro centro. Contattaci per maggiori informazioni: 📞 0332 624820 📧 segreteria@csvcuvio.it.`
-          })
-        };
-      }
     }
 
     const prestazioneRiconosciuta = prestazioniDisponibili.find(prestazione =>
@@ -199,3 +199,4 @@ Per contattarci: 📞 0332 624820 📧 segreteria@csvcuvio.it`;
     };
   }
 };
+
