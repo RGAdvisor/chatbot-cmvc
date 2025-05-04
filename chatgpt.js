@@ -6,14 +6,14 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 const prestazioniDisponibili = [
-  "Addominoplastica", "Agopuntura", "Bleforaplastica", "Carico immediato", "Protesi mobile", 
-  "Chirurgia carico immediato", "Endodonzia", "Devitalizzazione bicanalare", "Devitalizzazione canalare", 
-  "Otturazione", "Ricostruzione del dente con perni edocanalari", "Chirurgia estetica del seno", 
-  "ECG", "ECG sotto sforzo", "Ecocardiocolordoppler", "Conservativa", "Ortodonzia", 
-  "Contenzione fissa o mobile", "Controllo ortodontico", "Disinclusione chirurgica", 
-  "MAC", "Splintaggio", "Studio del caso", "Bite", "Terapia intervettiva", 
-  "Ecografie", "Holter cardiaco", "Holter pressorio", "Igiene dentale", 
-  "Trattamento linguale con e senza attacchi", "Trattamento ortodontico fisso", "Trattamento prechirurgico", 
+  "Addominoplastica", "Agopuntura", "Bleforaplastica", "Carico immediato", "Protesi mobile",
+  "Chirurgia carico immediato", "Endodonzia", "Devitalizzazione bicanalare", "Devitalizzazione canalare",
+  "Otturazione", "Ricostruzione del dente con perni edocanalari", "Chirurgia estetica del seno",
+  "ECG", "ECG sotto sforzo", "Ecocardiocolordoppler", "Conservativa", "Ortodonzia",
+  "Contenzione fissa o mobile", "Controllo ortodontico", "Disinclusione chirurgica",
+  "MAC", "Splintaggio", "Studio del caso", "Bite", "Terapia intervettiva",
+  "Ecografie", "Holter cardiaco", "Holter pressorio", "Igiene dentale",
+  "Trattamento linguale con e senza attacchi", "Trattamento ortodontico fisso", "Trattamento prechirurgico",
   "Lipoemulsione sottocutanea", "Liposcultura", "Liposuzione", "Mammografia",
   "Otoplastica", "Otturazioni", "Visita cardiologica", "Visita ginecologica"
 ];
@@ -34,7 +34,7 @@ const consigliPerMalessere = {
 };
 
 const urgenzeDentarie = [
-  "guancia gonfia", "dente rotto davanti", "ponte dentale che è sceso davanti", 
+  "guancia gonfia", "dente rotto davanti", "ponte dentale che è sceso davanti",
   "ribasatura che fa male", "mi è caduto un dente davanti"
 ];
 
@@ -50,10 +50,9 @@ function èDomandaGenerica(testo) {
 function contieneParoleChiaveSanitarie(testo) {
   const testoNorm = normalizzaTesto(testo);
   const paroleChiave = [
-    "risonanza", "rmn", "tac", "radiografia", 
-    "moc", "doppler", 
-    "rx", "rx torace", "scintigrafia", "tomografia", "angiografia", 
-    "neurologia", "otorino", "nefrologia", "pneumologia", 
+    "risonanza", "rmn", "tac", "radiografia", "moc", "doppler",
+    "rx", "rx torace", "scintigrafia", "tomografia", "angiografia",
+    "neurologia", "otorino", "nefrologia", "pneumologia",
     "reumatologia", "epatologia"
   ];
   return paroleChiave.some(parola => testoNorm.includes(normalizzaTesto(parola)));
