@@ -141,7 +141,7 @@ const prestazioneRiconosciuta = prestazioniDisponibili.find(prestazione =>
 );
 
 // ❌ Blocca domande su prestazioni escluse (es. risonanze, tac, ecc.)
-if (!prestazioneRiconosciuta && contieneParoleChiaveSanitarie(domandaNorm)) {
+if (!prestazioneRiconosciuta && contieneParoleChiaveSanitarie(domanda)) {
   return {
     statusCode: 200,
     body: JSON.stringify({
