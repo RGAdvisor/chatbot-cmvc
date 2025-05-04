@@ -74,10 +74,10 @@ exports.handler = async function(event) {
     const domandaNorm = normalizzaTesto(domanda);
 
     if (contieneParoleChiaveSanitarie(domandaNorm)) {
-      const èPrestazioneValida = prestazioniDisponibili.some(prestazione =>
+      const èPresenteNelCatalogo = prestazioniDisponibili.some(prestazione =>
         domandaNorm.includes(normalizzaTesto(prestazione))
       );
-      if (!èPrestazioneValida) {
+      if (!èPresenteNelCatalogo) {
         return {
           statusCode: 200,
           body: JSON.stringify({
@@ -143,6 +143,15 @@ exports.handler = async function(event) {
       };
     }
 
+    if (/analisi|esami del sangue|prelievi/.test(domandaNorm)) {
+      return {
+        statusCode: 200,
+        body: JSON.stringify({
+          risposta: "Presso la nostra struttura è presente il punto prelievi della società di analisi Beccaria, che opera in modo indipendente. Per informazioni o prenotazioni potete contattarli direttamente allo 0332 234395."
+        })
+      };
+    }
+
     const prestazioneRiconosciuta = prestazioniDisponibili.find(prestazione =>
       domandaNorm.includes(normalizzaTesto(prestazione))
     );
@@ -163,15 +172,6 @@ exports.handler = async function(event) {
         statusCode: 200,
         body: JSON.stringify({
           risposta: `Sì. Per prenotare una ${prestazioneRiconosciuta.toLowerCase()} presso il nostro centro, contattaci: 📞 0332 624820 📧 segreteria@csvcuvio.it. È utile sottoporsi regolarmente a controlli di prevenzione.`
-        })
-      };
-    }
-
-        if (/\banalisi\b|\besami del sangue\b|\bprelievi\b/.test(domandaNorm)) {
-      return {
-        statusCode: 200,
-        body: JSON.stringify({
-          risposta: "Presso la nostra struttura è presente il punto prelievi della società di analisi Beccaria, che opera in modo indipendente. Per informazioni o prenotazioni potete contattarli direttamente allo 0332 234395."
         })
       };
     }
