@@ -143,7 +143,8 @@ exports.handler = async function(event) {
       };
     }
 
-    if (/analisi|esami del sangue|prelievi/.test(domandaNorm)) {
+   if (/analisi|esami del sangue|prelievi/.test(domandaNorm)) {
+
       return {
         statusCode: 200,
         body: JSON.stringify({
