@@ -129,10 +129,6 @@ exports.handler = async function(event) {
       };
     }
 
-    const prestazioneRiconosciuta = prestazioniDisponibili.find(prestazione =>
-      domandaNorm.includes(normalizzaTesto(prestazione))
-    );
-
     if (contieneParoleChiaveSanitarie(domandaNorm)) {
       const èPrestazioneValida = prestazioniDisponibili.some(prestazione =>
         domandaNorm.includes(normalizzaTesto(prestazione))
@@ -147,6 +143,10 @@ exports.handler = async function(event) {
       }
     }
 
+    const prestazioneRiconosciuta = prestazioniDisponibili.find(prestazione =>
+      domandaNorm.includes(normalizzaTesto(prestazione))
+    );
+
     if (prestazioneRiconosciuta) {
       if (/(costo|prezzo|quanto)/.test(domandaNorm)) {
         const costo = costiPrestazioni[normalizzaTesto(prestazioneRiconosciuta)];
@@ -158,12 +158,6 @@ exports.handler = async function(event) {
             })
           };
         }
-        return {
-          statusCode: 200,
-          body: JSON.stringify({
-            risposta: `Sì. Per prenotare una ${prestazioneRiconosciuta.toLowerCase()} presso il nostro centro, contattaci: 📞 0332 624820 📧 segreteria@csvcuvio.it.`
-          })
-        };
       }
       return {
         statusCode: 200,
