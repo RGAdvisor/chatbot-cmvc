@@ -23,40 +23,6 @@ const costiPrestazioni = {
   "visita ginecologica": "150,00€"
 };
 
-const urgenzeDentarie = [
-  "guancia gonfia", "dente rotto davanti", "ponte dentale che è sceso davanti", 
-  "ribasatura che fa male", "mi è caduto un dente davanti"
-];
-
-function normalizzaTesto(testo) {
-  return testo.toLowerCase().replace(/[^a-zà-ú\s]/gi, "").replace(/\s+/g, " ").trim();
-}
-
-function èDomandaGenerica(testo) {
-  const frasi = ["ciao", "salve", "buongiorno", "buonasera", "grazie", "ok", "va bene"];
-  const testoNorm = normalizzaTesto(testo);
-  return frasi.includes(testoNorm);
-}
-
-function contieneParoleChiaveSanitarie(testo) {
-  const paroleChiave = ["risonanza", "rmn", "radiografia ginocchio", "TAC testa"];
-  const testoNorm = normalizzaTesto(testo);
-  return paroleChiave.some(parola => testoNorm.includes(parola));
-}
-
-const prestazioniDisponibili = [
-  "Addominoplastica", "Agopuntura", "Bleforaplastica", "Carico immediato", "Protesi mobile", "Chirurgia carico immediato", "Endodonzia", "Devitalizzazione bicanalare", "Devitalizzazione canalare", "Otturazione", "Ricostruzione del dente con perni edocanalari",
-  "Chirurgia estetica del seno", "ECG", "ECG sotto sforzo", "Ecocardiocolordoppler", "Conservativa", "Ortodonzia", "Contenzione fissa o mobile", "Controllo ortodontico", "Disinclusione chirurgica", "MAC", "Splintaggio", "Studio del caso", "Bite", "Terapia intervettiva",
-  "Ecografie", "Holter cardiaco", "Holter pressorio", "Igiene dentale", "Trattamento linguale con e senza attacchi", "Trattamento ortodontico fisso", "Trattamento prechirurgico", 
-  "Lipoemulsione sottocutanea", "Liposcultura", "Liposuzione", "Mammografia",
-  "Otoplastica", "Otturazioni", "Visita cardiologica", "Visita ginecologica"
-];
-
-const costiPrestazioni = {
-  "mammografia": "120,00€",
-  "visita ginecologica": "150,00€"
-};
-
 const consigliPerMalessere = {
   "mal di schiena": "stare sdraiato su una superficie rigida, evitare movimenti bruschi e applicare un impacco caldo.",
   "mal di denti": "evitare cibi troppo caldi o freddi, risciacquare con acqua tiepida e mantenere la zona a riposo.",
@@ -68,7 +34,8 @@ const consigliPerMalessere = {
 };
 
 const urgenzeDentarie = [
-  "guancia gonfia", "dente rotto davanti", "ponte dentale che è sceso davanti", "ribasatura che fa male", "mi è caduto un dente davanti"
+  "guancia gonfia", "dente rotto davanti", "ponte dentale che è sceso davanti", 
+  "ribasatura che fa male", "mi è caduto un dente davanti"
 ];
 
 function normalizzaTesto(testo) {
@@ -205,10 +172,8 @@ exports.handler = async function(event) {
     });
 
     let risposta = response.data.choices[0]?.message?.content || "Nessuna risposta generata.";
-
-    const contatti = "📞 0332 624820 📧 segreteria@csvcuvio.it";
     if (!risposta.includes("0332 624820") || !risposta.includes("segreteria@csvcuvio.it")) {
-      risposta += `\n\nPer contattarci: ${contatti}`;
+      risposta += `\n\nPer contattarci: 📞 0332 624820 📧 segreteria@csvcuvio.it`;
     }
 
     return {
@@ -217,10 +182,11 @@ exports.handler = async function(event) {
     };
 
   } catch (error) {
-    console.error("Errore nella funzione chatbot:", error);
+    console.error("Errore nella funzione chatbot:", error.message, error.stack);
     return {
       statusCode: 500,
       body: JSON.stringify({ error: "Errore durante la generazione della risposta." })
     };
   }
 };
+
