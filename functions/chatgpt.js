@@ -140,7 +140,21 @@ exports.handler = async function(event) {
       domandaNorm.includes(normalizzaTesto(prestazione))
     );
 
-    if (!prestazioneRiconosciuta && contieneParoleChiaveSanitarie(domandaNorm)) {
+    if (contieneParoleChiaveSanitarie(domandaNorm)) {
+  const èPrestazione = prestazioniDisponibili.some(prestazione =>
+    domandaNorm.includes(normalizzaTesto(prestazione))
+  );
+
+  if (!èPrestazione) {
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        risposta: `Mi dispiace, ma questa prestazione non è attualmente disponibile presso il nostro centro. Contattaci per maggiori informazioni: 📞 0332 624820 📧 segreteria@csvcuvio.it.`
+      })
+    };
+  }
+}
+
       return {
         statusCode: 200,
         body: JSON.stringify({
