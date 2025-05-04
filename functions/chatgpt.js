@@ -52,7 +52,7 @@ function contieneParoleChiaveSanitarie(testo) {
   const paroleChiave = [
     "risonanza", "rmn", "tac", "radiografia", "moc", "doppler",
     "rx", "rx torace", "scintigrafia", "tomografia", "angiografia",
-    "neurologia", "otorino", "nefrologia", "pneumologia",
+    "neurologia", "nefrologia",
     "reumatologia", "epatologia"
   ];
   return paroleChiave.some(parola => testoNorm.includes(normalizzaTesto(parola)));
