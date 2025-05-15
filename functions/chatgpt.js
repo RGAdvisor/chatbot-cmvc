@@ -70,9 +70,8 @@ function èUrgenzaDentale(testo) {
 exports.handler = async function(event) {
   try {
     const body = JSON.parse(event.body);
-    const domanda = body.domanda || "";
-    const domanda = body.domanda || "";
-const domandaNorm = normalizzaTesto(domanda);
+  const domanda = body.domanda || "";
+  const domandaNorm = normalizzaTesto(domanda); // QUESTA ERA MANCANTE!
     const paroleRadiografieNonDentali = [
   "torace", "polmoni", "spalla", "gamba", "piede", "braccio", "schiena", "colonna", "addome", "cranio"
 ];
