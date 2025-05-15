@@ -71,6 +71,8 @@ exports.handler = async function(event) {
   try {
     const body = JSON.parse(event.body);
     const domanda = body.domanda || "";
+    const domanda = body.domanda || "";
+const domandaNorm = normalizzaTesto(domanda);
     const paroleRadiografieNonDentali = [
   "torace", "polmoni", "spalla", "gamba", "piede", "braccio", "schiena", "colonna", "addome", "cranio"
 ];
