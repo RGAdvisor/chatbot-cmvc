@@ -71,21 +71,41 @@ exports.handler = async function(event) {
   try {
     const body = JSON.parse(event.body);
     const domanda = body.domanda || "";
-    const domandaNorm = normalizzaTesto(domanda);
+    const paroleRadiografieNonDentali = [
+  "torace", "polmoni", "spalla", "gamba", "piede", "braccio", "schiena", "colonna", "addome", "cranio"
+];
 
-    if (contieneParoleChiaveSanitarie(domandaNorm)) {
-      const èPresenteNelCatalogo = prestazioniDisponibili.some(prestazione =>
-        domandaNorm.includes(normalizzaTesto(prestazione))
-      );
-      if (!èPresenteNelCatalogo) {
-        return {
-          statusCode: 200,
-          body: JSON.stringify({
-            risposta: `Mi dispiace, ma questa prestazione non è attualmente disponibile presso il nostro centro. Contattaci per maggiori informazioni: 📞 0332 624820 📧 segreteria@csvcuvio.it.`
-          })
-        };
-      }
-    }
+const paroleRadiografieDentali = [
+  "dente", "denti", "dentale", "arcata", "ortopanoramica", "panoramica dentale", "mascella", "mandibola"
+];
+
+if (domandaNorm.includes("radiografia") || domandaNorm.includes("rx")) {
+  if (paroleRadiografieNonDentali.some(parola => domandaNorm.includes(normalizzaTesto(parola)))) {
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        risposta: "Eseguiamo radiografie esclusivamente in ambito odontoiatrico. Per esami radiologici su altre parti del corpo, è necessario rivolgersi a strutture con attrezzature dedicate. Per info: 📞 0332 624820 📧 segreteria@csvcuvio.it."
+      })
+    };
+  }
+
+  if (paroleRadiografieDentali.some(parola => domandaNorm.includes(normalizzaTesto(parola)))) {
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        risposta: "Sì, effettuiamo radiografie dentali presso il nostro centro. Contattaci per prenotare: 📞 0332 624820 📧 segreteria@csvcuvio.it."
+      })
+    };
+  }
+
+  // caso generico: "fate radiografie?" senza specificare
+  return {
+    statusCode: 200,
+    body: JSON.stringify({
+      risposta: "Eseguiamo radiografie esclusivamente in ambito odontoiatrico. Per esami radiologici su altre parti del corpo, è necessario rivolgersi a strutture con attrezzature dedicate. Per info: 📞 0332 624820 📧 segreteria@csvcuvio.it."
+    })
+  };
+}
 
     if (domandaNorm.includes("mi è caduto un dente")) {
       return {
