@@ -70,17 +70,18 @@ function èUrgenzaDentale(testo) {
 exports.handler = async function(event) {
   try {
     const body = JSON.parse(event.body);
-  const domanda = body.domanda || "";
-  const domandaNorm = normalizzaTesto(domanda); // QUESTA ERA MANCANTE!
+    const domanda = body.domanda || "";
+    const domandaNorm = normalizzaTesto(domanda); // 👈 QUESTA RIGA È FONDAMENTALE
+
     const paroleRadiografieNonDentali = [
-  "torace", "polmoni", "spalla", "gamba", "piede", "braccio", "schiena", "colonna", "addome", "cranio"
-];
+      "torace", "polmoni", "spalla", "gamba", "piede", "braccio", "schiena", "colonna", "addome", "cranio"
+    ];
 
-const paroleRadiografieDentali = [
-  "dente", "denti", "dentale", "arcata", "ortopanoramica", "panoramica dentale", "mascella", "mandibola"
-];
+    const paroleRadiografieDentali = [
+      "dente", "denti", "dentale", "arcata", "ortopanoramica", "panoramica dentale", "mascella", "mandibola"
+    ];
 
-if (domandaNorm.includes("radiografia") || domandaNorm.includes("rx")) {
+    if (domandaNorm.includes("radiografia") || domandaNorm.includes("rx")) {
   if (paroleRadiografieNonDentali.some(parola => domandaNorm.includes(normalizzaTesto(parola)))) {
     return {
       statusCode: 200,
